@@ -1,0 +1,22 @@
+import { build } from 'esbuild';
+import fs from 'fs';
+const r = (p) => fs.readFileSync(p);
+const out = await build({ entryPoints: ['src/main.js'], bundle: true, minify: true, format: 'iife', target: ['es2020'], write: false, legalComments: 'none' });
+let js = out.outputFiles[0].text.replace(/<\/script/gi, '<\\/script');
+const b64 = (p) => r(p).toString('base64');
+const geo = b64('node_modules/@fontsource-variable/geologica/files/geologica-latin-full-normal.woff2');
+const mono = b64('node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2');
+const fonts = `@font-face{font-family:"Geologica";font-style:normal;font-display:swap;font-weight:100 900;src:url(data:font/woff2;base64,${geo}) format("woff2-variations"),url(data:font/woff2;base64,${geo}) format("woff2");}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-display:swap;font-weight:100 800;src:url(data:font/woff2;base64,${mono}) format("woff2-variations"),url(data:font/woff2;base64,${mono}) format("woff2");}`;
+const d = fs.readFileSync('wordmark.d', 'utf8');
+const bb = fs.readFileSync('wordmark_bbox.txt', 'utf8').replace(/[()]/g, '').split(',').map(Number);
+const wm = `<svg viewBox="${(bb[0] - 1).toFixed(1)} ${(bb[1] - 1).toFixed(1)} ${(bb[2] - bb[0] + 2).toFixed(1)} ${(bb[3] - bb[1] + 2).toFixed(1)}" role="img" aria-label="Fintegre"><path fill="currentColor" fill-rule="evenodd" d="${d}"/></svg>`;
+let html = fs.readFileSync('src/template.html', 'utf8');
+html = html.replace('/*FONTS*/', fonts).replaceAll('<!--WORDMARK-->', wm);
+const parts = html.split('/*BUNDLE*/');
+html = parts[0] + js + parts[1];
+fs.mkdirSync('dist', { recursive: true });
+fs.writeFileSync('dist/fintegre-brand-book.html', html);
+const shell = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>${html}</body></html>`;
+fs.writeFileSync('dist/test.html', shell);
+console.log('bytes', html.length, 'js', js.length);
