@@ -18,7 +18,7 @@ Photo (cover) → deep indigo (story + logo) → ice blue (bridge) → White Smo
 
 | # | Chapter | Content | Assets |
 |---|---|---|---|
-| 0 | Cover | Full-bleed cinematic video loop, slogan "Make every device / worth more.", minimal chapter nav, scroll cue | `cover.jpg` + `cover.mp4` (Higgsfield), fallback A2 with slow zoom |
+| 0 | Cover | Full-bleed store handover photo with slow zoom, indigo scrim rising from the bottom, white slogan "Make every device / worth more." below the handover moment, minimal chapter nav, scroll cue. Crop: desktop 58% / 40%, mobile 64% / 40% | A2 now; `cover.mp4` (Higgsfield) replaces it later |
 | 1 | What is Fintegre | One-sentence answer + 3 support points; photo darkens into indigo | A1 |
 | 2 | Values | 4 values, each with definition + behaviour example | A4, A5, F1 |
 | 3 | The Apple moment | Typographic moment + reserved slot for the official partner badge, before the visual world | — (badge from Fintegre) |
