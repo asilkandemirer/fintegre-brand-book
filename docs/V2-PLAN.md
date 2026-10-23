@@ -1,4 +1,6 @@
-# Fintegre Brand Book v2 — Production Plan
+# Fintegre Brand Book v2: Production Plan
+
+Status: built. The finished book is `dist/fintegre-brand-book.html`; this plan records the decisions behind it.
 
 Source brief: Fatih (manager) + Asilkan, Oct 2026. Goal: a brand book that is clear, persuasive and makes people dream — "a big brand can be run with this guide."
 
@@ -45,7 +47,7 @@ Photo (cover) → deep indigo (story + logo) → ice blue (bridge) → White Smo
 
 ## 5. Icons
 
-Grid 24 × 24, 2 px padding, 1.75 px stroke, round caps and joins, diagonal terminals cut at 65°, one indigo accent element per icon.
+Grid 24 × 24, 2 px padding (20 px live area), 1.75 px stroke, round caps and joins, 2 px corner radius, diagonals at 65°, one indigo accent element per icon.
 
 Set: Trade-in · Valuation · Device check · Data wipe · Instant payment · Instalments · Store · Courier pickup · Upgrade · Partner · Secure · Support.
 

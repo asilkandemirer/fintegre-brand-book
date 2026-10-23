@@ -67,10 +67,11 @@ export function logoSVGPaths(h = 100, r = 0.03) {
   });
 }
 
+let uid = 0;
 export function logoSVG({ h = 100, fill = 'currentColor', gradient = null, cls = '' } = {}) {
   const w = LOGO_W * h;
   const paths = logoSVGPaths(h);
-  const id = 'lg' + Math.random().toString(36).slice(2, 7);
+  const id = 'lg' + ++uid;
   const grad = gradient
     ? `<defs><linearGradient id="${id}" x1="${-w / 2}" y1="0" x2="${w / 2}" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${gradient[0]}"/><stop offset="1" stop-color="${gradient[1]}"/></linearGradient></defs>`
     : '';
