@@ -21,6 +21,7 @@ export const ease = {
   inExpo: (t) => (t <= 0 ? 0 : Math.pow(2, 10 * t - 10)),
   inOutExpo: (t) =>
     t <= 0 ? 0 : t >= 1 ? 1 : t < 0.5 ? Math.pow(2, 20 * t - 10) / 2 : (2 - Math.pow(2, -20 * t + 10)) / 2,
+  inBack: (t, s = 1.70158) => (s + 1) * t * t * t - s * t * t,
   outBack: (t, s = 1.70158) => 1 + (s + 1) * Math.pow(t - 1, 3) + s * Math.pow(t - 1, 2),
   inOutSine: (t) => -(Math.cos(Math.PI * t) - 1) / 2,
   outElastic: (t) => {

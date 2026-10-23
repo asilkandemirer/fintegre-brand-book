@@ -1,1101 +1,936 @@
 <title>Fintegre Brand Book</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Fintegre brand book v2: what Fintegre is, its values, the mark, colour, type, icons, photography, voice and the brand in use.">
+<meta name="description" content="Fintegre brand book: a scroll-timed film through the story, the mark, colour, type, photography, icons, social and the brand in use.">
 <style>
 /*FONTS*/
-/* Layout: one long editorial scroll. A fixed backdrop changes colour as you read:
-   photo → night indigo → indigo → ice → smoke → white → photo. Pinned scenes only where motion explains something. */
+/* Layout: one fixed stage. Scrolling is a clock, never a movement: nothing travels up or down.
+   Things arrive by opening, turning, zooming or typing, and leave to the left or by shrinking away. */
 :root {
   --graphite: #0F1115; --titanium: #A7B0BE; --indigo: #3047EC; --ice: #B7D7FF; --smoke: #F5F7FA; --night: #1A246B; --white: #FFFFFF;
   --f-display: "Geologica", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --pad: clamp(16px, 4.4vw, 72px);
-  --gl: max(var(--pad), env(safe-area-inset-left, 0px));
-  --gr: max(var(--pad), env(safe-area-inset-right, 0px));
-  --maxw: 1360px;
-  --sec-y: clamp(72px, 11vh, 128px);
-  --ease: cubic-bezier(.2, .7, .1, 1);
-  --bd: var(--night);
+  --gl: max(clamp(16px, 5vw, 88px), env(safe-area-inset-left, 0px));
+  --gr: max(clamp(16px, 5vw, 88px), env(safe-area-inset-right, 0px));
+  --top: calc(env(safe-area-inset-top, 0px) + clamp(70px, 10svh, 104px));
+  --bot: calc(env(safe-area-inset-bottom, 0px) + clamp(52px, 8svh, 84px));
+  --fs-display: clamp(42px, min(8vw, 12.5svh), 132px);
+  --fs-h1: clamp(30px, min(5vw, 8.4svh), 84px);
+  --fs-h2: clamp(26px, min(3.7vw, 6.4svh), 60px);
+  --fs-h3: clamp(17px, min(1.7vw, 2.9svh), 27px);
+  --fs-lede: clamp(15px, min(1.4vw, 2.4svh), 22px);
+  --fs-body: clamp(13px, min(1.05vw, 1.85svh), 16.5px);
+  --spring: cubic-bezier(.3, 1.5, .5, 1);
+  --soft: cubic-bezier(.16, 1, .3, 1);
+  --backin: cubic-bezier(.55, -0.5, .8, .2);
+  --inout: cubic-bezier(.7, 0, .2, 1);
+  --bg: #FFFFFF;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: auto; }
-body { margin: 0; background: var(--night); color: var(--smoke); font-family: var(--f-display); font-weight: 300; font-size: 16px; line-height: 1.55;
-  overflow-x: clip; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--bd); }
+html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: none; }
+body { background: var(--bg); color: var(--graphite); font-family: var(--f-display); font-weight: 300; -webkit-font-smoothing: antialiased; touch-action: none; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--bg); }
 img { max-width: 100%; display: block; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
-a { color: inherit; }
-:focus-visible { outline: 2px solid var(--acc, var(--ice)); outline-offset: 3px; border-radius: 4px; }
-h1, h2, h3, h4, p, ul, ol, figure { margin: 0; }
+h1, h2, h3, p, ul, ol, figure { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
+:focus-visible { outline: 2px solid var(--indigo); outline-offset: 3px; border-radius: 4px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* ---------- tone: each section carries its own ink; the backdrop carries the colour ---------- */
-#backdrop { position: fixed; inset: 0; z-index: 0; background: var(--bd); pointer-events: none; }
-main { position: relative; z-index: 1; }
-.sec { position: relative; }
-.dk { --ink: var(--smoke); --ink2: rgba(245, 247, 250, .76); --ink3: rgba(245, 247, 250, .52); --rule: rgba(183, 215, 255, .22);
-  --acc: var(--ice); --acc-icon: var(--ice); --card: rgba(245, 247, 250, .06); --card-ink: var(--smoke); color: var(--ink); }
-.lt { --ink: var(--graphite); --ink2: rgba(15, 17, 21, .72); --ink3: rgba(15, 17, 21, .5); --rule: rgba(15, 17, 21, .12);
-  --acc: var(--indigo); --acc-icon: var(--indigo); --card: var(--white); --card-ink: var(--graphite); color: var(--ink); }
-[data-tone="night"] { background: var(--night); } [data-tone="indigo"] { background: var(--indigo); }
-[data-tone="ice"] { background: var(--ice); } [data-tone="smoke"] { background: var(--smoke); } [data-tone="white"] { background: var(--white); }
-html.js .sec[data-tone] { background: transparent; }
+/* layers */
+#bgl { position: fixed; inset: 0; background: var(--bg); z-index: 0; }
+#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 2; display: block; pointer-events: none; }
+#asc { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
+#stage { position: fixed; inset: 0; z-index: 4; overflow: hidden; pointer-events: none; }
+#stage a, #stage button { pointer-events: auto; }
+.scn { position: absolute; inset: 0; visibility: hidden; contain: layout paint; }
+.scn.vis { visibility: visible; }
+.scn:not(.vis) .fx { visibility: hidden !important; }
+.frame { position: absolute; top: var(--top); bottom: var(--bot); left: var(--gl); right: var(--gr); }
+.lt { --ink: var(--graphite); --ink2: rgba(15, 17, 21, .68); --ink3: rgba(15, 17, 21, .46); --rule: rgba(15, 17, 21, .12); --acc: var(--indigo); --scr: var(--indigo); --hair: rgba(48, 71, 236, .7); --card: var(--white); color: var(--ink); }
+.dk { --ink: var(--smoke); --ink2: rgba(245, 247, 250, .78); --ink3: rgba(245, 247, 250, .52); --rule: rgba(183, 215, 255, .24); --acc: var(--ice); --scr: var(--ice); --hair: rgba(183, 215, 255, .7); --card: rgba(245, 247, 250, .07); color: var(--ink); }
 
-/* ---------- type ---------- */
-.wrap { max-width: calc(var(--maxw) + var(--gl) + var(--gr)); margin-inline: auto; padding-left: var(--gl); padding-right: var(--gr); }
-.pad { padding-block: var(--sec-y); }
-.eyebrow { font-family: var(--f-mono); font-weight: 500; font-size: 12px; line-height: 1.5; letter-spacing: .16em; text-transform: uppercase; color: var(--acc);
-  display: inline-flex; align-items: center; gap: 12px; }
-.eyebrow::before { content: ""; width: 2px; height: 16px; background: currentColor; transform: skewX(-25deg); }
-.eyebrow.plain::before { display: none; }
-.h-display { font-weight: 580; font-size: clamp(46px, 7vw, 112px); line-height: .96; letter-spacing: -.035em; text-wrap: balance; }
-.h1 { font-weight: 560; font-size: clamp(36px, 4.9vw, 76px); line-height: 1; letter-spacing: -.032em; text-wrap: balance; }
-.h2 { font-weight: 560; font-size: clamp(32px, 4vw, 60px); line-height: 1.02; letter-spacing: -.03em; text-wrap: balance; }
-.h3 { font-weight: 500; font-size: clamp(20px, 1.7vw, 26px); line-height: 1.18; letter-spacing: -.015em; text-wrap: balance; }
-.lede { font-size: clamp(18px, 1.45vw, 22px); line-height: 1.5; color: var(--ink2); max-width: 58ch; }
-.txt { font-size: 16px; line-height: 1.6; color: var(--ink2); max-width: 62ch; }
-.small { font-size: 14px; line-height: 1.55; color: var(--ink2); }
-.mono { font-family: var(--f-mono); font-weight: 500; font-size: 12px; letter-spacing: .08em; font-variant-numeric: tabular-nums; }
-.cap { font-family: var(--f-mono); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink3); }
+/* type */
+.eyebrow { font-family: var(--f-mono); font-weight: 500; font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--acc); }
+.display { font-weight: 580; font-size: var(--fs-display); line-height: .95; letter-spacing: -.04em; }
+.h1 { font-weight: 570; font-size: var(--fs-h1); line-height: 1; letter-spacing: -.034em; }
+.h2 { font-weight: 560; font-size: var(--fs-h2); line-height: 1.03; letter-spacing: -.03em; }
+.h3 { font-weight: 500; font-size: var(--fs-h3); line-height: 1.2; letter-spacing: -.015em; }
+.lede { font-size: var(--fs-lede); line-height: 1.5; color: var(--ink2); max-width: 44ch; }
+.body { font-size: var(--fs-body); line-height: 1.6; color: var(--ink2); max-width: 46ch; }
+.mono { font-family: var(--f-mono); font-weight: 500; font-size: 12px; letter-spacing: .06em; font-variant-numeric: tabular-nums; }
+.cap { font-family: var(--f-mono); font-weight: 500; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink3); }
 .acc { color: var(--acc); }
-.head { display: grid; gap: 20px; margin-bottom: clamp(40px, 6vw, 80px); max-width: 980px; }
-.head .h1, .head .h2 { max-width: 20ch; }
+.h1.long { font-size: calc(var(--fs-h1) * .78); }
+.h1 em, .h2 em, .display em, .lede em { font-style: normal; color: var(--acc); }
 
-/* ---------- shared blocks ---------- */
-.card { background: var(--card); color: var(--card-ink); border-radius: 18px; overflow: hidden; }
-.lt .card { box-shadow: 0 1px 0 rgba(15, 17, 21, .04), 0 12px 32px -18px rgba(15, 17, 21, .18); }
-.rule-list { display: grid; gap: 0; border-top: 1px solid var(--rule); }
-.rule-list li { display: grid; grid-template-columns: minmax(120px, 220px) 1fr; gap: 8px 24px; padding: 18px 0; border-bottom: 1px solid var(--rule); }
-.rule-list li > :first-child { font-weight: 500; color: var(--ink); }
-.rule-list li > :last-child { color: var(--ink2); }
+/* text effect (typed in, blown out to the left) */
+.fx { visibility: hidden; position: relative; }
+.fx.fx-on { visibility: visible; }
+.fx .w { display: inline-block; white-space: nowrap; }
+.fx .c { display: inline-block; text-align: center; white-space: pre; }
+.fx .c.scr { color: var(--scr); }
+.fx .c.acc { color: var(--acc); }
+.fx .c.lk { animation: lk .42s ease-out; }
+@keyframes lk { 0% { color: var(--acc); text-shadow: 0 0 20px var(--acc); } 100% { text-shadow: 0 0 0 transparent; } }
+.fx-body, .fx-label { clip-path: inset(calc(50% - 1px) -14% calc(50% - 1px) -14%); }
+.fx-body.fx-open, .fx-label.fx-open { clip-path: inset(-30% -14% -30% -14%); transition: clip-path .52s var(--soft) .13s; }
+.fx-body::before, .fx-label::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--hair); clip-path: inset(0 0 0 100%); pointer-events: none; }
+.fx-open::before { animation: hairIn .6s cubic-bezier(.65, 0, .35, 1) forwards; }
+@keyframes hairIn { 0% { clip-path: inset(0 0 0 100%); } 38% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 100% 0 0); } }
+.fx-body.fx-close, .fx-label.fx-close { clip-path: inset(calc(50% - 1px) -14% calc(50% - 1px) -14%); transform: translate3d(-3%, 0, 0) scaleX(.96); transition: clip-path .24s cubic-bezier(.7, 0, .84, 0), transform .42s cubic-bezier(.7, 0, .84, 0); }
+.fx-close::before { animation: hairOut .46s cubic-bezier(.7, 0, .3, 1) forwards; }
+@keyframes hairOut { 0% { clip-path: inset(0 0 0 0); opacity: 0; } 40% { clip-path: inset(0 0 0 0); opacity: 1; } 100% { clip-path: inset(0 100% 0 0); opacity: 1; } }
+
+/* timed elements: pre → on → post */
+.st-pre[data-e="pop"] { transform: scale(.3); opacity: 0; }
+.st-pre[data-e="open"] { clip-path: inset(50% 50% 50% 50% round var(--r, 20px)); }
+.st-pre[data-e="flip"] { transform: perspective(1400px) rotateY(-84deg) scale(.92); opacity: 0; }
+.st-pre[data-e="zoom"] { transform: scale(1.4); opacity: 0; }
+.st-pre[data-e="right"] { transform: translateX(70vw) skewX(-8deg); opacity: 0; }
+.st-pre[data-e="wipe"] { clip-path: polygon(-40% 0, -40% 0, -80% 100%, -80% 100%); }
+.st-pre[data-e="draw"] { transform: scaleX(0); }
+.st-pre[data-e="tilt"] { transform: perspective(1200px) rotateX(70deg) scale(.8); opacity: 0; }
+.st-on[data-e="open"] { clip-path: inset(0 0 0 0 round var(--r, 20px)); }
+.st-on[data-e="wipe"], .st-on[data-x="cut"] { clip-path: polygon(-40% 0, 140% 0, 100% 100%, -80% 100%); }
+[data-e="draw"] { transform-origin: left center; }
+.st-post[data-x="left"] { transform: translateX(-115vw) skewX(10deg); }
+.st-post[data-x="shrink"] { transform: scale(0); }
+.st-post[data-x="cut"] { clip-path: polygon(140% 0, 140% 0, 100% 100%, 100% 100%); }
+.st-post[data-x="flip"] { transform: perspective(1400px) rotateY(84deg) scale(.92); opacity: 0; }
+.st-post[data-x="zoom"] { transform: scale(.55); opacity: 0; }
+.st-post[data-x="fade"] { opacity: 0; }
+.st-on { transform: none; opacity: 1; transition: transform .9s var(--spring) var(--d, 0ms), opacity .25s linear var(--d, 0ms), clip-path .85s var(--soft) var(--d, 0ms); }
+.st-on[data-e="open"], .st-on[data-e="wipe"], .st-on[data-e="draw"] { transition: transform .8s var(--soft) var(--d, 0ms), opacity .25s linear var(--d, 0ms), clip-path .85s var(--soft) var(--d, 0ms); }
+.st-post { transition: transform .5s var(--backin) var(--xd, 0ms), opacity .16s linear calc(var(--xd, 0ms) + .34s), clip-path .6s var(--inout) var(--xd, 0ms); }
+.st-post[data-x="left"] { transition: transform .85s var(--inout) var(--xd, 0ms), opacity .2s linear calc(var(--xd, 0ms) + .62s); }
+.st-post[data-x="flip"], .st-post[data-x="zoom"] { transition: transform .5s var(--inout) var(--xd, 0ms), opacity .3s linear calc(var(--xd, 0ms) + .12s); }
+.st-pre { transition: transform .45s var(--inout), opacity .2s linear, clip-path .45s var(--inout); }
+
+/* ---------- chrome ---------- */
+.top { position: fixed; z-index: 20; left: 0; right: 0; top: 0; padding: calc(env(safe-area-inset-top, 0px) + 18px) var(--gr) 0 var(--gl); display: flex; align-items: center; gap: 18px; color: var(--nav, var(--graphite)); pointer-events: none; transition: color .4s; }
+.top > * { pointer-events: auto; }
+.brand { height: 24px; display: block; }
+.brand svg { height: 100%; width: auto; display: block; }
+.brand > span { display: block; height: 100%; }
+.brand > .on-dark { display: none; }
+html[data-nav="dark"] .brand > .on-dark { display: block; } html[data-nav="dark"] .brand > .on-light { display: none; }
+html[data-nav="dark"] .top { --nav: var(--smoke); }
+.ctr { margin: 0 auto; font-family: var(--f-mono); font-weight: 500; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; --scr: var(--indigo); --acc: var(--indigo); }
+html[data-nav="dark"] .ctr { --scr: var(--ice); --acc: var(--ice); }
+.tools { display: flex; gap: 8px; }
+.tb { height: 34px; padding: 0 13px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; background: rgba(15, 17, 21, .06); }
+html[data-nav="dark"] .tb { background: rgba(245, 247, 250, .14); }
+.tb.pri { background: var(--indigo); color: var(--white); }
+html[data-nav="dark"] .tb.pri { background: var(--ice); color: var(--graphite); }
+.dot { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid currentColor; }
+.tb[aria-pressed="true"] .dot { background: currentColor; }
+.bar { position: fixed; z-index: 20; left: var(--gl); right: var(--gr); bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); height: 2px; background: rgba(127, 140, 170, .22); border-radius: 2px; overflow: hidden; pointer-events: none; }
+.bar i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--indigo), var(--ice)); transform-origin: left; transform: scaleX(var(--p, 0)); }
+@media (max-width: 760px) { .ctr { display: none; } .tools { margin-left: auto; } }
+.index { position: fixed; inset: 0; z-index: 70; background: var(--night); color: var(--smoke); overflow-y: auto; padding: calc(env(safe-area-inset-top, 0px) + 20px) var(--gr) calc(env(safe-area-inset-bottom, 0px) + 32px) var(--gl); touch-action: pan-y; }
+.index-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5vh; }
+.index-top svg { height: 24px; width: auto; }
+.index ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 0 40px; }
+.index li button { width: 100%; text-align: left; display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: baseline; padding: 15px 0; border-bottom: 1px solid rgba(183, 215, 255, .2); }
+.index .n { font-family: var(--f-mono); font-size: 11px; letter-spacing: .12em; color: rgba(245, 247, 250, .55); }
+.index .t { font-size: clamp(19px, 2vw, 26px); font-weight: 500; letter-spacing: -.02em; }
+.index li button:hover .t { color: var(--ice); }
+
+/* ---------- shared pieces ---------- */
+.card { background: var(--card); border-radius: 20px; overflow: hidden; }
+.lt .card { box-shadow: 0 1px 0 rgba(15, 17, 21, .04), 0 18px 40px -24px rgba(15, 17, 21, .28); }
+.chip { font-family: var(--f-mono); font-weight: 500; font-size: 12px; letter-spacing: .06em; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--rule); white-space: nowrap; display: inline-block; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink); }
-.clip65 { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22%), calc(100% - 10.3%) 100%, 0 100%); }
-.figcap { margin-top: 12px; }
-.g2, .g3, .g4 { display: grid; gap: clamp(16px, 2vw, 28px); }
-.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-@media (max-width: 1000px) { .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 640px) { .g2, .g3, .g4 { grid-template-columns: minmax(0, 1fr); } .rule-list li { grid-template-columns: 1fr; } }
+.ab { position: absolute; }
+.stack { display: grid; gap: clamp(10px, 1.6svh, 18px); align-content: start; }
+.lcol { position: absolute; left: 0; top: 0; width: min(36%, 520px); display: grid; gap: clamp(12px, 2.2svh, 22px); align-content: start; }
+.lcol > .h1, .lcol > .h2 { grid-area: 2 / 1; }
+.lcol > .lede, .lcol > .isteps { grid-area: 3 / 1; }
+html.measuring [data-e], html.measuring [data-x], html.measuring .fx .c { transform: none !important; transition: none !important; }
+html.boot * { transition: none !important; }
+.strike { position: relative; }
+.strike::after { content: ""; position: absolute; left: -2%; right: -2%; top: 55%; height: 2px; background: var(--acc); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--inout) .55s; }
+.strike.st-on::after { transform: scaleX(1); }
+@media (max-width: 760px) { .lcol { width: 100% !important; } }
 
-/* strike: drawn by scroll (JS sets --s); struck at rest without JS */
-.strike { background: linear-gradient(var(--acc), var(--acc)) no-repeat 0 58% / calc(var(--s, 1) * 100%) 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-
-/* ---------- nav ---------- */
-.nav { position: fixed; z-index: 50; left: 0; right: 0; top: 0; padding-top: calc(env(safe-area-inset-top, 0px) + 18px); padding-left: var(--gl); padding-right: var(--gr);
-  display: flex; align-items: center; gap: 24px; color: var(--nav-ink, var(--smoke)); transition: color .4s var(--ease); pointer-events: none; }
-.nav > * { pointer-events: auto; }
-.nav::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--nb, var(--night)); opacity: 0; transition: opacity .35s var(--ease), background-color .35s var(--ease); }
-html[data-scrolled] .nav::before { opacity: .86; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
-.nav { padding-bottom: 14px; }
-.nav .brand { display: block; height: 26px; }
-.nav .brand > span { display: block; height: 100%; }
-.nav .brand svg { height: 100%; width: auto; display: block; }
-.nav .brand > .lk-on-light { display: none; }
-html[data-nav="light"] .nav { --nav-ink: var(--graphite); }
-html[data-nav="light"] .nav .brand > .lk-on-light { display: block; } html[data-nav="light"] .nav .brand > .lk-on-dark { display: none; }
-.nav-groups { display: flex; gap: 28px; margin-left: auto; margin-right: auto; }
-.nav-groups a, .nbtn { font-family: var(--f-mono); font-weight: 500; font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; text-decoration: none; opacity: .78; transition: opacity .2s; }
-.nav-groups a:hover, .nav-groups a.on, .nbtn:hover { opacity: 1; }
-.nav-groups a.on { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
-.nav-tools { display: flex; gap: 8px; align-items: center; }
-.nbtn { height: 36px; padding: 0 14px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; opacity: 1; background: rgba(245, 247, 250, .14); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-html[data-nav="light"] .nbtn { background: rgba(15, 17, 21, .06); }
-.nbtn.pri { background: var(--ice); color: var(--graphite); }
-html[data-nav="light"] .nbtn.pri { background: var(--indigo); color: var(--white); }
-.snd-dot { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid currentColor; }
-.nbtn[aria-pressed="true"] .snd-dot { background: currentColor; }
-.prog { position: fixed; z-index: 51; left: 0; right: 0; top: env(safe-area-inset-top, 0px); height: 2px; background: linear-gradient(90deg, var(--indigo), var(--ice)); transform-origin: left; transform: scaleX(var(--prog, 0)); }
-@media (max-width: 960px) { .nav-groups { display: none; } .nav-tools { margin-left: auto; } .nbtn .hide-s { display: none; } }
-
-/* index */
-.index { position: fixed; z-index: 70; inset: 0; background: var(--night); color: var(--smoke); overflow-y: auto;
-  padding: calc(env(safe-area-inset-top, 0px) + 20px) var(--gr) calc(env(safe-area-inset-bottom, 0px) + 40px) var(--gl); }
-.index-top { display: flex; justify-content: space-between; align-items: center; max-width: var(--maxw); margin: 0 auto 6vh; }
-.index-top svg { height: 26px; width: auto; }
-.index ol { max-width: var(--maxw); margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 0 40px; }
-.index li a { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid rgba(183, 215, 255, .2); text-decoration: none; }
-.index li a:hover .t { color: var(--ice); }
-.index .n, .index .k { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .12em; color: rgba(245, 247, 250, .55); text-transform: uppercase; }
-.index .t { font-size: clamp(20px, 2vw, 28px); font-weight: 500; letter-spacing: -.02em; transition: color .2s; }
-
-/* ---------- 00 cover ---------- */
-.cover { height: 145vh; }
-.cover-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
-.cover-media { position: absolute; inset: 0; transform: scale(calc(1.04 + var(--cp, 0) * .08)); transform-origin: 56% 45%; }
-.cover-media img { width: 100%; height: 100%; object-fit: cover; object-position: 58% 40%; animation: kb 26s ease-in-out infinite alternate; }
-@keyframes kb { from { transform: scale(1); } to { transform: scale(1.06) translate(-1%, -.6%); } }
-.cover-veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(26, 36, 107, .32) 0%, rgba(26, 36, 107, 0) 22%, rgba(26, 36, 107, 0) 44%, rgba(26, 36, 107, .6) 74%, rgba(26, 36, 107, .94) 100%); }
-.cover-night { position: absolute; inset: 0; background: var(--night); opacity: calc(var(--cp, 0) * 1.1); }
-.cover-head { position: absolute; left: 0; right: 0; bottom: clamp(88px, 11vh, 120px); transform: translateY(calc(var(--cp, 0) * -10vh)); opacity: calc(1 - var(--cp, 0) * 1.6); }
-.cover-head .eyebrow { margin-bottom: 22px; color: var(--smoke); }
-.cover-head .eyebrow::before { background: var(--ice); }
-.cover-head .h-display span { display: block; color: var(--ice); }
-.cue { position: absolute; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 26px); transform: translateX(-50%); text-align: center; text-decoration: none;
-  font-family: var(--f-mono); font-size: 11px; letter-spacing: .22em; opacity: calc(.8 - var(--cp, 0) * 2); }
-.cue i { display: block; margin: 6px auto 0; width: 1px; height: 22px; background: currentColor; animation: cue 2.2s var(--ease) infinite; transform-origin: top; }
+/* ---------- intro ---------- */
+#heroph { position: fixed; inset: 0; z-index: 1; visibility: hidden; overflow: hidden; }
+#heroph img { width: 100%; height: 100%; object-fit: cover; object-position: 58% 42%; }
+#heroph .veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(26, 36, 107, .28) 0%, rgba(26, 36, 107, 0) 24%, rgba(26, 36, 107, 0) 46%, rgba(26, 36, 107, .62) 76%, rgba(26, 36, 107, .92) 100%); opacity: var(--veil, 0); }
+.intro-mark { position: absolute; left: 50%; top: 44%; width: min(34vw, 56svh, 420px); transform: translate(-50%, -50%); }
+.intro-mark svg { width: 100%; height: auto; display: block; overflow: visible; }
+.intro-mark path { animation: asm 1.5s var(--spring) both; }
+.intro-mark path:nth-child(1) { --dx: 34px; --dy: -73px; animation-delay: .25s; }
+.intro-mark path:nth-child(2) { --dx: -28px; --dy: 60px; animation-delay: .38s; }
+.intro-mark path:nth-child(3) { --dx: -42px; --dy: 90px; animation-delay: .5s; }
+.intro-mark path:nth-child(4) { --dx: 24px; --dy: -52px; animation-delay: .6s; }
+@keyframes asm { 0% { transform: translate(var(--dx), var(--dy)); opacity: 0; } 30% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+.intro-wm { position: absolute; left: 50%; top: calc(44% + min(13vw, 21svh, 160px)); transform: translateX(-50%); width: min(30vw, 260px); clip-path: inset(0 100% 0 0); animation: wm .9s var(--soft) 1.5s forwards; }
+.intro-wm svg { width: 100%; height: auto; display: block; }
+@keyframes wm { to { clip-path: inset(0 0 0 0); } }
+.intro-eb { position: absolute; left: 0; right: 0; top: 0; text-align: center; }
+.intro-sl { position: absolute; left: 0; right: 0; bottom: 7svh; text-align: center; }
+.cue { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .22em; color: var(--ink3); text-align: center; opacity: 0; animation: cueIn .6s ease 2.6s forwards; }
+.cue i { display: block; margin: 8px auto 0; width: 1px; height: 22px; background: currentColor; transform-origin: top; animation: cue 2s var(--inout) 2.8s infinite; }
+@keyframes cueIn { to { opacity: 1; } }
 @keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
-@media (max-width: 700px) { .cover-media img { object-position: 64% 40%; } }
+@media (max-width: 760px) { .intro-mark { width: min(64vw, 36svh); } .intro-wm { top: calc(44% + min(25vw, 15svh)); width: 46vw; } }
 
-/* ---------- 01 what ---------- */
-.what-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 88px); align-items: end; }
-.what-grid .h1 { max-width: 17ch; margin: 22px 0 28px; }
-.what-img img { aspect-ratio: 4 / 5; width: 100%; object-fit: cover; object-position: 70% 50%; border-radius: 18px 18px 0 18px; }
-.steps3 { margin-top: clamp(48px, 7vw, 96px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); counter-reset: st; }
-.steps3 li { padding: 28px 26px 30px; border-radius: 18px; background: var(--card); display: grid; gap: 12px; align-content: start; }
-.steps3 .ico { width: 30px; height: 30px; color: var(--smoke); }
-.steps3 .num { font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; color: var(--ice); }
-.isnot { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; padding-top: 32px; border-top: 1px solid var(--rule); }
-.isnot .eyebrow { color: var(--ink3); margin-bottom: 16px; }
-.nots { display: grid; gap: 10px; font-size: clamp(18px, 1.6vw, 24px); color: var(--ink2); }
-@media (max-width: 860px) { .what-grid, .isnot { grid-template-columns: minmax(0, 1fr); } .steps3 { grid-template-columns: minmax(0, 1fr); } .what-img { max-width: 440px; } }
+/* ---------- hero ---------- */
+.hero-t { position: absolute; left: 0; right: 0; bottom: 0; display: grid; gap: 18px; }
 
-/* ---------- 02 values ---------- */
-.values { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(16px, 1.6vw, 24px); }
-.val { display: grid; grid-template-rows: auto 1fr; }
-.val img { aspect-ratio: 4 / 5; width: 100%; object-fit: cover; }
-.val-body { padding: 24px 24px 28px; display: grid; gap: 12px; align-content: start; }
-.val-body .num { font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; color: var(--ice); }
-.val-body .do { margin-top: 6px; padding-top: 14px; border-top: 1px solid var(--rule); font-size: 14px; color: var(--ink2); }
-.val-body .do b { display: block; font-family: var(--f-mono); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
-@media (max-width: 1100px) { .values { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 600px) { .values { grid-template-columns: minmax(0, 1fr); } .val img { aspect-ratio: 16 / 10; } }
+/* ---------- what ---------- */
+.what-img { position: absolute; right: 0; top: 0; width: min(46%, 560px); height: 100%; --r: 22px; }
+.what-img img { width: 100%; height: 100%; object-fit: cover; object-position: 66% 50%; border-radius: 22px 22px 0 22px; clip-path: polygon(0 0, 100% 0, 100% 80%, 90.7% 100%, 0 100%); }
+.tiles { position: absolute; right: 0; top: 0; width: min(52%, 720px); display: grid; gap: 14px; }
+.tile { display: grid; grid-template-columns: 52px 1fr; gap: 6px 18px; align-items: start; padding: clamp(16px, 2.6svh, 26px) 24px; }
+.tile .ico { width: 34px; height: 34px; color: var(--graphite); grid-row: span 2; }
+.tile .n { font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; color: var(--indigo); }
+.isnot { position: absolute; right: 0; top: 0; width: min(52%, 720px); display: grid; gap: 28px; }
+.nots { display: grid; gap: 10px; font-size: var(--fs-h3); color: var(--ink2); }
+.nots li { width: fit-content; }
+@media (max-width: 760px) {
+  .what-img { left: 0; right: auto; top: 44%; width: 66%; height: 56%; }
+  .tiles, .isnot { left: 0; right: 0; top: 12%; width: auto; }
+  .tile { grid-template-columns: 40px 1fr; padding: 14px 16px; }
+  .tile .body { display: none; }
+}
 
-/* ---------- 03 apple ---------- */
-.apple-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
-.apple-grid .h1 { max-width: 15ch; margin: 22px 0 28px; }
-.products { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
-.products .chip { font-size: 14px; letter-spacing: .02em; padding: 10px 18px; border-color: rgba(245, 247, 250, .4); }
-.partner { padding: clamp(24px, 3vw, 40px); border-radius: 20px; background: rgba(15, 17, 21, .16); }
-.plock { display: grid; grid-template-columns: auto auto auto; align-items: center; justify-content: center; gap: clamp(16px, 3vw, 40px); padding: clamp(28px, 4vw, 56px) 8px; }
-.plock svg.lockup { height: clamp(34px, 4vw, 52px); width: auto; }
-.plock .div65 { width: 2px; height: clamp(56px, 6vw, 84px); background: var(--ice); transform: skewX(-25deg); }
-.slot { width: clamp(108px, 12vw, 160px); aspect-ratio: 1; border: 1.5px dashed rgba(245, 247, 250, .55); border-radius: 14px; display: grid; place-content: center; text-align: center; gap: 6px; padding: 10px; }
-.slot .cap { color: rgba(245, 247, 250, .7); }
-.partner .rule-list { margin-top: 16px; }
-.legal { margin-top: 28px; font-size: 12px; color: var(--ink3); max-width: 70ch; }
-@media (max-width: 900px) { .apple-grid { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 480px) { .plock { grid-template-columns: 1fr; justify-items: center; } .plock .div65 { height: 40px; } }
+/* ---------- values ---------- */
+.vslot { position: absolute; right: 0; top: 0; bottom: 0; width: min(58%, 820px); display: grid; align-items: center; }
+.vcard { grid-area: 1 / 1; display: grid; grid-template-columns: 1fr 1fr; height: min(62svh, 520px); }
+.vcard img { width: 100%; height: 100%; object-fit: cover; }
+.vbody { padding: clamp(20px, 3.4svh, 40px) clamp(20px, 2.6vw, 40px); display: grid; align-content: center; gap: 14px; }
+.vbody .n { font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; color: var(--indigo); }
+.vbody .do { margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.vbody .do b { display: block; font-family: var(--f-mono); font-weight: 500; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
+@media (max-width: 760px) {
+  .vslot { left: 0; width: auto; top: 30%; align-items: end; }
+  .vcard { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; height: 100%; }
+  .vbody { padding: 16px 18px; gap: 6px; }
+  .vbody .h2 { font-size: 24px; }
+}
 
-/* ---------- 04 logo scene ---------- */
-.scene { position: relative; }
-.stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
-#logo { height: 330vh; }
-#logo-gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.logo-fallback { position: absolute; inset: 0; display: none; place-items: center; }
-.logo-fallback svg { width: min(46vw, 520px); height: auto; }
-html.no-gl .logo-fallback { display: grid; } html.no-gl #logo-gl { display: none; }
-.logo-copy { position: relative; z-index: 2; height: 100%; display: grid; align-content: center; }
-.steps { position: relative; max-width: 540px; min-height: 300px; display: grid; }
-.step { align-self: center; display: grid; gap: 18px; transition: opacity .6s var(--ease), transform .6s var(--ease); }
-html:not(.js) .steps { gap: 28px; }
-html.js .step { grid-area: 1 / 1; opacity: 0; transform: translateY(18px); }
-html.js .step.on { opacity: 1; transform: none; }
-.step .h1 { margin-top: 10px; }
-.meter { display: flex; gap: 6px; margin-top: 34px; }
-.meter i { width: 26px; height: 3px; border-radius: 2px; background: rgba(245, 247, 250, .25); transform: skewX(-25deg); transition: background .4s; }
-.meter i.on { background: var(--ice); }
-@media (max-width: 760px) { .logo-copy { align-content: end; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 9vh); } .steps { min-height: 250px; } }
+/* ---------- apple ---------- */
+.ppanel { position: absolute; right: 0; top: 0; width: min(52%, 700px); display: grid; gap: clamp(10px, 2svh, 20px); padding: clamp(18px, 3svh, 36px); border-radius: 22px; background: rgba(15, 17, 21, .16); }
+.plock { display: flex; align-items: center; justify-content: center; gap: clamp(14px, 2.6vw, 36px); padding: clamp(10px, 2.6svh, 32px) 0; }
+.plock svg.lockup { height: clamp(28px, 4.4svh, 50px); width: auto; }
+.plock .div65 { width: 2px; height: clamp(46px, 8svh, 80px); background: var(--ice); transform: skewX(-25deg); }
+.plock .div65.st-pre { transform: skewX(-25deg) scaleY(0); }
+.slot { width: clamp(86px, 14svh, 150px); aspect-ratio: 1; border: 1.5px dashed rgba(245, 247, 250, .6); border-radius: 14px; display: grid; place-content: center; text-align: center; gap: 6px; padding: 8px; }
+.slot .cap { color: rgba(245, 247, 250, .75); }
+.prules { display: grid; }
+.prules li { display: grid; grid-template-columns: 90px 1fr; gap: 16px; padding: clamp(7px, 1.4svh, 13px) 0; border-bottom: 1px solid var(--rule); font-size: var(--fs-body); }
+.prules li b { font-weight: 500; }
+.prules li span { color: var(--ink2); }
+.legal { font-size: 11px; color: var(--ink3); max-width: 60ch; }
+@media (max-width: 760px) {
+  .ppanel { left: 0; width: auto; top: 0; }
+  .prules li { grid-template-columns: 1fr; gap: 2px; }
+}
 
-/* ---------- 04b logo rules ---------- */
-.spec { padding: clamp(20px, 2.4vw, 32px); display: grid; gap: 14px; align-content: start; }
-.spec .art { aspect-ratio: 4 / 3; display: grid; place-items: center; background: var(--smoke); border-radius: 12px; }
-.spec .art svg { width: 84%; height: auto; }
-.minis { display: grid; gap: 18px; justify-items: start; width: 84%; }
-.minis div { display: flex; align-items: center; gap: 14px; }
-.minis svg.lockup { height: 22px; width: auto; } .minis svg.mark { height: 20px; width: auto; }
-.vers { margin-top: clamp(28px, 3vw, 44px); }
-.ver { aspect-ratio: 4 / 3; border-radius: 16px; display: grid; place-items: center; position: relative; overflow: hidden; }
-.ver svg.lockup { width: 58%; height: auto; position: relative; }
-.ver .cap { position: absolute; left: 16px; bottom: 14px; }
+/* ---------- logo / digits / console ---------- */
+.sweep { position: fixed; z-index: 3; left: 0; top: 0; width: 2px; height: 160vmax; background: linear-gradient(180deg, transparent, var(--ice) 30%, #fff 50%, var(--ice) 70%, transparent); box-shadow: 0 0 24px var(--ice); opacity: 0; pointer-events: none; }
+.console { position: absolute; right: 0; top: 50%; width: min(48%, 600px); translate: 0 -50%; padding: clamp(16px, 2.8svh, 30px); border-radius: 22px; background: rgba(245, 247, 250, .08); box-shadow: inset 0 0 0 1px rgba(183, 215, 255, .26); display: grid; gap: clamp(8px, 1.6svh, 16px); color: var(--smoke); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.con-h { display: flex; justify-content: space-between; align-items: center; }
+.live { width: 8px; height: 8px; border-radius: 50%; background: #7CFFB2; box-shadow: 0 0 12px #7CFFB2; animation: blink 1.4s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: .35; } }
+.con-dev b { font-size: var(--fs-h3); font-weight: 500; display: block; }
+.con-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.con-checks li { display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 10px; background: rgba(245, 247, 250, .06); font-size: 13px; }
+.con-checks li span { font-family: var(--f-mono); color: var(--ice); }
+.con-val { display: flex; justify-content: space-between; align-items: end; gap: 12px; padding-top: 6px; border-top: 1px solid rgba(183, 215, 255, .2); }
+.con-val b { font-size: clamp(32px, 6svh, 60px); font-weight: 580; letter-spacing: -.04em; line-height: 1; color: var(--white); font-variant-numeric: tabular-nums; }
+.bars { display: flex; align-items: end; gap: 6px; height: clamp(34px, 7svh, 64px); }
+.bars i { width: 12px; border-radius: 3px 3px 0 0; background: linear-gradient(180deg, var(--ice), var(--indigo)); }
+@media (max-width: 760px) {
+  .console { left: 0; width: auto; top: auto; bottom: 0; translate: none; }
+  .con-checks li { padding: 8px 10px; font-size: 12px; }
+}
+
+/* ---------- logo system ---------- */
+.sys3 { position: absolute; left: 0; right: 0; top: 18%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.spec { padding: clamp(14px, 2.2svh, 24px); display: grid; gap: 10px; }
+.spec .art { aspect-ratio: 16 / 10; display: grid; place-items: center; background: var(--smoke); border-radius: 12px; }
+.spec .art svg { width: 82%; height: 82%; }
+.construct .c-guide line, .construct .c-base line { stroke-dasharray: 400; stroke-dashoffset: 400; }
+.st-on .construct .c-guide line { animation: dash 1.4s var(--inout) .5s forwards; }
+.st-on .construct .c-base line { animation: dash 1.2s var(--inout) .3s forwards; }
+@keyframes dash { to { stroke-dashoffset: 0; } }
+.minis { display: grid; gap: 16px; justify-items: start; }
+.minis div { display: flex; align-items: center; gap: 12px; }
+.minis svg.lockup { height: 20px; width: auto; } .minis svg.mark { height: 18px; width: auto; }
+.vers { position: absolute; left: 0; right: 0; top: 16%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.miss { position: absolute; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.ver { aspect-ratio: 4 / 3; border-radius: 14px; display: grid; place-items: center; position: relative; overflow: hidden; }
+.ver svg.lockup { width: 60%; height: auto; position: relative; }
+.ver .cap { position: absolute; left: 12px; bottom: 10px; }
 .ver img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.misuse .ver svg.mark { width: 34%; height: auto; }
-.m-rot, .m-stretch, .m-fx, .m-skew { display: contents; }
-.m-rot > svg { transform: rotate(20deg); } .m-stretch > svg { transform: scaleX(1.45); } .m-skew > svg { transform: skewX(18deg); }
-.m-fx > svg { filter: drop-shadow(0 10px 8px rgba(15, 17, 21, .45)) drop-shadow(0 0 18px rgba(48, 71, 236, .8)); }
-.avoid::before { content: ""; position: absolute; right: 18px; top: 16px; width: 2px; height: 26px; background: var(--indigo); transform: skewX(-25deg); }
-.misuse .cap { color: var(--graphite); }
+.miss .ver { aspect-ratio: 1; background: var(--white); box-shadow: inset 0 0 0 1px var(--rule); }
+.miss .ver svg.mark { width: 46%; height: auto; }
+.miss .ver::after { content: ""; position: absolute; right: 14px; top: 12px; width: 2px; height: 22px; background: var(--indigo); transform: skewX(-25deg) scaleY(0); transform-origin: top; transition: transform .4s var(--soft) .5s; }
+.miss .ver.st-on::after { transform: skewX(-25deg) scaleY(1); }
+.m-rot > svg { transform: rotate(20deg); } .m-str > svg { transform: scaleX(1.45); } .m-skw > svg { transform: skewX(18deg); }
+.m-fx > svg { filter: drop-shadow(0 8px 6px rgba(15, 17, 21, .45)) drop-shadow(0 0 14px rgba(48, 71, 236, .8)); }
+.m-rot, .m-str, .m-skw, .m-fx { display: contents; }
+@media (max-width: 760px) {
+  .sys3 { top: 22%; grid-template-columns: 1fr; }
+  .sys3 .spec { grid-area: 1 / 1; }
+  .vers { grid-template-columns: 1fr 1fr; top: 22%; }
+  .miss { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 
-/* ---------- 05 colour ---------- */
-.swatches { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: auto auto; gap: clamp(12px, 1.4vw, 20px); }
-.sw { border-radius: 20px; padding: clamp(20px, 2.2vw, 30px); min-height: clamp(220px, 26vw, 340px); display: grid; align-content: space-between; gap: 24px; }
-.sw.big { min-height: clamp(300px, 40vw, 520px); }
-.sw h3 { font-size: clamp(22px, 2vw, 32px); font-weight: 560; letter-spacing: -.02em; }
-.sw .codes { font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; line-height: 1.9; font-variant-numeric: tabular-nums; }
-.sw p { font-size: 14px; line-height: 1.5; max-width: 34ch; }
-.sw-indigo { background: var(--indigo); color: var(--white); }
-.sw-ice { background: var(--ice); color: var(--graphite); }
-.sw-smoke { background: var(--white); color: var(--graphite); box-shadow: inset 0 0 0 1px rgba(15, 17, 21, .1); }
-.sw-graphite { background: var(--graphite); color: var(--smoke); }
-.sw-titanium { background: var(--titanium); color: var(--graphite); }
-.swatches .sw:nth-child(4), .swatches .sw:nth-child(5) { min-height: clamp(180px, 18vw, 240px); }
-.swatches { grid-template-areas: "a b c" "a d e"; }
-.sw-indigo { grid-area: a; } .sw-ice { grid-area: b; } .sw-smoke { grid-area: c; } .sw-graphite { grid-area: d; } .sw-titanium { grid-area: e; }
-.derived { margin-top: 16px; display: flex; align-items: center; gap: 16px; padding: 16px 18px; border-radius: 14px; background: var(--white); box-shadow: inset 0 0 0 1px var(--rule); }
-.derived i { width: 44px; height: 44px; border-radius: 10px; background: var(--night); flex: none; }
-.ratio { margin-top: clamp(48px, 6vw, 80px); background: var(--white); border-radius: 20px; padding: clamp(20px, 2.4vw, 32px); }
-.ratio-bar { display: flex; height: clamp(64px, 7vw, 96px); border-radius: 16px; overflow: hidden; margin: 18px 0 12px; box-shadow: inset 0 0 0 1px var(--rule); }
-.ratio-bar span { display: flex; align-items: flex-end; padding: 10px 12px; font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; min-width: 0; }
-.pairs { margin-top: clamp(48px, 6vw, 80px); }
-.pair { border-radius: 16px; padding: 20px; display: grid; gap: 22px; min-height: 168px; align-content: space-between; box-shadow: inset 0 0 0 1px rgba(15, 17, 21, .06); }
-.pair .aa { font-size: 30px; font-weight: 560; letter-spacing: -.02em; line-height: 1; }
-.pair .meta { display: flex; justify-content: space-between; gap: 12px; font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; }
-.pair .grade { padding: 3px 8px; border-radius: 6px; background: rgba(255, 255, 255, .22); box-shadow: inset 0 0 0 1px currentColor; }
-.grads { margin-top: clamp(48px, 6vw, 80px); }
-.grad { border-radius: 18px; aspect-ratio: 16 / 10; position: relative; overflow: hidden; }
-.grad .cap { position: absolute; left: 16px; bottom: 14px; }
-@media (max-width: 860px) { .swatches { grid-template-columns: 1fr 1fr; grid-template-areas: "a a" "b c" "d e"; } .sw.big { min-height: 280px; } }
+/* ---------- colour ---------- */
+.sq-row { position: absolute; left: 0; right: 0; top: 30%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(10px, 1.6vw, 24px); }
+.sq { display: grid; gap: 10px; align-content: start; }
+.sq i { display: block; aspect-ratio: 1; border-radius: 16px; width: min(100%, 22svh); }
+.sq .h3 { white-space: nowrap; }
+.cpanel { position: absolute; left: 0; right: 0; top: 22%; bottom: 0; border-radius: 26px; overflow: hidden; --r: 26px; }
+.cpanel .fill { position: absolute; inset: 0; }
+.cpanel .lab { position: absolute; left: clamp(18px, 2.6vw, 36px); bottom: clamp(16px, 3svh, 32px); display: grid; gap: 8px; }
+.pairs4 { position: absolute; left: 0; right: 0; top: 24%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.pair { border-radius: 18px; padding: 20px; min-height: clamp(150px, 28svh, 260px); display: grid; align-content: space-between; gap: 18px; }
+.pair .aa { font-size: clamp(40px, 7svh, 72px); font-weight: 580; letter-spacing: -.03em; line-height: 1; }
+.pair .m { display: flex; justify-content: space-between; gap: 10px; font-family: var(--f-mono); font-size: 12px; letter-spacing: .04em; }
+.pair .g { padding: 2px 8px; border-radius: 6px; box-shadow: inset 0 0 0 1px currentColor; height: fit-content; width: fit-content; align-self: flex-start; }
+.prop { position: absolute; left: 0; right: 0; top: 30%; height: clamp(120px, 26svh, 230px); display: flex; gap: 6px; }
+.prop span { border-radius: 16px; display: flex; align-items: flex-end; padding: 14px; font-family: var(--f-mono); font-size: 12px; letter-spacing: .04em; overflow: hidden; white-space: nowrap; min-width: 0; flex: 1; }
+@media (max-width: 760px) {
+  .sq-row { grid-template-columns: repeat(3, minmax(0, 1fr)); top: 20%; row-gap: 22px; }
+  .sq .h3 { white-space: normal; font-size: 15px; }
+  .sq .mono { font-size: 10px; }
+  .pairs4 { grid-template-columns: 1fr 1fr; top: 20%; }
+  .pair { min-height: 0; padding: 14px; } .pair .m { flex-direction: column; font-size: 11px; }
+  .prop { flex-direction: column; height: auto; top: 20%; bottom: 0; }
+}
 
-/* ---------- 06 type ---------- */
-.spec-row { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(16px, 2vw, 28px); }
-.face { padding: clamp(24px, 3vw, 40px); display: grid; gap: 18px; min-height: 360px; align-content: space-between; }
-.face .aa { font-size: clamp(120px, 16vw, 240px); line-height: .8; letter-spacing: -.05em; font-weight: 560; }
-.face.mono-face .aa { font-family: var(--f-mono); font-weight: 500; letter-spacing: -.06em; }
-.face .glyphs { font-size: clamp(16px, 1.4vw, 20px); color: var(--ink2); line-height: 1.5; word-break: break-word; }
-.face.mono-face .glyphs { font-family: var(--f-mono); }
-.anatomy { margin-top: clamp(16px, 2vw, 28px); display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 0; }
-.ana-demo { padding: clamp(28px, 4vw, 56px); position: relative; border-right: 1px solid var(--rule); }
-.ana-demo .l { font-family: var(--f-mono); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .16em; text-transform: uppercase; color: var(--indigo); }
-.ana-demo .hh { font-size: clamp(32px, 3.4vw, 48px); line-height: 1; letter-spacing: -.03em; font-weight: 580; margin-top: 16px; max-width: 16ch; }
-.ana-demo .bb { font-size: 18px; line-height: 1.6; color: var(--ink2); margin-top: 24px; max-width: 40ch; }
-.ana-demo .dd { font-family: var(--f-mono); font-weight: 500; font-size: 14px; line-height: 20px; margin-top: 40px; display: inline-flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 10px; background: var(--smoke); }
-.ana-demo .dd i { width: 8px; height: 8px; border-radius: 50%; background: var(--indigo); }
-.ana-notes { padding: clamp(24px, 3vw, 40px); display: grid; gap: 0; align-content: center; }
-.ana-notes li { padding: 14px 0; border-bottom: 1px solid var(--rule); display: grid; gap: 4px; }
-.ana-notes li:last-child { border-bottom: 0; }
-.ana-notes b { font-weight: 500; }
-.ana-notes .mono { color: var(--ink2); letter-spacing: .04em; }
-@media (max-width: 900px) { .spec-row, .anatomy { grid-template-columns: minmax(0, 1fr); } .ana-demo { border-right: 0; border-bottom: 1px solid var(--rule); } }
+/* ---------- typography ---------- */
+.tword { position: absolute; left: 0; top: 14%; height: 1em; width: 100%; font-size: clamp(64px, min(14vw, 24svh), 250px); line-height: .9; letter-spacing: -.045em; font-variation-settings: "wght" var(--wg, 300), "slnt" var(--sl, 0); white-space: nowrap; }
+.tword .fx { position: absolute; left: 0; top: 0; }
+.tfam { position: absolute; right: 0; bottom: 0; width: min(30%, 380px); display: grid; border-top: 1px solid var(--rule); }
+.tfam li { display: flex; justify-content: space-between; padding: clamp(6px, 1.4svh, 13px) 0; border-bottom: 1px solid var(--rule); font-size: var(--fs-lede); transition: color .3s; }
+.tfam li.on { color: var(--indigo); }
+.tfam li span { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); }
+.tnote { position: absolute; left: 0; bottom: 0; width: min(46%, 520px); }
+.tmono { position: absolute; left: 0; top: 14%; font-family: var(--f-mono); font-weight: 500; font-size: clamp(40px, min(9vw, 15svh), 160px); line-height: .95; letter-spacing: -.05em; white-space: nowrap; }
+.tdigits { position: absolute; left: 0; top: calc(14% + min(11vw, 18svh) + 24px); font-family: var(--f-mono); font-weight: 500; font-size: clamp(18px, min(2.6vw, 4svh), 40px); letter-spacing: .02em; color: var(--indigo); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.anat { position: absolute; left: 0; right: 0; top: 8%; bottom: 0; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 64px); align-items: center; }
+.ana-card { position: relative; padding: clamp(24px, 5svh, 56px) clamp(24px, 5svh, 56px) clamp(24px, 5svh, 56px) clamp(40px, 6svh, 64px); }
+.ana-card .l { font-family: var(--f-mono); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .16em; text-transform: uppercase; color: var(--indigo); }
+.ana-card .hh { font-size: clamp(26px, min(3.4vw, 5.6svh), 50px); line-height: 1; letter-spacing: -.03em; font-weight: 580; margin-top: 16px; max-width: 15ch; }
+.ana-card .bb { font-size: clamp(14px, 2.2svh, 18px); line-height: 1.6; color: var(--ink2); margin-top: 24px; max-width: 38ch; }
+.ana-card .dd { font-family: var(--f-mono); font-weight: 500; font-size: 14px; margin-top: 40px; display: inline-flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 10px; background: var(--smoke); }
+.ana-card .dd i { width: 8px; height: 8px; border-radius: 50%; background: var(--indigo); }
+.msr { position: absolute; left: 16px; width: 8px; border: 1px solid var(--indigo); border-right: 0; }
+.msr b { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-family: var(--f-mono); font-weight: 500; font-size: 9px; color: var(--indigo); }
+.ana-notes { display: grid; }
+.ana-notes li:first-child, .prl li:first-child, .prules li:first-child { border-top: 1px solid var(--rule); }
+.ana-notes li { padding: clamp(7px, 1.5svh, 14px) 0; border-bottom: 1px solid var(--rule); display: grid; gap: 3px; }
+.ana-notes b { font-weight: 500; font-size: var(--fs-body); color: var(--ink); }
+.ana-notes span { font-family: var(--f-mono); font-size: 12px; color: var(--ink2); }
+.cgrid { position: absolute; left: 0; right: 0; top: 16%; bottom: 0; display: grid; grid-template-columns: 1.35fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; }
+.kc { position: relative; border-radius: 18px; background: var(--white); box-shadow: inset 0 0 0 1px rgba(15, 17, 21, .08); padding: 22px; display: grid; align-content: space-between; gap: 14px; overflow: hidden; min-height: 0; }
+.kc .real { display: grid; gap: 10px; align-content: start; opacity: 0; transition: opacity .2s linear .7s; }
+.kc.st-on .real { opacity: 1; }
+.kc .sk { position: absolute; inset: 22px; display: grid; gap: 10px; align-content: start; transition: opacity .2s linear .7s; }
+.kc.st-on .sk { opacity: 0; }
+.kc .sk i { display: block; height: 12px; border-radius: 6px; background: rgba(15, 17, 21, .09); }
+.kc .t-l { font-family: var(--f-mono); font-weight: 500; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--indigo); }
+.kc .t-h { font-size: clamp(17px, min(1.9vw, 3.2svh), 28px); line-height: 1.08; letter-spacing: -.025em; font-weight: 580; }
+.kc .t-b { font-size: 13.5px; line-height: 1.55; color: var(--ink2); }
+.kc .tag { position: absolute; right: 12px; top: 12px; font-family: var(--f-mono); font-size: 10px; color: var(--indigo); background: rgba(48, 71, 236, .08); padding: 3px 7px; border-radius: 6px; }
+.kc.hz { grid-row: span 2; grid-template-rows: minmax(0, 1fr) auto; align-content: stretch; padding: 0; }
+.kc.hz img { width: 100%; height: 100%; object-fit: cover; min-height: 0; }
+.kc.hz .real { padding: 22px; }
+.kc.hz .sk { inset: auto 22px 22px 22px; }
+.kc.cen { text-align: center; justify-items: center; align-content: center; }
+.kc.cen .real { justify-items: center; }
+.kc.grp .row { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 14px; }
+.kc.grp .row .ico { width: 22px; height: 22px; color: var(--graphite); flex: none; }
+.kc.dont::after { content: "Avoid"; position: absolute; right: 12px; bottom: 12px; font-family: var(--f-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--white); background: var(--graphite); padding: 3px 8px; border-radius: 6px; }
+.kc.dont .real { opacity: 1; }
+.kc .why { font-family: var(--f-mono); font-size: 11px; color: var(--ink2); padding-top: 10px; padding-right: 56px; border-top: 1px dashed var(--rule); }
+.cgrid .kc { grid-area: var(--ga); }
+@media (max-width: 760px) {
+  .tword { top: 12%; font-size: clamp(54px, 17vw, 120px); }
+  .tfam { left: 0; right: auto; width: 100%; bottom: 0; }
+  .tfam li { font-size: 15px; }
+  .tmono { font-size: 11vw; }
+  .tdigits { top: calc(14% + 11vw + 20px); font-size: 5.4vw; }
+  .anat { grid-template-columns: 1fr; top: 8%; align-items: start; }
+  .ana-notes, .msr { display: none; }
+  .cgrid { grid-template-columns: 1fr 1fr; grid-template-rows: 1.2fr 1fr 1fr; top: 16%; gap: 10px; }
+  .kc { padding: 14px; } .kc .sk { inset: 14px; }
+  .kc.hz { grid-row: auto; }
+  .cgrid .kc { grid-area: var(--gm); }
+  .posts #sp1, .posts #sp3 { display: none; }
+  .kc .t-b, .kc .tag { display: none; }
+  .kc.dont .t-h { font-size: 17px !important; }
+  .kc.dont .t-l { font-size: 11px !important; }
+}
 
-#type-build { height: 300vh; }
-.tb-stage { display: grid; align-content: center; gap: clamp(28px, 5vh, 56px); }
-.tb-cap { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
-.tb-cap .h2 { max-width: 18ch; }
-.tb-phase { font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--indigo); }
-.tb-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 24px); }
-.tb { --b: 1; --x: 0; position: relative; transform-origin: 30% 80%; border-radius: 20px; padding: clamp(22px, 2.4vw, 34px); min-height: clamp(230px, 30vh, 320px); display: flex; flex-direction: column;
-  transform: translate(calc(var(--x) * -14vw), calc(var(--x) * 30vh)) rotate(calc(var(--x) * -25deg)); opacity: calc(1 - var(--x) * 1.4); will-change: transform; }
-.tb.c1 { background: var(--white); color: var(--graphite); box-shadow: inset 0 0 0 1px rgba(15, 17, 21, .08); }
-.tb.c2 { background: var(--indigo); color: var(--white); }
-.tb.c3 { background: var(--ice); color: var(--graphite); }
-.tb .t-l { font-family: var(--f-mono); font-weight: 500; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
-.tb .t-h { font-size: clamp(24px, 2.4vw, 36px); line-height: 1.02; letter-spacing: -.028em; font-weight: 580; margin-top: 14px; }
-.tb .t-d { font-family: var(--f-mono); font-weight: 500; font-size: 13px; letter-spacing: .04em; }
-.tb .real { opacity: var(--b); flex: 1 1 auto; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; }
-.tb .skel { position: absolute; inset: clamp(22px, 2.4vw, 34px); display: grid; align-content: space-between; opacity: calc(1 - var(--b)); pointer-events: none; }
-.tb .skel i { display: block; height: 12px; border-radius: 6px; background: currentColor; opacity: .14; }
-.tb .skel .s-l { width: 34%; } .tb .skel .s-h1 { width: 92%; height: 26px; margin-top: 18px; } .tb .skel .s-h2 { width: 64%; height: 26px; margin-top: 10px; } .tb .skel .s-d { width: 28%; }
-@media (max-width: 760px) { .tb-cards { grid-template-columns: minmax(0, 1fr); } .tb { min-height: 0; } .tb .t-h { font-size: 24px; } #type-build .tb:nth-child(3) { display: none; } }
+/* ---------- gallery ---------- */
+.strip { position: absolute; left: 40%; right: calc(var(--gr) * -1); top: -2%; bottom: -2%; overflow: hidden; }
+.gi { position: absolute; left: 0; top: 50%; border-radius: 18px; overflow: hidden; background: var(--smoke); }
+.gi img { width: 100%; height: 100%; object-fit: cover; }
+.gi figcaption { position: absolute; left: 12px; bottom: 10px; font-family: var(--f-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--white); padding: 5px 8px; border-radius: 6px; background: rgba(26, 36, 107, .55); }
+.cursor { position: absolute; left: 0; top: 0; width: 26px; height: 26px; z-index: 5; pointer-events: none; filter: drop-shadow(0 4px 8px rgba(15, 17, 21, .3)); opacity: 0; }
+.handles { position: absolute; left: 0; top: 0; border: 1.5px solid var(--indigo); border-radius: 18px; opacity: 0; z-index: 4; pointer-events: none; }
+.handles i { position: absolute; width: 10px; height: 10px; background: var(--white); border: 1.5px solid var(--indigo); border-radius: 2px; }
+.prl { display: grid; }
+.prl li { display: grid; grid-template-columns: 74px 1fr; gap: 12px; padding: clamp(6px, 1.3svh, 12px) 0; border-bottom: 1px solid var(--rule); font-size: var(--fs-body); }
+.prl li b { font-weight: 500; }
+.prl li span { color: var(--ink2); }
+@media (max-width: 760px) {
+  .strip { left: calc(var(--gl) * -1); top: 46%; bottom: 0; }
+  .prl { display: none; }
+}
 
-.weights { margin-top: clamp(48px, 6vw, 88px); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
-.weights li { padding: 22px 0; display: grid; gap: 8px; border-bottom: 1px solid var(--rule); }
-.weights .w { font-size: clamp(28px, 3vw, 44px); letter-spacing: -.03em; line-height: 1; }
-@media (max-width: 760px) { .weights { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.scale { margin-top: clamp(40px, 5vw, 72px); border-top: 1px solid var(--rule); }
-.scale li { display: grid; grid-template-columns: 120px 150px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--rule); }
-.scale .sample { font-weight: 560; letter-spacing: -.03em; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-@media (max-width: 700px) { .scale li { grid-template-columns: 1fr; gap: 4px; } }
-.trules { margin-top: clamp(48px, 6vw, 88px); }
-.trule { padding: 24px; display: grid; gap: 14px; align-content: start; }
-.trule .demo { border-radius: 12px; background: var(--smoke); padding: 18px; min-height: 120px; display: grid; align-content: center; }
-.trule .demo.c { text-align: center; justify-items: center; }
-.trule .demo .dh { font-weight: 580; font-size: 20px; letter-spacing: -.02em; line-height: 1.1; }
-.trule .demo .db { font-size: 13px; color: var(--ink2); margin-top: 6px; }
-.sp8 { display: flex; align-items: end; gap: 6px; }
-.sp8 i { background: var(--indigo); width: 14px; border-radius: 2px; }
+/* ---------- photo + type ---------- */
+.pcard { position: absolute; left: 66%; top: 52%; border-radius: 20px; overflow: hidden; translate: -50% -50%; background: var(--graphite); container-type: size; }
+.pcard img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .45s; }
+.pcard .veil { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(26, 36, 107, .8), rgba(26, 36, 107, 0) 62%); transition: opacity .4s; }
+.pcard .blk { position: absolute; left: 4cqmin; bottom: 4cqmin; width: min(64cqw, 380px); height: 34cqmin; border-radius: 12px; background: var(--night); opacity: 0; transition: opacity .4s; }
+.pcard .txt { position: absolute; left: 6cqmin; bottom: 6cqmin; right: 30%; color: var(--white); display: grid; gap: 1.8cqmin; transition: color .4s; }
+.pcard .txt .ph { font-size: clamp(16px, 7.2cqmin, 48px); line-height: 1; letter-spacing: -.03em; font-weight: 580; }
+.pcard .txt .pb { font-size: clamp(10.5px, 2.7cqmin, 18px); line-height: 1.5; opacity: .88; max-width: 34ch; }
+.pcard .l65 { position: absolute; right: 9cqmin; top: 8cqmin; width: 2px; height: 16cqmin; background: var(--ice); transform: skewX(-25deg); }
+.pcard .pm { position: absolute; right: 6cqmin; bottom: 6cqmin; width: 9cqmin; }
+.pcard .pm svg { width: 100%; height: auto; display: block; }
+.pcard.bright .veil { opacity: 0; } .pcard.bright .txt { color: var(--graphite); } .pcard.bright .l65 { background: var(--indigo); }
+.pcard.busy .veil { opacity: 0; } .pcard.busy .blk { opacity: 1; }
+.pcard.busy .txt { left: 8cqmin; bottom: 8cqmin; right: auto; width: min(54cqw, 330px); }
+.ratio { position: absolute; left: 0; top: 30%; display: grid; gap: 6px; }
+.ratio .fx { grid-area: 1 / 1; }
+.prule-txt { position: absolute; left: 0; bottom: 0; width: min(30%, 400px); display: grid; gap: 10px; }
+.prule-txt .body { grid-area: 2 / 1; }
+@media (max-width: 760px) { .pcard { left: 50%; top: 40%; } .prule-txt { width: 100%; } .ratio { top: 4%; } }
 
-/* ---------- 07 graphic ---------- */
-.why { position: relative; border-radius: 22px; overflow: hidden; min-height: clamp(360px, 46vw, 560px); color: var(--white); display: grid; align-content: end; }
-.why img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.why-in { position: relative; padding: clamp(24px, 4vw, 56px); display: grid; gap: 22px; background: linear-gradient(0deg, rgba(26, 36, 107, .72), rgba(26, 36, 107, 0)); }
-.why-in ol { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-.why-in li { display: grid; gap: 6px; font-size: 15px; color: rgba(255, 255, 255, .86); }
-.why-in li b { font-weight: 560; font-size: 19px; color: var(--white); letter-spacing: -.01em; }
-@media (max-width: 760px) { .why-in ol { grid-template-columns: minmax(0, 1fr); } }
-.els { margin-top: clamp(20px, 2vw, 28px); }
-.el { padding: 0 0 22px; display: grid; gap: 14px; align-content: start; }
-.el .art { aspect-ratio: 1; position: relative; overflow: hidden; }
-.el .art > * { position: absolute; inset: 0; width: 100%; height: 100%; }
-.el .art img { object-fit: cover; }
-.el h3, .el p { padding: 0 20px; }
-.pat-lines { background: var(--ice); background-image: repeating-linear-gradient(-25deg, transparent 0 11px, rgba(48, 71, 236, .55) 11px 12.2px); }
-.pat-split { background: linear-gradient(115deg, var(--indigo) 0 52%, var(--ice) 52% 100%); }
-.mover { position: absolute; width: 22%; height: 30%; left: 18%; top: 52%; background: var(--indigo); clip-path: polygon(23% 0, 100% 0, 77% 100%, 0 100%); animation: mv 4.8s var(--ease) infinite; }
-@keyframes mv { 0%, 12% { transform: translate(0, 0); } 50%, 62% { transform: translate(110%, -150%); } 100% { transform: translate(0, 0); } }
-.onerule { margin-top: clamp(28px, 3vw, 44px); padding: 22px 26px; border-radius: 16px; background: var(--indigo); color: var(--white); display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
-.onerule .h3 { font-weight: 560; }
-
-/* ---------- 08 icons ---------- */
-#icon-build { height: 320vh; }
-.ib { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 80px); align-items: center; height: 100%; }
-.board { position: relative; width: min(100%, 72vh, 560px); aspect-ratio: 1; margin-inline: auto; border-radius: 24px; background: var(--white); box-shadow: inset 0 0 0 1px rgba(15, 17, 21, .08); }
-.board svg { position: absolute; inset: 8%; width: 84%; height: 84%; overflow: visible; }
+/* ---------- icons ---------- */
+.board { position: absolute; right: 4%; top: 50%; width: min(48%, 66svh, 560px); aspect-ratio: 1; translate: 0 -50%; border-radius: 26px; background: var(--white); box-shadow: inset 0 0 0 1px rgba(15, 17, 21, .08), 0 30px 60px -40px rgba(15, 17, 21, .35); }
+.board svg, .board .fin { position: absolute; inset: 9%; width: 82%; height: 82%; overflow: visible; }
 .board .grid24 line { stroke: rgba(48, 71, 236, .16); stroke-width: .04; }
-.board .grid24 .live { fill: none; stroke: rgba(48, 71, 236, .4); stroke-width: .06; stroke-dasharray: .3 .3; }
+.board .grid24 .live { fill: none; stroke: rgba(48, 71, 236, .42); stroke-width: .06; stroke-dasharray: .3 .3; }
 .board .keys * { fill: none; stroke: rgba(48, 71, 236, .5); stroke-width: .06; }
 .board .sketch path { fill: none; stroke: #5b616d; stroke-width: .34; stroke-linecap: round; stroke-linejoin: round; }
-.board .final { color: var(--graphite); }
-.board .lyr { transition: opacity .25s linear; }
-.ib-steps { display: grid; gap: 0; border-top: 1px solid var(--rule); }
-.ib-steps li { padding: 20px 0; border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 40px 1fr; gap: 4px 16px; opacity: .38; transition: opacity .4s; }
-.ib-steps li.on { opacity: 1; }
-.ib-steps .n { font-family: var(--f-mono); font-size: 12px; letter-spacing: .1em; color: var(--indigo); padding-top: 6px; }
-.ib-steps .h3 { grid-column: 2; } .ib-steps p { grid-column: 2; }
-html:not(.js) .ib-steps li { opacity: 1; }
-@media (max-width: 860px) { .ib { grid-template-columns: minmax(0, 1fr); align-content: center; gap: 22px; } .board { width: min(100%, 44vh); } .ib-steps li { padding: 12px 0; } .ib-steps p { display: none; } .ib .head { margin-bottom: 0; } }
-.iconset { margin-top: clamp(40px, 5vw, 72px); display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
-.ig-item { background: var(--white); border-radius: 16px; aspect-ratio: 6 / 5; display: grid; place-items: center; align-content: center; gap: 14px; padding: 12px; text-align: center; box-shadow: inset 0 0 0 1px rgba(15, 17, 21, .06); }
-.ig-item .ico { width: 44px; height: 44px; color: var(--graphite); }
-.ig-item span { font-size: 13px; color: var(--ink2); }
-@media (max-width: 900px) { .iconset { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.ispecs { margin-top: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
-.isizes { padding: 26px; display: flex; gap: clamp(16px, 3vw, 36px); align-items: end; flex-wrap: wrap; }
-.isizes div { display: grid; gap: 10px; justify-items: center; }
-.isizes span svg { width: 100%; height: auto; display: block; color: var(--graphite); }
-.ion-indigo { padding: 26px; background: var(--indigo); color: var(--white); border-radius: 18px; display: flex; flex-wrap: wrap; gap: 22px; align-items: center; --acc-icon: var(--ice); }
-.ion-indigo .ico { width: 30px; height: 30px; }
-@media (max-width: 760px) { .ispecs { grid-template-columns: minmax(0, 1fr); } }
+.board .fin .ico { width: 100%; height: 100%; color: var(--graphite); }
+.board .ghost { position: absolute; left: 12%; right: 12%; top: 50%; translate: 0 -50%; opacity: 0; }
+.board .ghost svg { width: 100%; height: auto; display: block; }
+.board .g65 { position: absolute; left: 48%; top: -4%; width: 2px; height: 108%; background: var(--indigo); transform: skewX(-25deg) scaleY(0); transform-origin: top; }
+.swatch { position: absolute; left: 0; bottom: 0; display: flex; gap: 12px; align-items: center; }
+.swatch i { width: 46px; height: 46px; border-radius: 12px; background: var(--indigo); }
+.isteps { display: grid; border-top: 1px solid var(--rule); }
+.isteps li { display: grid; grid-template-columns: 34px 1fr; padding: clamp(7px, 1.5svh, 14px) 0; border-bottom: 1px solid var(--rule); opacity: .35; transition: opacity .35s; }
+.isteps li.on { opacity: 1; }
+.isteps .n { font-family: var(--f-mono); font-size: 11px; color: var(--indigo); padding-top: 5px; }
+.irows { position: absolute; left: 0; bottom: 0; width: min(36%, 480px); display: grid; gap: 6px; }
+.irow { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; background: var(--white); box-shadow: inset 0 0 0 1px var(--rule); font-size: 16px; font-weight: 500; }
+.irow .ico { width: 24px; height: 24px; color: var(--graphite); flex: none; }
+.onimg { position: absolute; right: 4%; top: 50%; width: min(40%, 52svh, 480px); aspect-ratio: 4 / 5; translate: 0 -50%; border-radius: 22px; overflow: hidden; }
+.onimg img { width: 100%; height: 100%; object-fit: cover; }
+.onimg .pm { position: absolute; left: 8%; bottom: 7%; width: 12%; }
+.onimg .pm svg { width: 100%; height: auto; display: block; }
+.onimg .cs { position: absolute; left: 2%; bottom: 2.4%; width: 24%; aspect-ratio: 1.42 / 1; border: 1.5px dashed var(--ice); border-radius: 4px; }
+.icap { position: absolute; left: 0; bottom: 0; width: min(36%, 440px); }
+@media (max-width: 760px) {
+  .board { right: auto; left: 50%; top: 52%; translate: -50% -50%; width: min(76vw, 36svh); }
+  .irows, .icap { width: 100%; }
+  .onimg { right: auto; left: 50%; top: 46%; translate: -50% -50%; width: min(64vw, 34svh); }
+}
 
-/* ---------- 09 illustration ---------- */
-.ill { display: grid; gap: 0; }
-.ill .art { background: var(--smoke); aspect-ratio: 4 / 3; display: grid; place-items: center; }
-.ill .art svg { width: 92%; height: auto; }
-.ill-body { padding: 22px 24px 26px; display: grid; gap: 8px; }
-.ill-body .num { font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; color: var(--indigo); }
+/* ---------- illustration ---------- */
+.phone { position: absolute; right: 8%; top: 50%; height: min(100%, 640px); aspect-ratio: 9 / 18.5; translate: 0 -50%; border-radius: 44px; background: #111318; padding: 11px; box-shadow: 0 40px 80px -40px rgba(15, 17, 21, .55); }
+.phone .scr { position: relative; width: 100%; height: 100%; border-radius: 34px; overflow: hidden; background: var(--smoke); }
+.phone .reel { position: absolute; top: 0; left: 0; height: 100%; width: 300%; display: flex; }
+.phone .sc { width: 33.3334%; height: 100%; position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.phone .sc img { width: 100%; height: 100%; object-fit: cover; }
+.phone .sc .tx { padding: 18px 18px 26px; display: grid; gap: 8px; background: var(--white); }
+.phone .sc .tx b { font-size: clamp(16px, 2.6svh, 21px); font-weight: 580; letter-spacing: -.02em; line-height: 1.1; }
+.phone .sc .tx span { font-size: 12.5px; color: var(--ink2); }
+.phone .sc .btn { margin-top: 4px; height: 40px; border-radius: 12px; background: var(--indigo); color: var(--white); display: grid; place-items: center; font-size: 13px; font-weight: 500; }
+.phone .sc.il .art { display: grid; place-items: center; background: var(--smoke); }
+.phone .sc.il .art svg { width: 92%; height: auto; }
+.phone .flag { position: absolute; right: calc(100% + 14px); top: 28%; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--indigo); display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: opacity .3s; }
+.phone .flag::after { content: ""; width: 40px; height: 1px; background: var(--indigo); }
+.ratio5 { display: flex; gap: 6px; }
+.ratio5 i { width: 22px; height: 34px; border-radius: 5px; background: rgba(15, 17, 21, .12); }
+.ratio5 i.on { background: var(--indigo); }
+@media (max-width: 760px) { .phone { right: auto; left: 50%; top: auto; bottom: 0; translate: -50% 0; height: 62%; } .phone .flag { display: none; } }
 
-/* ---------- carousels ---------- */
-.car { margin-top: clamp(28px, 3vw, 48px); }
-.car-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; }
-.car-ctl { display: flex; gap: 8px; align-items: center; }
-.car-ctl .cap { margin-right: 10px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-@media (max-width: 600px) { .car-bar > p.cap { display: none; } .car-bar { justify-content: flex-end; } .car-bar:has(> h3) { justify-content: space-between; } }
-.cbtn { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; box-shadow: inset 0 0 0 1px var(--rule); transition: background .2s, color .2s; }
-.cbtn:hover { background: var(--indigo); color: var(--white); box-shadow: none; }
-.cbtn svg { width: 18px; height: 18px; }
-.car-track { display: grid; grid-auto-flow: column; grid-auto-columns: var(--cw, min(82vw, 520px)); gap: clamp(14px, 1.6vw, 24px); overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
-  padding-left: max(var(--gl), calc((100vw - var(--maxw)) / 2)); padding-right: var(--gr); scroll-padding-left: max(var(--gl), calc((100vw - var(--maxw)) / 2)); scrollbar-width: none; padding-bottom: 6px; }
-.car-track::-webkit-scrollbar { display: none; }
-.car-track > * { scroll-snap-align: start; min-width: 0; }
-.car-fig { display: grid; gap: 14px; }
-.car-fig img { width: 100%; aspect-ratio: var(--ar, 4 / 5); object-fit: cover; border-radius: 18px; }
-.car-fig figcaption { display: grid; gap: 4px; }
-.car-fig figcaption b { font-weight: 500; }
-.car-fig figcaption span { font-size: 14px; color: var(--ink2); }
-
-/* ---------- 10 cards ---------- */
-.kc { --b: 1; position: relative; border-radius: 22px; aspect-ratio: 4 / 5; overflow: hidden; display: grid; align-content: space-between; padding: 26px; }
-.kc .real { opacity: var(--b); display: contents; }
-.kc .real > * { opacity: var(--b); position: relative; }
-.kc .skel { position: absolute; inset: 26px; display: grid; align-content: space-between; opacity: calc(1 - var(--b)); pointer-events: none; }
-.kc .skel i { display: block; height: 12px; border-radius: 6px; background: currentColor; opacity: .14; }
-.kc .skel .sk-h { height: 28px; width: 86%; margin-top: 10px; } .kc .skel .sk-h2 { height: 28px; width: 58%; margin-top: 10px; } .kc .skel .sk-s { width: 34%; }
-.kc .k-l { font-family: var(--f-mono); font-weight: 500; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
-.kc .k-h { font-size: clamp(26px, 2.6vw, 36px); line-height: 1.02; letter-spacing: -.028em; font-weight: 580; max-width: 13ch; }
-.kc .k-s { font-size: 14px; }
-.kc-photo { color: var(--white); background: var(--graphite); }
-.kc-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; clip-path: polygon(0 0, 100% 0, 100% 72%, 87% 100%, 0 100%); opacity: var(--b); }
-.kc-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(26, 36, 107, .8), rgba(26, 36, 107, 0) 58%), linear-gradient(180deg, rgba(26, 36, 107, .45), rgba(26, 36, 107, 0) 24%); opacity: var(--b); }
-.kc-photo .real > * { z-index: 1; }
-.kc-block { background: var(--indigo); color: var(--white); }
-.kc-pattern { background: var(--ice); color: var(--graphite); background-image: repeating-linear-gradient(-25deg, transparent 0 13px, rgba(48, 71, 236, calc(.35 * var(--b))) 13px 14.2px); }
-.kc-stat { background: var(--white); color: var(--graphite); box-shadow: inset 0 0 0 1px rgba(15, 17, 21, .08); }
-.kc-stat .big { font-size: clamp(96px, 10vw, 148px); line-height: .8; letter-spacing: -.06em; font-weight: 580; color: var(--indigo); }
-.kc-ill { background: var(--smoke); color: var(--graphite); }
-.kc-ill svg { width: 100%; height: auto; }
-.kc-voice { background: var(--night); color: var(--smoke); }
-.kc-voice .k-h { font-weight: 400; font-size: clamp(26px, 2.6vw, 34px); }
-
-/* ---------- 11 photo ---------- */
-.prules .card { padding: 0 0 22px; display: grid; gap: 12px; }
-.prules img { aspect-ratio: 3 / 2; width: 100%; object-fit: cover; }
-.prules h3, .prules p { padding: 0 22px; }
-.shots { margin-top: clamp(40px, 5vw, 72px); }
-.shot { position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 4 / 5; }
-.shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.shot figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px; color: var(--white); background: linear-gradient(0deg, rgba(26, 36, 107, .78), rgba(26, 36, 107, 0)); display: grid; gap: 2px; }
-.shot figcaption .cap { color: rgba(255, 255, 255, .8); }
-.shot .ontext { position: absolute; left: 18px; right: 18px; top: 22%; font-size: clamp(22px, 2.2vw, 30px); line-height: 1.05; letter-spacing: -.025em; font-weight: 560; color: var(--graphite); }
-.doavoid { margin-top: clamp(40px, 5vw, 72px); }
-.da { padding: 24px 26px; display: grid; gap: 14px; align-content: start; }
-.da ul { display: grid; gap: 10px; }
-.da li { padding-left: 22px; position: relative; color: var(--ink2); }
-.da li::before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 2px; background: var(--indigo); }
-.da.no li::before { background: var(--titanium); transform: rotate(-65deg); width: 12px; }
-
-/* ---------- 12 voice ---------- */
-.princ .card { padding: 26px; display: grid; gap: 10px; align-content: start; }
-.princ .num { font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; color: var(--indigo); }
-.saydont { margin-top: clamp(40px, 5vw, 72px); display: grid; gap: 0; border-top: 1px solid var(--rule); }
-.sd { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; padding: 26px 0; border-bottom: 1px solid var(--rule); }
-.sd p { font-size: clamp(19px, 1.7vw, 26px); line-height: 1.3; letter-spacing: -.012em; }
-.sd .no { color: var(--ink3); }
-.sd .cap { display: block; margin-bottom: 8px; }
-@media (max-width: 700px) { .sd { grid-template-columns: minmax(0, 1fr); gap: 14px; } }
-.channels { margin-top: clamp(40px, 5vw, 72px); }
-.chn { padding: 24px; display: grid; gap: 16px; align-content: start; }
-.chn .ico { width: 26px; height: 26px; color: var(--graphite); }
-.chn .tr { font-size: 19px; line-height: 1.35; letter-spacing: -.01em; font-weight: 500; }
-.chn .en { font-size: 15px; color: var(--ink2); }
-.words { margin-top: 20px; }
-.words .card { padding: 24px; display: grid; gap: 14px; }
-
-/* ---------- 13 instagram ---------- */
-.ig-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(28px, 5vw, 80px); align-items: start; }
-.profile { padding: clamp(16px, 2vw, 24px); border-radius: 24px; background: var(--white); box-shadow: inset 0 0 0 1px rgba(15, 17, 21, .08); }
-.p-head { display: flex; gap: 16px; align-items: center; padding: 6px 6px 18px; }
-.p-av { width: 64px; height: 64px; border-radius: 50%; background: var(--indigo); display: grid; place-items: center; flex: none; }
-.p-av svg { width: 62%; height: auto; }
-.p-head b { display: block; font-weight: 560; font-size: 17px; }
-.p-grid { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; border-radius: 10px; overflow: hidden; }
-.p-grid .post { border-radius: 0; }
-.p-diag { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .4s; }
-.p-diag line { stroke: var(--ice); stroke-width: .6; stroke-dasharray: 2 2; }
-.profile.show-diag .p-diag { opacity: 1; }
-.diag-btn { margin-top: 14px; }
-.post { container-type: inline-size; position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 16px; color: var(--white); background: var(--indigo); }
+/* ---------- social ---------- */
+.posts { position: absolute; left: 36%; right: 0; top: 50%; height: min(62svh, 540px); translate: 0 -50%; }
+.post { container-type: inline-size; position: absolute; top: 0; height: 100%; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 16px; color: var(--white); background: var(--indigo); }
 .post img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.post .scrim { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(26, 36, 107, .7), rgba(26, 36, 107, 0) 58%); }
-.post .pt { position: absolute; left: 7cqw; right: 7cqw; bottom: 17cqw; font-size: 9.4cqw; line-height: 1.02; letter-spacing: -.03em; font-weight: 580; }
-.post .pt.top { bottom: auto; top: 9cqw; }
+.post .scrim { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(26, 36, 107, .72), rgba(26, 36, 107, 0) 58%); }
+.post .pt { position: absolute; left: 7cqw; right: 7cqw; bottom: 17cqw; font-size: 9.6cqw; line-height: 1.02; letter-spacing: -.03em; font-weight: 580; }
 .post .pk { position: absolute; left: 7cqw; top: 8cqw; font-family: var(--f-mono); font-size: 3.6cqw; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; }
-.post .pm { position: absolute; left: 7cqw; bottom: 7cqw; width: 8cqw; height: auto; }
-.post .pm.r { left: auto; right: 7cqw; }
+.post .pm { position: absolute; left: 7cqw; bottom: 7cqw; width: 8cqw; }
+.post .pm svg { width: 100%; height: auto; display: block; }
 .post.ice { background: var(--ice); color: var(--graphite); background-image: repeating-linear-gradient(-25deg, transparent 0 4.2cqw, rgba(48, 71, 236, .45) 4.2cqw 4.6cqw); }
-.post.split { background: linear-gradient(115deg, var(--indigo) 0 50%, transparent 50%); }
-.post.split img { clip-path: polygon(62% 0, 100% 0, 100% 100%, 15% 100%); }
-.post .bignum { position: absolute; left: 6cqw; top: 8cqw; font-size: 46cqw; line-height: .8; letter-spacing: -.07em; font-weight: 580; color: var(--indigo); }
-.post.block .pt { font-size: 10.4cqw; }
-.ig-rules { display: grid; gap: 0; border-top: 1px solid var(--rule); margin-top: 8px; }
-.ig-rules li { display: grid; grid-template-columns: 118px 1fr; gap: 4px 20px; padding: 18px 0; border-bottom: 1px solid var(--rule); }
-.ig-rules b { font-weight: 500; }
-.ig-rules span { color: var(--ink2); }
-@media (max-width: 900px) { .ig-wrap { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 520px) { .ig-rules li { grid-template-columns: 1fr; } }
+.post .bars3 { position: absolute; left: 5cqw; right: 5cqw; top: 4cqw; display: flex; gap: 1.4cqw; opacity: 0; transition: opacity .3s; z-index: 2; }
+.post .bars3 i { flex: 1; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .35); overflow: hidden; position: relative; }
+.post .bars3 i b { position: absolute; inset: 0; background: var(--white); transform-origin: left; transform: scaleX(var(--f, 0)); }
+.post .frames img { opacity: 0; transition: opacity .35s; }
+.post .frames img.on { opacity: 1; }
+.post .ktx { position: absolute; left: 7cqw; right: 7cqw; bottom: 26%; font-size: 12cqw; line-height: 1; letter-spacing: -.035em; font-weight: 580; transition: opacity .25s, transform .5s var(--spring); }
+.safe { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .4s; z-index: 3; }
+.safe i { position: absolute; left: 0; right: 0; background: repeating-linear-gradient(-25deg, rgba(183, 215, 255, .35) 0 2px, transparent 2px 10px); border: 1px dashed rgba(255, 255, 255, .7); }
+.safe .t { top: 0; height: 14%; } .safe .b { bottom: 0; height: 20%; }
+.safe b { position: absolute; right: 4cqw; font-family: var(--f-mono); font-size: 3.2cqw; letter-spacing: .1em; color: var(--white); }
+.pgrid { position: absolute; left: 68%; top: 50%; width: min(44svh, 86vw, 420px); translate: -50% -50%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; border-radius: 12px; overflow: hidden; }
+.pgrid .post { position: relative; height: auto; width: 100%; border-radius: 0; }
+.pgrid .post .pt { font-size: 11cqw; bottom: 22cqw; }
+.pgrid .diag { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.pgrid .diag line { stroke: var(--white); stroke-width: .5; }
+.soc-txt { position: absolute; left: 0; top: 0; width: min(32%, 440px); display: grid; gap: 12px; }
+.soc-txt .h2 { grid-area: 2 / 1; } .soc-txt .body { grid-area: 3 / 1; }
+@media (max-width: 760px) {
+  .soc-txt { width: 100%; }
+  .posts { left: 0; top: 66%; height: min(46svh, 400px); }
+  .pgrid { left: 50%; top: 64%; width: min(78vw, 40svh); }
+}
 
-/* ---------- 14 merch / 15 devices ---------- */
-.mrules { margin-top: clamp(32px, 4vw, 56px); }
-.mrules .card { padding: 22px 24px; display: grid; gap: 8px; align-content: start; }
-.devs { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: clamp(14px, 1.6vw, 24px); }
-.devs figure { position: relative; border-radius: 20px; overflow: hidden; }
-.devs img { width: 100%; height: 100%; object-fit: cover; }
-.devs .tall { grid-row: span 2; }
-.devs figcaption { position: absolute; left: 14px; bottom: 14px; color: var(--white); font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; padding: 7px 10px; border-radius: 8px; background: rgba(26, 36, 107, .62); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-@media (max-width: 760px) { .devs { grid-template-columns: minmax(0, 1fr); } .devs .tall { grid-row: auto; } }
-.slots { margin-top: clamp(20px, 2vw, 28px); }
-.oslot { aspect-ratio: 4 / 3; border-radius: 18px; border: 1.5px dashed rgba(48, 71, 236, .45); display: grid; place-content: center; text-align: center; gap: 8px; padding: 20px; background: rgba(183, 215, 255, .18); }
-.oslot b { font-weight: 560; font-size: 20px; letter-spacing: -.01em; }
-@media (max-width: 640px) { .oslot { aspect-ratio: 16 / 7; } }
+/* ---------- in use ---------- */
+.fstrip { position: absolute; left: calc(var(--gl) * -1); right: calc(var(--gr) * -1); top: 22%; bottom: 0; overflow: hidden; }
+.fi { position: absolute; left: 0; top: 0; height: 100%; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; }
+.fi img { width: 100%; height: 100%; object-fit: cover; }
+.fi figcaption { position: absolute; left: 14px; right: 14px; bottom: 12px; color: var(--white); display: grid; gap: 2px; padding: 10px 12px; border-radius: 10px; background: rgba(26, 36, 107, .6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); font-size: 13px; }
+.fi figcaption b { font-weight: 560; font-size: 15px; }
+.bb-wrap { position: absolute; inset: 0; perspective: 1400px; overflow: hidden; }
+.bb-img { position: absolute; left: 50%; top: 50%; width: 130vw; height: 130vh; translate: -50% -50%; transform-origin: center; }
+.bb-img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+.silh { position: absolute; left: 0; bottom: -6vh; height: 92vh; filter: blur(10px); opacity: .9; pointer-events: none; }
+.silh svg { height: 100%; width: auto; display: block; }
+.bb-cap { position: absolute; left: var(--gl); bottom: var(--bot); color: var(--white); display: grid; gap: 8px; padding: 16px 18px; border-radius: 14px; background: rgba(26, 36, 107, .62); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); max-width: min(calc(100vw - var(--gl) - var(--gr)), 460px); }
+.ocap { position: absolute; left: 0; bottom: 0; width: min(34%, 420px); height: 30%; }
+.ocap .obj { position: absolute; left: 0; bottom: 0; width: 100%; display: grid; gap: 6px; }
+@media (max-width: 760px) { .fstrip { top: 20%; } .ocap { width: 100%; height: 22%; } }
 
 /* ---------- closing ---------- */
-.closing { position: relative; min-height: 100vh; min-height: 100svh; display: grid; align-content: end; overflow: hidden; color: var(--white); }
-.closing img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 40%; }
-.closing::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(26, 36, 107, .92) 0%, rgba(26, 36, 107, .25) 55%, rgba(26, 36, 107, .1) 100%); }
-.closing .wrap { position: relative; z-index: 1; width: 100%; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(48px, 9vh, 96px)); display: grid; gap: 24px; }
-.closing .h-display span { color: var(--ice); display: block; }
-.end-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-.ebtn { height: 48px; padding: 0 20px; border-radius: 12px; display: inline-flex; align-items: center; gap: 10px; font-family: var(--f-mono); font-weight: 500; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; background: rgba(245, 247, 250, .16); color: var(--white); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-.ebtn.pri { background: var(--ice); color: var(--graphite); }
-.foot { position: relative; z-index: 1; font-size: 12px; color: rgba(255, 255, 255, .7); max-width: 78ch; }
+.end { position: absolute; inset: var(--top) var(--gr) var(--bot) var(--gl); display: grid; place-items: center; text-align: center; }
+.end-in { display: grid; gap: clamp(14px, 2.6svh, 22px); justify-items: center; }
+.end-mark { width: min(22vw, 140px); }
+.end-mark svg { width: 100%; height: auto; display: block; }
+.end .display { font-size: clamp(38px, min(7vw, 11svh), 112px); }
+.ebtns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.eb { height: 46px; padding: 0 20px; border-radius: 12px; display: inline-flex; align-items: center; font-family: var(--f-mono); font-weight: 500; font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; background: rgba(15, 17, 21, .06); }
+.eb.pri { background: var(--indigo); color: var(--white); }
+.foot { font-size: 11.5px; color: var(--ink3); max-width: 64ch; }
 
 @media (prefers-reduced-motion: reduce) {
-  .cover-media img, .cue i, .mover { animation: none; }
-  .step, .tb, .board .lyr { transition: none; }
+  .st-on, .st-post, .st-pre { transition-duration: .01s !important; transition-delay: 0s !important; }
+  .intro-mark path, .intro-wm, .cue, .cue i { animation-duration: .01s !important; animation-delay: 0s !important; }
 }
 </style>
 
-<div id="backdrop" aria-hidden="true"></div>
-<div class="prog" aria-hidden="true"></div>
+<div id="bgl" aria-hidden="true"></div>
+<div id="heroph" aria-hidden="true"><img src="{{img:A2}}" alt=""><div class="veil"></div></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<canvas id="asc" aria-hidden="true"></canvas>
+<div class="sweep" id="sweep" aria-hidden="true"></div>
 
-<header class="nav" aria-label="Brand book">
-  <a class="brand" href="#cover" aria-label="Fintegre, back to the start"><span class="lk-on-dark">{{lockup:white}}</span><span class="lk-on-light">{{lockup:dark}}</span></a>
-  <nav class="nav-groups" aria-label="Chapters">
-    <a href="#what" data-group="story">Story</a>
-    <a href="#logo" data-group="identity">Identity</a>
-    <a href="#icons" data-group="system">System</a>
-    <a href="#instagram" data-group="use">In use</a>
-  </nav>
-  <div class="nav-tools">
-    <button class="nbtn" id="snd" type="button" aria-pressed="false" title="The mark plays one short chime when it assembles"><span class="snd-dot"></span><span id="snd-txt">Sound off</span></button>
-    <button class="nbtn pri" id="idx-open" type="button" aria-expanded="false" aria-controls="index">Index</button>
+<header class="top" aria-label="Brand book">
+  <span class="brand" aria-label="Fintegre"><span class="on-light">{{lockup:dark}}</span><span class="on-dark">{{lockup:white}}</span></span>
+  <p class="ctr" id="ctr" data-fx="label">Fintegre Brand Book</p>
+  <div class="tools">
+    <button class="tb" id="snd" type="button" aria-pressed="false" title="One short chime when the mark assembles"><span class="dot"></span><span id="snd-t">Sound off</span></button>
+    <button class="tb pri" id="idx-open" type="button" aria-expanded="false" aria-controls="index">Index</button>
   </div>
 </header>
+<div class="bar" aria-hidden="true"><i id="bar"></i></div>
 
 <div class="index" id="index" hidden role="dialog" aria-modal="true" aria-label="Index">
-  <div class="index-top">{{lockup:white}}<button class="nbtn pri" id="idx-close" type="button">Close</button></div>
-  <ol>
-    <li><a href="#what"><span class="n">01</span><span class="t">What is Fintegre</span><span class="k">Story</span></a></li>
-    <li><a href="#values"><span class="n">02</span><span class="t">Values</span><span class="k">Story</span></a></li>
-    <li><a href="#apple"><span class="n">03</span><span class="t">Apple ecosystem</span><span class="k">Story</span></a></li>
-    <li><a href="#logo"><span class="n">04</span><span class="t">Logo</span><span class="k">Identity</span></a></li>
-    <li><a href="#colour"><span class="n">05</span><span class="t">Colour</span><span class="k">Identity</span></a></li>
-    <li><a href="#type"><span class="n">06</span><span class="t">Typography</span><span class="k">Identity</span></a></li>
-    <li><a href="#graphic"><span class="n">07</span><span class="t">Graphic language</span><span class="k">Identity</span></a></li>
-    <li><a href="#icons"><span class="n">08</span><span class="t">Icons</span><span class="k">System</span></a></li>
-    <li><a href="#illustration"><span class="n">09</span><span class="t">Illustration</span><span class="k">System</span></a></li>
-    <li><a href="#cards"><span class="n">10</span><span class="t">Card patterns</span><span class="k">System</span></a></li>
-    <li><a href="#photo"><span class="n">11</span><span class="t">Photography</span><span class="k">System</span></a></li>
-    <li><a href="#voice"><span class="n">12</span><span class="t">Tone of voice</span><span class="k">System</span></a></li>
-    <li><a href="#instagram"><span class="n">13</span><span class="t">Instagram</span><span class="k">In use</span></a></li>
-    <li><a href="#merch"><span class="n">14</span><span class="t">Merchandise</span><span class="k">In use</span></a></li>
-    <li><a href="#devices"><span class="n">15</span><span class="t">Devices</span><span class="k">In use</span></a></li>
-  </ol>
+  <div class="index-top">{{lockup:white}}<button class="tb" id="idx-close" type="button" style="background:var(--ice);color:var(--graphite)">Close</button></div>
+  <ol id="idx-list"></ol>
 </div>
 
-<main>
+<main id="stage">
 
-<!-- 00 · Cover -->
-<section class="sec cover dk" id="cover" data-tone="night" data-navbg="night" aria-label="Fintegre Brand Book">
-  <div class="cover-stage">
-    <div class="cover-media"><img src="{{img:A2}}" alt="In a bright store, a specialist hands a new phone to a smiling customer"></div>
-    <div class="cover-veil"></div>
-    <div class="cover-night"></div>
-    <div class="cover-head"><div class="wrap">
-      <p class="eyebrow">Fintegre Brand Book · v2</p>
-      <h1 class="h-display">Make every device <span>worth more.</span></h1>
-    </div></div>
-    <a class="cue" href="#what">SCROLL<i></i></a>
+<section class="scn lt" id="s-intro" data-len="2.4" data-bg="#FFFFFF" data-name="Fintegre Brand Book">
+  <div class="frame">
+    <p class="eyebrow intro-eb" data-fx="label" data-t="0,0.7" data-wait="900">Fintegre Brand Book · v2</p>
+    <div class="intro-mark" id="intro-mark">{{mark:gradient}}</div>
+    <div class="intro-wm" id="intro-wm">{{wordmark:graphite}}</div>
+    <p class="h2 intro-sl" data-fx="head" data-t="0,0.55" data-wait="2000">Make every device worth more.</p>
+    <p class="cue" id="cue">SCROLL<i></i></p>
   </div>
 </section>
 
-<!-- 01 · What is Fintegre -->
-<section class="sec dk" id="what" data-tone="night" data-group="story">
-  <div class="wrap pad" style="padding-top:clamp(40px,8vh,96px)">
-    <div class="what-grid">
-      <div>
-        <p class="eyebrow">01 · What is Fintegre</p>
-        <h2 class="h1">Fintegre is the <span style="white-space:nowrap">trade-in</span> and payment infrastructure behind device renewal.</h2>
-        <p class="lede">We value the device a customer already has, turn it into credit in seconds and help the store hand over the new one. Retailers, telecom operators and device brands run their renewal programs on Fintegre.</p>
-      </div>
-      <figure class="what-img"><img class="clip65" src="{{img:A1}}" alt="At home by a window, a woman lifts a new phone out of its box and smiles"></figure>
+<section class="scn dk" id="s-hero" data-len="2.6" data-bg="#FFFFFF" data-name="Make every device worth more">
+  <div class="frame">
+    <div class="hero-t">
+      <p class="eyebrow" data-fx="label" data-t="0.25,2.0" style="color:var(--ice)">The happy moment</p>
+      <h1 class="display" data-fx="head" data-t="0.3,2.0">Make every device <em>worth more.</em></h1>
+      <p class="lede" data-fx="body" data-t="0.75,2.0" style="color:rgba(255,255,255,.86)">A new phone, handed over in a bright store. Fintegre is the quiet system that makes that moment easy.</p>
     </div>
-    <ol class="steps3" aria-label="How renewal works">
-      <li>{{icon:value}}<span class="num">01 · Value</span><h3 class="h3">A clear price in seconds.</h3><p class="small">Phones, tablets, computers and watches each have their own valuation flow.</p></li>
-      <li>{{icon:pay}}<span class="num">02 · Pay</span><h3 class="h3">Value becomes credit on the spot.</h3><p class="small">Payment, operations and settlement run in the background, in one flow.</p></li>
-      <li>{{icon:upgrade}}<span class="num">03 · Renew</span><h3 class="h3">The new device goes home.</h3><p class="small">The customer upgrades with confidence and the store closes a better sale.</p></li>
+  </div>
+</section>
+
+<section class="scn lt" id="s-what" data-len="5.2" data-bg="#FFFFFF" data-name="What is Fintegre" data-num="01">
+  <div class="frame">
+    <div class="lcol" style="width:min(44%,640px)">
+      <p class="eyebrow" data-fx="label" data-t="0.05,5.0" data-tm="0.05,1.9">01 · What is Fintegre</p>
+      <h2 class="h1 long" data-fx="head" data-t="0.15,5.0" data-tm="0.15,1.9">Fintegre is the trade-in and payment infrastructure behind device renewal.</h2>
+      <p class="lede" data-fx="body" data-t="0.6,5.0" data-tm="9,9">We value the device a customer already has, turn it into credit in seconds and help the store hand over the new one.</p>
+    </div>
+    <figure class="what-img" data-t="0.45,1.95" data-e="open" data-x="shrink"><img src="{{img:A1}}" alt="At home, a woman lifts a new phone out of its box and smiles"></figure>
+    <ol class="tiles" aria-label="How renewal works">
+      <li class="card tile" data-t="2.0,3.5" data-e="pop" data-x="shrink">{{icon:value}}<span class="n">01 · VALUE</span><div><p class="h3">A clear price in seconds.</p><p class="body">Phones, tablets, computers and watches each have their own valuation flow.</p></div></li>
+      <li class="card tile" data-t="2.15,3.5" data-e="pop" data-x="shrink" style="--xd:70ms">{{icon:pay}}<span class="n">02 · PAY</span><div><p class="h3">Value becomes credit on the spot.</p><p class="body">Payment, operations and settlement run in the background.</p></div></li>
+      <li class="card tile" data-t="2.3,3.5" data-e="pop" data-x="shrink" style="--xd:140ms">{{icon:upgrade}}<span class="n">03 · RENEW</span><div><p class="h3">The new device goes home.</p><p class="body">The customer upgrades with confidence; the store closes a better sale.</p></div></li>
     </ol>
     <div class="isnot">
-      <div><p class="eyebrow plain">What we are</p><ul class="chips"><li class="chip">B2B</li><li class="chip">White-label</li><li class="chip">Vendor-neutral</li><li class="chip">Asset-light</li></ul></div>
-      <div><p class="eyebrow plain">What we are not</p><ul class="nots"><li><span class="strike">A consumer trade-in site</span></li><li><span class="strike">A marketplace for used devices</span></li><li><span class="strike">A device buyer</span></li><li><span class="strike">A recycling brand</span></li></ul></div>
+      <div class="stack"><p class="cap" data-fx="label" data-t="3.6,5.0">What we are</p>
+        <div class="chips"><span class="chip" data-t="3.7,5.0" data-e="pop" data-x="left">B2B</span><span class="chip" data-t="3.78,5.0" data-e="pop" data-x="left" style="--xd:40ms">White-label</span><span class="chip" data-t="3.86,5.0" data-e="pop" data-x="left" style="--xd:80ms">Vendor-neutral</span><span class="chip" data-t="3.94,5.0" data-e="pop" data-x="left" style="--xd:120ms">Asset-light</span></div></div>
+      <div class="stack"><p class="cap" data-fx="label" data-t="4.0,5.0">What we are not</p>
+        <ul class="nots"><li class="strike" data-t="4.05,5.0" data-e="right" data-x="left">A consumer trade-in site</li><li class="strike" data-t="4.15,5.0" data-e="right" data-x="left" style="--d:60ms;--xd:40ms">A marketplace for used devices</li><li class="strike" data-t="4.25,5.0" data-e="right" data-x="left" style="--d:120ms;--xd:80ms">A device buyer</li></ul></div>
     </div>
   </div>
 </section>
 
-<!-- 02 · Values -->
-<section class="sec dk" id="values" data-tone="night" data-group="story">
-  <div class="wrap pad">
-    <div class="head">
-      <p class="eyebrow">02 · Values</p>
-      <h2 class="h2">Four values guide every decision we make.</h2>
-      <p class="lede">Each value comes with a behaviour, so any team can check its own work against it.</p>
+<section class="scn lt" id="s-values" data-len="5.0" data-bg="#FFFFFF" data-name="Values" data-num="02">
+  <div class="frame">
+    <div class="lcol">
+      <p class="eyebrow" data-fx="label" data-t="0.05,4.8">02 · Values</p>
+      <h2 class="h1" data-fx="head" data-t="0.12,4.8">Four values guide every decision we make.</h2>
+      <p class="lede" data-fx="body" data-t="0.45,4.8" data-tm="9,9">Each value comes with a behaviour, so any team can check its own work against it.</p>
     </div>
-    <div class="values">
-      <article class="val card"><img src="{{img:A5}}" alt="An older phone and a new one side by side on pale stone" loading="lazy"><div class="val-body"><span class="num">01</span><h3 class="h3">Worth more</h3><p class="small">Every device has a second value. We make it visible.</p><p class="do"><b>In practice</b>We show the valuation as one clear number, right away.</p></div></article>
-      <article class="val card"><img src="{{img:A4}}" alt="A granddaughter shows her grandfather his new phone and he laughs" loading="lazy"><div class="val-body"><span class="num">02</span><h3 class="h3">Within reach</h3><p class="small">New technology should be easy to reach for everyone.</p><p class="do"><b>In practice</b>No journey takes more than three steps.</p></div></article>
-      <article class="val card"><img src="{{img:F1}}" alt="A woman in the back of a car looks out of the window, phone in hand" loading="lazy"><div class="val-body"><span class="num">03</span><h3 class="h3">Clear by design</h3><p class="small">No surprises in payment or operations.</p><p class="do"><b>In practice</b>Every fee and every waiting time is written up front.</p></div></article>
-      <article class="val card"><img src="{{img:B1}}" alt="A diverse team works together around a white table" loading="lazy"><div class="val-body"><span class="num">04</span><h3 class="h3">Trusted partner</h3><p class="small">We are the quiet infrastructure behind the store, the brand and the customer.</p><p class="do"><b>In practice</b>The customer's happy moment takes the stage. We stay behind it.</p></div></article>
-    </div>
-  </div>
-</section>
-
-<!-- 03 · Apple ecosystem -->
-<section class="sec dk" id="apple" data-tone="indigo" data-group="story">
-  <div class="wrap pad">
-    <div class="apple-grid">
-      <div>
-        <p class="eyebrow">03 · Apple ecosystem</p>
-        <h2 class="h1">Built around the devices people love most.</h2>
-        <p class="lede">Fintegre runs trade-in and renewal journeys for Apple devices at leading electronics retailers. Every device family has its own valuation flow.</p>
-        <ul class="products" aria-label="Device families"><li class="chip">iPhone</li><li class="chip">iPad</li><li class="chip">Mac</li><li class="chip">Apple Watch</li></ul>
-        <p class="legal">Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc., registered in the U.S. and other countries.</p>
-      </div>
-      <div class="partner">
-        <p class="cap" style="color:rgba(245,247,250,.7)">Partner lockup</p>
-        <div class="plock">{{lockup:white}}<span class="div65" aria-hidden="true"></span><div class="slot"><b class="cap" style="color:var(--white)">Official partner badge</b><span class="cap">Supplied by Fintegre</span></div></div>
-        <ul class="rule-list">
-          <li><span>Badge</span><span>Use only the badge supplied under the partner agreement. Never redraw, recolour or animate it.</span></li>
-          <li><span>Height</span><span>The badge matches the height of the Fintegre mark.</span></li>
-          <li><span>Space</span><span>Keep one mark height of space on each side of the divider.</span></li>
-          <li><span>Divider</span><span>The 65° line is the only connector. No plus or multiplication signs.</span></li>
-          <li><span>Names</span><span>Write product names exactly: iPhone, iPad, Mac, Apple Watch.</span></li>
-        </ul>
-      </div>
+    <div class="vslot">
+      <article class="card vcard" data-t="0.5,1.55" data-e="flip" data-x="flip"><img src="{{img:A5}}" alt="An older phone and a new one side by side on pale stone"><div class="vbody"><span class="n">01 / 04</span><h3 class="h2">Worth more</h3><p class="body">Every device has a second value. We make it visible.</p><p class="body do"><b>In practice</b>We show the valuation as one clear number, right away.</p></div></article>
+      <article class="card vcard" data-t="1.55,2.6" data-e="flip" data-x="flip"><img src="{{img:A4}}" alt="A granddaughter shows her grandfather his new phone and he laughs"><div class="vbody"><span class="n">02 / 04</span><h3 class="h2">Within reach</h3><p class="body">New technology should be easy to reach for everyone.</p><p class="body do"><b>In practice</b>No journey takes more than three steps.</p></div></article>
+      <article class="card vcard" data-t="2.6,3.65" data-e="flip" data-x="flip"><img src="{{img:F1}}" alt="A woman in the back of a car looks out of the window, phone in hand" style="object-position:30% 50%"><div class="vbody"><span class="n">03 / 04</span><h3 class="h2">Clear by design</h3><p class="body">No surprises in payment or operations.</p><p class="body do"><b>In practice</b>Every fee and every waiting time is written up front.</p></div></article>
+      <article class="card vcard" data-t="3.65,4.8" data-e="flip" data-x="shrink"><img src="{{img:B1}}" alt="A team works together around a white table" style="object-position:40% 50%"><div class="vbody"><span class="n">04 / 04</span><h3 class="h2">Trusted partner</h3><p class="body">The quiet infrastructure behind the store, the brand and the customer.</p><p class="body do"><b>In practice</b>The customer's happy moment takes the stage. We stay behind it.</p></div></article>
     </div>
   </div>
 </section>
 
-<!-- 04 · Logo (3D) -->
-<section class="sec dk scene" id="logo" data-tone="indigo" data-group="identity">
-  <div class="stage">
-    <canvas id="logo-gl" aria-hidden="true"></canvas>
-    <div class="logo-fallback" aria-hidden="true">{{mark:white}}</div>
-    <div class="wrap logo-copy">
-      <p class="eyebrow">04 · Logo</p>
-      <div class="steps">
-        <div class="step" data-step="0"><h2 class="h1">Four blocks.</h2><p class="lede">The mark is built from four parallelograms. Two long bars and two short blocks form an F in motion.</p></div>
-        <div class="step" data-step="1"><h2 class="h1">One slant: 65°.</h2><p class="lede">Every block leans at the same angle, measured from the master artwork. The whole system reuses it.</p></div>
-        <div class="step" data-step="2"><h2 class="h1">The mark.</h2><p class="lede">Assembled, it reads as forward motion: light, precise and easy to recognise at any size.</p></div>
-      </div>
-      <div class="meter" aria-hidden="true"><i></i><i></i><i></i></div>
+<section class="scn dk" id="s-apple" data-len="4.4" data-bg="#3047EC" data-name="Apple ecosystem" data-num="03">
+  <div class="frame">
+    <div class="lcol" style="width:min(42%,600px)">
+      <p class="eyebrow" data-fx="label" data-t="0.25,4.2" data-tm="0.25,1.8">03 · Apple ecosystem</p>
+      <h2 class="h1" data-fx="head" data-t="0.3,4.2" data-tm="0.3,1.8">Built around the devices people love most.</h2>
+      <p class="lede" data-fx="body" data-t="0.75,4.2" data-tm="0.75,1.8">Fintegre runs trade-in and renewal journeys for Apple devices at leading electronics retailers. Every device family has its own valuation flow.</p>
+      <div class="chips"><span class="chip" data-t="1.1,4.2" data-tm="1.1,1.8" data-e="pop" data-x="left" style="border-color:rgba(255,255,255,.45)">iPhone</span><span class="chip" data-t="1.18,4.2" data-tm="1.18,1.8" data-e="pop" data-x="left" style="--xd:40ms;border-color:rgba(255,255,255,.45)">iPad</span><span class="chip" data-t="1.26,4.2" data-tm="1.26,1.8" data-e="pop" data-x="left" style="--xd:80ms;border-color:rgba(255,255,255,.45)">Mac</span><span class="chip" data-t="1.34,4.2" data-tm="1.34,1.8" data-e="pop" data-x="left" style="--xd:120ms;border-color:rgba(255,255,255,.45)">Apple Watch</span></div>
+      <p class="legal" data-fx="body" data-t="1.5,4.2" data-tm="1.5,1.8">Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc., registered in the U.S. and other countries.</p>
     </div>
-  </div>
-</section>
-
-<!-- 04 · Logo system -->
-<section class="sec lt" id="logo-rules" data-tone="ice" data-group="identity">
-  <div class="wrap pad">
-    <div class="head">
-      <p class="eyebrow">04 · Logo system</p>
-      <h2 class="h2">Construction, space and size.</h2>
-    </div>
-    <div class="g3">
-      <div class="card spec"><div class="art">{{construction}}</div><h3 class="h3">Construction</h3><p class="small">Every edge runs at 65°. The block baselines give the grid for type and layouts next to the mark.</p></div>
-      <div class="card spec"><div class="art">{{clearspace}}</div><h3 class="h3">Clear space</h3><p class="small">Keep half the mark height free on every side. Nothing enters this space, not even the edge of an image.</p></div>
-      <div class="card spec"><div class="art"><div class="minis"><div>{{lockup:dark}}<span class="cap">96 px · 25 mm</span></div><div>{{mark:gradient}}<span class="cap">20 px · 6 mm</span></div></div></div><h3 class="h3">Minimum size</h3><p class="small">The lockup never goes below 96 px wide on screen or 25 mm in print. The mark alone never goes below 20 px.</p></div>
-    </div>
-    <div class="g4 vers">
-      <div class="ver" style="background:var(--white)">{{lockup:dark}}<span class="cap">Primary · on White Smoke</span></div>
-      <div class="ver" style="background:var(--indigo)">{{lockup:white}}<span class="cap" style="color:rgba(255,255,255,.8)">On Deep Indigo</span></div>
-      <div class="ver" style="background:var(--smoke)">{{lockup:graphite}}<span class="cap">One colour · Graphite</span></div>
-      <div class="ver"><img src="{{img:B3}}" alt="" loading="lazy"><span style="position:absolute;inset:0;background:rgba(26,36,107,.35)"></span>{{lockup:white}}<span class="cap" style="color:rgba(255,255,255,.85)">On photography</span></div>
-    </div>
-    <p class="cap" style="margin:clamp(40px,5vw,64px) 0 16px">Avoid</p>
-    <div class="g3 misuse">
-      <div class="ver avoid" style="background:var(--white)"><span class="m-rot">{{mark:gradient}}</span><span class="cap">Don't rotate</span></div>
-      <div class="ver avoid" style="background:var(--white)"><span class="m-stretch">{{mark:gradient}}</span><span class="cap">Don't stretch</span></div>
-      <div class="ver avoid" style="background:var(--white)">{{mark:E8743B}}<span class="cap">Don't recolour</span></div>
-      <div class="ver avoid" style="background:var(--white)"><span class="m-fx">{{mark:gradient}}</span><span class="cap">Don't add effects</span></div>
-      <div class="ver avoid" style="background:var(--white)"><span class="m-skew">{{mark:gradient}}</span><span class="cap">Don't change the angle</span></div>
-      <div class="ver avoid" style="background:var(--smoke)">{{mark:ice}}<span class="cap">Don't use low contrast</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- 05 · Colour -->
-<section class="sec lt" id="colour" data-tone="smoke" data-group="identity">
-  <div class="wrap pad">
-    <div class="head">
-      <p class="eyebrow">05 · Colour</p>
-      <h2 class="h2">Five colours, used flat.</h2>
-      <p class="lede">Deep Indigo and Ice Blue carry the brand. White Smoke gives it air. Graphite and Titanium do the quiet work of text and structure.</p>
-    </div>
-    <div class="swatches">
-      <div class="sw big sw-indigo"><div><p class="cap" style="color:rgba(255,255,255,.75)">Signal</p><h3>Deep Indigo</h3></div><p>Colour blocks, buttons, links and headlines on light ground. The start of the mark's gradient.</p><p class="codes">HEX #3047EC<br>RGB 48 71 236</p></div>
-      <div class="sw sw-ice"><div><p class="cap">Clarity</p><h3>Ice Blue</h3></div><p class="codes">HEX #B7D7FF<br>RGB 183 215 255</p></div>
-      <div class="sw sw-smoke"><div><p class="cap">Air</p><h3>White Smoke</h3></div><p class="codes">HEX #F5F7FA<br>RGB 245 247 250</p></div>
-      <div class="sw sw-graphite"><div><p class="cap" style="color:rgba(245,247,250,.6)">Text</p><h3>Midnight Graphite</h3></div><p class="codes">HEX #0F1115 · RGB 15 17 21</p></div>
-      <div class="sw sw-titanium"><div><p class="cap" style="color:rgba(15,17,21,.6)">Structure</p><h3>Soft Titanium</h3></div><p class="codes">HEX #A7B0BE · RGB 167 176 190</p></div>
-    </div>
-    <div class="derived"><i></i><p class="small"><b style="color:var(--ink);font-weight:500">Night Indigo #1A246B</b> is a derived tone: Deep Indigo at 40% over Midnight Graphite. Use it only for deep grounds behind photography and the 3D mark. Graphite is for text and lines, never for whole pages.</p></div>
-
-    <div class="ratio">
-      <h3 class="h3">Proportion</h3>
-      <div class="ratio-bar" role="img" aria-label="Colour proportion: 60% White Smoke, 25% Deep Indigo, 10% Ice Blue, 5% Graphite and Titanium">
-        <span style="flex:60;background:var(--smoke);box-shadow:inset 0 0 0 1px rgba(15,17,21,.08)">60 · White Smoke</span>
-        <span style="flex:25;background:var(--indigo);color:var(--white)">25 · Indigo</span>
-        <span style="flex:10;background:var(--ice)">10 · Ice</span>
-        <span style="flex:5;background:var(--graphite);color:var(--smoke)">5</span>
-      </div>
-      <p class="small">A layout is mostly air. Indigo marks what matters, Ice softens it, Graphite and Titanium stay in the details.</p>
-    </div>
-
-    <div class="pairs">
-      <h3 class="h3" style="margin-bottom:18px">Approved pairs</h3>
-      <div class="g4">
-        <div class="pair" style="background:var(--indigo);color:var(--white)"><span class="aa">Aa</span><div class="meta"><span>White on Indigo · 6.49</span><span class="grade">AA</span></div></div>
-        <div class="pair" style="background:var(--smoke);color:var(--graphite)"><span class="aa">Aa</span><div class="meta"><span>Graphite on Smoke · 17.61</span><span class="grade">AAA</span></div></div>
-        <div class="pair" style="background:var(--smoke);color:var(--indigo)"><span class="aa">Aa</span><div class="meta"><span>Indigo on Smoke · 6.04</span><span class="grade">AA</span></div></div>
-        <div class="pair" style="background:var(--ice);color:var(--graphite)"><span class="aa">Aa</span><div class="meta"><span>Graphite on Ice · 12.76</span><span class="grade">AAA</span></div></div>
-        <div class="pair" style="background:var(--night);color:var(--smoke)"><span class="aa">Aa</span><div class="meta"><span>Smoke on Night · 12.97</span><span class="grade">AAA</span></div></div>
-        <div class="pair" style="background:var(--indigo);color:var(--ice)"><span class="aa">Aa</span><div class="meta"><span>Ice on Indigo · 4.38</span><span class="grade">Large</span></div></div>
-        <div class="pair" style="background:var(--ice);color:var(--white)"><span class="aa">Aa</span><div class="meta" style="color:var(--graphite)"><span>White on Ice · 1.48</span><span class="grade">Avoid</span></div></div>
-        <div class="pair" style="background:var(--smoke);color:var(--titanium)"><span class="aa">Aa</span><div class="meta" style="color:var(--graphite)"><span>Titanium on Smoke · 2.04</span><span class="grade">Avoid</span></div></div>
-      </div>
-      <p class="small" style="margin-top:14px">Contrast ratios follow WCAG 2.2. AA needs 4.5 for body text; "Large" pairs work only for text from 24 px.</p>
-    </div>
-
-    <div class="grads">
-      <h3 class="h3" style="margin-bottom:18px">Gradients</h3>
-      <div class="g3">
-        <div><div class="grad" style="background:linear-gradient(115deg,var(--indigo),var(--ice))"><span class="cap" style="color:var(--white)">Signature · 65°</span></div><p class="small figcap">Indigo to Ice, always along the 65° slant. For the mark, hero fields and covers.</p></div>
-        <div><div class="grad" style="background:linear-gradient(180deg,var(--ice),var(--smoke))"><span class="cap">Air</span></div><p class="small figcap">Ice to Smoke, top to bottom. For quiet page grounds.</p></div>
-        <div><div class="grad avoid" style="background:linear-gradient(115deg,#0b0420,#7a1cff 60%,#ff2bd6)"><span class="cap" style="color:var(--white)">Avoid</span></div><p class="small figcap">Black to neon purple reads as a "hacker" mood. It is never part of the brand.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 06 · Typography -->
-<section class="sec lt" id="type" data-tone="smoke" data-group="identity">
-  <div class="wrap pad" style="padding-bottom:0">
-    <div class="head">
-      <p class="eyebrow">06 · Typography</p>
-      <h2 class="h2">Geologica speaks. JetBrains Mono counts.</h2>
-      <p class="lede">Two families, a short scale and a few firm rules. Headlines stay close and confident, body text stays open and easy to read.</p>
-    </div>
-    <div class="spec-row">
-      <div class="card face"><p class="cap">Geologica · Headlines and text · 300 to 700</p><span class="aa">Aa</span><p class="glyphs">ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ<br>abcçdefgğhıijklmnoöprsştuüvyz</p></div>
-      <div class="card face mono-face"><p class="cap">JetBrains Mono · Labels and numbers · 400 to 600</p><span class="aa">Aa</span><p class="glyphs">0123456789 ₺ € % · 00:58</p></div>
-    </div>
-    <div class="card anatomy">
-      <div class="ana-demo">
-        <p class="l">Trade-in · iPhone</p>
-        <h3 class="hh">Your old phone is worth more than you think.</h3>
-        <p class="bb">Bring it to the store. We check it, value it and count it toward your new one in a few minutes.</p>
-        <p class="dd"><i></i>Valuation ready · 00:58</p>
-      </div>
-      <ul class="ana-notes">
-        <li><b>Label</b><span class="mono">JetBrains Mono 500 · 12/18 · +0.16em · caps</span></li>
-        <li><b>Headline</b><span class="mono">Geologica 580 · 48/48 · −0.03em</span></li>
-        <li><b>Body</b><span class="mono">Geologica 300 · 18/29 · 0</span></li>
-        <li><b>Data</b><span class="mono">JetBrains Mono 500 · 14/20</span></li>
-        <li><b>Spacing</b><span class="mono">16 · 24 · 40 on the 8-point grid</span></li>
+    <div class="ppanel" data-t="1.5,4.2" data-tm="1.9,4.2" data-e="open" data-x="left">
+      <p class="cap" style="color:rgba(245,247,250,.75)">Partner lockup</p>
+      <div class="plock">{{lockup:white}}<span class="div65" data-t="1.8,4.2" data-tm="2.1,4.2" data-e="pop" data-x="fade"></span><div class="slot" data-t="2.0,4.2" data-tm="2.3,4.2" data-e="pop" data-x="fade"><b class="cap" style="color:var(--white)">Official partner badge</b><span class="cap">Supplied by Fintegre</span></div></div>
+      <ul class="prules">
+        <li data-t="2.3,4.2" data-tm="2.5,4.2" data-e="right" data-x="fade"><b>Badge</b><span>Only the badge from the partner agreement. Never redrawn, recoloured or animated.</span></li>
+        <li data-t="2.45,4.2" data-tm="2.6,4.2" data-e="right" data-x="fade" style="--d:40ms"><b>Height</b><span>The badge matches the height of the Fintegre mark.</span></li>
+        <li data-t="2.6,4.2" data-tm="2.7,4.2" data-e="right" data-x="fade" style="--d:80ms"><b>Divider</b><span>The 65° line is the only connector. No plus or multiplication signs.</span></li>
+        <li data-t="2.75,4.2" data-tm="2.8,4.2" data-e="right" data-x="fade" style="--d:120ms"><b>Names</b><span>Written exactly: iPhone, iPad, Mac, Apple Watch.</span></li>
       </ul>
     </div>
   </div>
-  <div class="scene" id="type-build">
-    <div class="stage"><div class="wrap tb-stage" style="height:100%">
-      <div class="tb-cap"><h3 class="h2">Skeleton first. Then type.</h3><p class="tb-phase" id="tb-phase">Skeleton</p></div>
-      <div class="tb-cards">
-        <div class="tb c1"><div class="skel" aria-hidden="true"><div><i class="s-l"></i><i class="s-h1"></i><i class="s-h2"></i></div><i class="s-d"></i></div>
-          <div class="real"><div><p class="t-l" style="color:var(--indigo)">In store</p><p class="t-h">Bring the old. Take the new.</p></div><p class="t-d">3 steps · 1 visit</p></div></div>
-        <div class="tb c2"><div class="skel" aria-hidden="true"><div><i class="s-l"></i><i class="s-h1"></i><i class="s-h2"></i></div><i class="s-d"></i></div>
-          <div class="real"><div><p class="t-l" style="color:var(--ice)">Valuation</p><p class="t-h">See its value in seconds.</p></div><p class="t-d">Ready · 00:58</p></div></div>
-        <div class="tb c3"><div class="skel" aria-hidden="true"><div><i class="s-l"></i><i class="s-h1"></i><i class="s-h2"></i></div><i class="s-d"></i></div>
-          <div class="real"><div><p class="t-l" style="color:var(--indigo)">Payment</p><p class="t-h">Credit applied to your new device.</p></div><p class="t-d">Paid in · today</p></div></div>
-      </div>
-      <p class="small" style="max-width:56ch">Every layout starts as grey blocks. Type replaces them in a fixed order: label, headline, body, data. When a card leaves, it turns along the 65° slant.</p>
-    </div></div>
+</section>
+
+<section class="scn dk" id="s-logo" data-len="6.6" data-bg="#3047EC" data-bg2="2.8:#1A246B" data-name="Logo" data-num="04">
+  <div class="frame">
+    <div class="lcol" style="width:min(40%,560px)">
+      <p class="eyebrow" data-fx="label" data-t="0.1,6.4">04 · Logo</p>
+      <h2 class="h1" data-fx="head" data-t="0.15,1.95">Four blocks. One slant: 65°.</h2>
+      <p class="lede" data-fx="body" data-t="0.5,1.95" data-tm="9,9">The mark is built from four parallelograms. Every edge leans at the same angle, measured from the master artwork and reused across the whole system.</p>
+      <h2 class="h1" data-fx="head" data-t="2.15,4.0">Behind every device, a number.</h2>
+      <p class="lede" data-fx="body" data-t="2.5,4.0" data-tm="9,9">Fintegre reads a device as data: model, condition, market. The mark carries that idea in its own surface.</p>
+      <h2 class="h1" data-fx="head" data-t="4.25,6.4">Found in seconds.</h2>
+      <p class="lede" data-fx="body" data-t="4.55,6.4" data-tm="9,9">Every check becomes one clear value. This is the screen the store and the customer see together.</p>
+    </div>
+    <div class="console" data-t="4.1,6.4" data-e="zoom" data-x="shrink" aria-label="Example valuation screen">
+      <div class="con-h"><span class="mono" style="color:var(--ice)">VALUATION · EXAMPLE</span><span class="live"></span></div>
+      <div class="con-dev"><b data-fx="label" data-t="4.3,6.4">iPhone 13 · 128 GB</b><span class="mono" style="color:rgba(245,247,250,.6)">Checked at the counter · 00:58</span></div>
+      <ul class="con-checks">
+        <li data-t="4.4,6.4" data-e="pop" data-x="fade">Screen <span>A</span></li>
+        <li data-t="4.5,6.4" data-e="pop" data-x="fade">Battery <span>91%</span></li>
+        <li data-t="4.6,6.4" data-e="pop" data-x="fade">Body <span>A−</span></li>
+        <li data-t="4.7,6.4" data-e="pop" data-x="fade">Market <span>+3.2%</span></li>
+      </ul>
+      <div class="con-val"><div class="stack" style="gap:6px"><span class="mono" style="color:rgba(245,247,250,.6)">TRADE-IN VALUE</span><b class="count" data-t="4.8,6.4" data-to="14250" data-pre="₺">₺0</b></div>
+        <div class="bars" data-t="4.9,6.4" data-e="draw" data-x="fade"><i style="height:38%"></i><i style="height:52%"></i><i style="height:47%"></i><i style="height:66%"></i><i style="height:74%"></i><i style="height:100%"></i></div></div>
+    </div>
   </div>
-  <div class="wrap pad" style="padding-top:0">
-    <ul class="weights" aria-label="Geologica weights">
-      <li><span class="w" style="font-weight:300">Fintegre</span><span class="cap">Light 300 · body</span></li>
-      <li><span class="w" style="font-weight:400">Fintegre</span><span class="cap">Regular 400</span></li>
-      <li><span class="w" style="font-weight:500">Fintegre</span><span class="cap">Medium 500 · titles</span></li>
-      <li><span class="w" style="font-weight:580">Fintegre</span><span class="cap">Semibold 580 · headlines</span></li>
-      <li><span class="w" style="font-weight:700">Fintegre</span><span class="cap">Bold 700 · numbers only</span></li>
+</section>
+
+<section class="scn lt" id="s-logosys" data-len="4.8" data-bg="#FFFFFF" data-name="Logo system" data-num="04">
+  <div class="frame">
+    <p class="eyebrow ab" data-fx="label" data-t="0.3,4.6" style="top:0">04 · Logo system</p>
+    <h2 class="h2 ab" data-fx="head" data-t="0.35,2.4" style="top:26px">Construction, space and size.</h2>
+    <h2 class="h2 ab" data-fx="head" data-t="2.5,4.6" style="top:26px">Versions, and what to avoid.</h2>
+    <div class="sys3">
+      <div class="card spec" data-t="0.6,2.35" data-tm="0.6,1.2" data-e="pop" data-x="shrink"><div class="art">{{construction}}</div><p class="h3">Construction</p><p class="body">Every edge runs at 65°. The block baselines give the grid for type next to the mark.</p></div>
+      <div class="card spec" data-t="0.75,2.35" data-tm="1.2,1.8" data-e="pop" data-x="shrink" style="--xd:60ms"><div class="art">{{clearspace}}</div><p class="h3">Clear space</p><p class="body">Half the mark height stays free on every side.</p></div>
+      <div class="card spec" data-t="0.9,2.35" data-tm="1.8,2.35" data-e="pop" data-x="shrink" style="--xd:120ms"><div class="art"><div class="minis"><div>{{lockup:dark}}<span class="cap">96 px · 25 mm</span></div><div>{{mark:gradient}}<span class="cap">20 px · 6 mm</span></div></div></div><p class="h3">Minimum size</p><p class="body">Lockup from 96 px wide. Mark alone from 20 px.</p></div>
+    </div>
+    <div class="vers">
+      <div class="ver" data-t="2.6,4.6" data-tm="2.6,3.25" data-e="flip" data-x="shrink" style="background:var(--smoke)">{{lockup:dark}}<span class="cap">Primary</span></div>
+      <div class="ver" data-t="2.7,4.6" data-tm="2.7,3.25" data-e="flip" data-x="shrink" style="background:var(--indigo);--xd:40ms">{{lockup:white}}<span class="cap" style="color:rgba(255,255,255,.8)">On Indigo</span></div>
+      <div class="ver" data-t="2.8,4.6" data-tm="2.8,3.25" data-e="flip" data-x="shrink" style="background:var(--white);box-shadow:inset 0 0 0 1px var(--rule);--xd:80ms">{{lockup:graphite}}<span class="cap">One colour</span></div>
+      <div class="ver" data-t="2.9,4.6" data-tm="2.9,3.25" data-e="flip" data-x="shrink" style="--xd:120ms"><img src="{{img:B3}}" alt=""><span style="position:absolute;inset:0;background:rgba(26,36,107,.38)"></span>{{lockup:white}}<span class="cap" style="color:rgba(255,255,255,.85)">On photography</span></div>
+    </div>
+    <div class="miss">
+      <div class="ver" data-t="3.3,4.6" data-e="pop" data-x="shrink" style="--xd:30ms"><span class="m-rot">{{mark:gradient}}</span><span class="cap">Rotate</span></div>
+      <div class="ver" data-t="3.4,4.6" data-e="pop" data-x="shrink" style="--xd:110ms"><span class="m-str">{{mark:gradient}}</span><span class="cap">Stretch</span></div>
+      <div class="ver" data-t="3.5,4.6" data-e="pop" data-x="shrink" style="--xd:0ms">{{mark:E8743B}}<span class="cap">Recolour</span></div>
+      <div class="ver" data-t="3.6,4.6" data-e="pop" data-x="shrink" style="--xd:160ms"><span class="m-fx">{{mark:gradient}}</span><span class="cap">Effects</span></div>
+      <div class="ver" data-t="3.7,4.6" data-e="pop" data-x="shrink" style="--xd:60ms"><span class="m-skw">{{mark:gradient}}</span><span class="cap">New angle</span></div>
+      <div class="ver" data-t="3.8,4.6" data-e="pop" data-x="shrink" style="--xd:200ms;background:var(--smoke)">{{mark:ice}}<span class="cap">Low contrast</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="scn lt" id="s-colour" data-len="7.0" data-bg="#FFFFFF" data-name="Colour" data-num="05">
+  <div class="frame">
+    <p class="eyebrow ab" data-fx="label" data-t="0.05,6.8" style="top:0">05 · Colour</p>
+    <h2 class="h2 ab" data-fx="head" data-t="0.1,2.3" style="top:26px">Five colours, used flat.</h2>
+    <h2 class="h2 ab" data-fx="head" data-t="2.45,3.75" style="top:26px">Two blend, along the slant.</h2>
+    <h2 class="h2 ab" data-fx="head" data-t="3.85,4.95" style="top:26px">The other blend is air.</h2>
+    <h2 class="h2 ab" data-fx="head" data-t="5.05,5.95" style="top:26px">Pairs that stay readable.</h2>
+    <h2 class="h2 ab" data-fx="head" data-t="6.0,6.8" style="top:26px">Mostly air, some signal.</h2>
+    <div class="sq-row">
+      <div class="sq" data-t="0.5,2.25" data-e="pop" data-x="left"><i style="background:var(--indigo)"></i><p class="h3" data-fx="label" data-t="0.9,2.2">Deep Indigo</p><p class="mono" data-fx="label" data-t="1.0,2.2">#3047EC · Primary</p></div>
+      <div class="sq" data-t="0.6,2.25" data-e="pop" data-x="left" style="--xd:50ms"><i style="background:var(--ice)"></i><p class="h3" data-fx="label" data-t="1.0,2.2">Ice Blue</p><p class="mono" data-fx="label" data-t="1.1,2.2">#B7D7FF · Secondary</p></div>
+      <div class="sq" data-t="0.7,2.25" data-e="pop" data-x="left" style="--xd:100ms"><i style="background:var(--smoke);box-shadow:inset 0 0 0 1px rgba(15,17,21,.1)"></i><p class="h3" data-fx="label" data-t="1.1,2.2">White Smoke</p><p class="mono" data-fx="label" data-t="1.2,2.2">#F5F7FA · Ground</p></div>
+      <div class="sq" data-t="0.8,2.25" data-e="pop" data-x="left" style="--xd:150ms"><i style="background:var(--graphite)"></i><p class="h3" data-fx="label" data-t="1.2,2.2">Graphite</p><p class="mono" data-fx="label" data-t="1.3,2.2">#0F1115 · Text</p></div>
+      <div class="sq" data-t="0.9,2.25" data-e="pop" data-x="left" style="--xd:200ms"><i style="background:var(--titanium)"></i><p class="h3" data-fx="label" data-t="1.3,2.2">Titanium</p><p class="mono" data-fx="label" data-t="1.4,2.2">#A7B0BE · Structure</p></div>
+    </div>
+    <div class="cpanel" id="cp1" data-t="2.5,3.8" data-e="wipe" data-x="cut"><div class="fill" id="cp1f"></div><div class="lab" style="color:var(--white)"><p class="cap" style="color:rgba(255,255,255,.8)" data-fx="label" data-t="2.9,3.75">Signature gradient</p><p class="h2" data-fx="head" data-t="3.0,3.75">Indigo → Ice · 65°</p></div></div>
+    <div class="cpanel" id="cp2" data-t="3.85,5.0" data-e="wipe" data-x="shrink" style="background:linear-gradient(180deg,var(--ice),var(--smoke))"><div class="lab"><p class="cap" data-fx="label" data-t="4.1,4.95">Air</p><p class="h2" data-fx="head" data-t="4.2,4.95">Ice → Smoke · top to bottom</p></div></div>
+    <div class="pairs4">
+      <div class="pair" data-t="5.1,6.0" data-e="flip" data-x="shrink" style="background:var(--indigo);color:var(--white)"><span class="aa">Aa</span><div class="m"><span>White on Indigo · 6.49</span><span class="g">AA</span></div></div>
+      <div class="pair" data-t="5.2,6.0" data-e="flip" data-x="shrink" style="background:var(--smoke);color:var(--graphite);--xd:60ms"><span class="aa">Aa</span><div class="m"><span>Graphite on Smoke · 17.61</span><span class="g">AAA</span></div></div>
+      <div class="pair" data-t="5.3,6.0" data-e="flip" data-x="shrink" style="background:var(--ice);color:var(--graphite);--xd:120ms"><span class="aa">Aa</span><div class="m"><span>Graphite on Ice · 12.76</span><span class="g">AAA</span></div></div>
+      <div class="pair" data-t="5.4,6.0" data-e="flip" data-x="shrink" style="background:var(--ice);color:var(--white);--xd:180ms"><span class="aa">Aa</span><div class="m" style="color:var(--graphite)"><span>White on Ice · 1.48</span><span class="g">Avoid</span></div></div>
+    </div>
+    <div class="prop" id="prop" data-t="6.05,6.8" data-e="open" data-x="left" aria-label="Proportion: 60% White Smoke, 25% Deep Indigo, 10% Ice Blue, 5% Graphite">
+      <span style="background:var(--smoke);box-shadow:inset 0 0 0 1px rgba(15,17,21,.1)">60 · Smoke</span><span style="background:var(--indigo);color:var(--white)">25 · Indigo</span><span style="background:var(--ice)">10 · Ice</span><span style="background:var(--graphite);color:var(--smoke)">5</span>
+    </div>
+  </div>
+</section>
+
+<section class="scn lt" id="s-type" data-len="10.2" data-bg="#FFFFFF" data-name="Typography" data-num="06">
+  <div class="frame">
+    <p class="eyebrow ab" data-fx="label" data-t="0.15,10.0" style="top:0">06 · Typography</p>
+    <div class="tword" id="tword" data-t="0.2,3.5" data-e="right" data-x="left">
+      <span data-fx="big" data-t="0.25,2.35">Geologica</span>
+      <span data-fx="big" data-t="2.35,2.75">Clear.</span>
+      <span data-fx="big" data-t="2.75,3.15">Confident.</span>
+      <span data-fx="big" data-t="3.15,3.5">Human.</span>
+    </div>
+    <ul class="tfam" id="tfam" data-t="0.55,3.5" data-e="right" data-x="left">
+      <li>Light<span>300</span></li><li>Regular<span>400</span></li><li>Medium<span>500</span></li><li>Semibold<span>580</span></li><li>Bold<span>700</span></li><li>Italic<span>slnt −12</span></li>
     </ul>
-    <ul class="scale" aria-label="Type scale">
-      <li><span class="cap">Display</span><span class="mono">112 / 108 · −0.035em</span><span class="sample" style="font-size:clamp(34px,5vw,72px)">Worth more.</span></li>
-      <li><span class="cap">H1</span><span class="mono">76 / 76 · −0.032em</span><span class="sample" style="font-size:clamp(28px,3.6vw,52px)">Built around people.</span></li>
-      <li><span class="cap">H2</span><span class="mono">60 / 62 · −0.03em</span><span class="sample" style="font-size:clamp(24px,2.8vw,40px)">Five colours, used flat.</span></li>
-      <li><span class="cap">H3</span><span class="mono">26 / 31 · −0.015em</span><span class="sample" style="font-size:26px;font-weight:500">A clear price in seconds.</span></li>
-      <li><span class="cap">Body L</span><span class="mono">22 / 33 · 0</span><span class="sample" style="font-size:22px;font-weight:300;letter-spacing:0">We value the device a customer already has.</span></li>
-      <li><span class="cap">Body</span><span class="mono">16 / 26 · 0</span><span class="sample" style="font-size:16px;font-weight:300;letter-spacing:0">Payment and settlement run in the background.</span></li>
-      <li><span class="cap">Label</span><span class="mono">12 / 18 · +0.16em</span><span class="sample" style="font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase">Trade-in · 00:58</span></li>
-    </ul>
-    <div class="g3 trules">
-      <div class="card trule"><div class="demo"><p class="dh">Left-aligned by default.</p><p class="db">Text starts on one line, so the eye always knows where to return.</p></div><h3 class="h3">Align left</h3><p class="small">Headlines, body and labels share one left edge.</p></div>
-      <div class="card trule"><div class="demo c"><p class="dh">Worth more.</p><p class="db">Short statements only.</p></div><h3 class="h3">Centre with care</h3><p class="small">Centre only statements of two lines or less, on covers and posts.</p></div>
-      <div class="card trule"><div class="demo"><div class="sp8" aria-hidden="true"><i style="height:8px"></i><i style="height:16px"></i><i style="height:24px"></i><i style="height:40px"></i><i style="height:64px"></i></div><p class="db" style="margin-top:12px">8 · 16 · 24 · 40 · 64</p></div><h3 class="h3">Space in steps of 8</h3><p class="small">Padding and gaps come from one scale. Larger type gets more space above it.</p></div>
-      <div class="card trule"><div class="demo"><p class="db" style="font-size:15px;color:var(--ink)">A line holds 45 to 70 characters. Longer lines tire the eye, shorter lines break the rhythm.</p></div><h3 class="h3">Keep lines readable</h3><p class="small">Set the measure, then the size.</p></div>
-      <div class="card trule"><div class="demo"><p class="dh" style="font-family:var(--f-mono);font-weight:500;letter-spacing:0">00:58 · ₺8.400</p></div><h3 class="h3">Numbers in mono</h3><p class="small">Prices, times and counts use JetBrains Mono so digits line up.</p></div>
-      <div class="card trule"><div class="demo"><p class="dh">Three sizes.</p><p class="db">One headline, one body, one label per layout.</p></div><h3 class="h3">Three sizes at most</h3><p class="small">Hierarchy comes from size and weight, never from colour alone.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- 07 · Graphic language -->
-<section class="sec lt" id="graphic" data-tone="smoke" data-group="identity">
-  <div class="wrap pad">
-    <div class="head">
-      <p class="eyebrow">07 · Graphic language</p>
-      <h2 class="h2">One angle runs through everything.</h2>
-      <p class="lede">The 65° slant comes from the mark itself. Repeated in lines, blocks, crops and light, it makes a Fintegre surface recognisable before the logo appears.</p>
-    </div>
-    <div class="why">
-      <img src="{{img:E2}}" alt="" loading="lazy">
-      <div class="why-in">
-        <h3 class="h2" style="font-size:clamp(28px,3vw,44px)">Why 65°?</h3>
-        <ol>
-          <li><b>It is ours.</b>The angle is measured from the mark. Nobody else owns it.</li>
-          <li><b>It moves forward.</b>A 65° line rises like an upgrade arrow and reads as progress.</li>
-          <li><b>It stays calm.</b>Steep enough to feel alive, never sharp enough to feel aggressive.</li>
-        </ol>
+    <div class="tnote" data-t="0.6,3.5" data-tm="9,9" data-e="right" data-x="left"><p class="body">Geologica carries the voice. One variable family, from Light for long text to Bold for big numbers.</p></div>
+    <p class="tmono" data-fx="big" data-t="3.6,5.0">JetBrains Mono</p>
+    <p class="tdigits" id="tdig" data-t="3.8,5.0" data-e="right" data-x="left">00:58 · ₺14.250 · 91%</p>
+    <p class="body ab" data-fx="body" data-t="4.0,5.0" style="bottom:0;left:0">Numbers, labels and anything a machine would say. Digits line up in tables and prices.</p>
+    <div class="anat">
+      <div class="card ana-card" data-t="5.1,6.8" data-e="open" data-x="left">
+        <span class="msr" data-t="5.6,6.8" data-e="pop" data-x="fade" style="top:calc(clamp(24px,5svh,56px) + 18px);height:16px"><b>16</b></span>
+        <p class="l" data-fx="label" data-t="5.3,6.8">Trade-in · iPhone</p>
+        <h3 class="hh" data-fx="head" data-t="5.35,6.8">Your old phone is worth more than you think.</h3>
+        <p class="bb" data-fx="body" data-t="5.55,6.8">Bring it to the store. We check it, value it and count it toward your new one in minutes.</p>
+        <p class="dd" data-t="5.75,6.8" data-e="pop" data-x="fade"><i></i>Valuation ready · 00:58</p>
       </div>
+      <ul class="ana-notes">
+        <li data-t="5.5,6.8" data-e="right" data-x="left"><b>Label</b><span>Mono 500 · 12/18 · +0.16em · caps</span></li>
+        <li data-t="5.6,6.8" data-e="right" data-x="left" style="--xd:40ms"><b>Headline</b><span>Geologica 580 · 48/48 · −0.03em</span></li>
+        <li data-t="5.7,6.8" data-e="right" data-x="left" style="--xd:80ms"><b>Body</b><span>Geologica 300 · 18/29</span></li>
+        <li data-t="5.8,6.8" data-e="right" data-x="left" style="--xd:120ms"><b>Data</b><span>Mono 500 · 14/20</span></li>
+        <li data-t="5.9,6.8" data-e="right" data-x="left" style="--xd:160ms"><b>Spacing</b><span>16 · 24 · 40 on the 8-point grid</span></li>
+      </ul>
     </div>
-    <div class="g4 els">
-      <div class="card el"><div class="art"><span class="pat-lines"></span></div><h3 class="h3">Lines</h3><p class="small">1 px lines at 65°, 12 px apart. A texture for Ice and Indigo fields.</p></div>
-      <div class="card el"><div class="art"><span class="pat-split"></span></div><h3 class="h3">Blocks</h3><p class="small">Colour fields meet along a 65° edge, never at a random angle.</p></div>
-      <div class="card el"><div class="art"><img class="clip65" src="{{img:F2}}" alt="A man at a café table with a tablet and a glass of tea" loading="lazy"></div><h3 class="h3">Crops</h3><p class="small">One image corner can be cut at 65°. The other three stay square.</p></div>
-      <div class="card el"><div class="art"><img src="{{img:E1}}" alt="Soft daylight falls across a white wall in diagonal bands" loading="lazy"><span class="mover" aria-hidden="true"></span></div><h3 class="h3">Light and motion</h3><p class="small">Light falls along the slant and elements enter along it too.</p></div>
-    </div>
-    <div class="onerule"><span class="eyebrow plain" style="color:var(--ice)">Rule</span><p class="h3">Use one 65° element per layout. Two at most, and they never cross.</p></div>
-  </div>
-</section>
-
-<!-- 08 · Icons -->
-<section class="sec lt" id="icons" data-tone="smoke" data-group="system">
-  <div class="scene" id="icon-build">
-    <div class="stage"><div class="wrap ib">
-      <div>
-        <div class="head" style="margin-bottom:28px">
-          <p class="eyebrow">08 · Icons</p>
-          <h2 class="h2">Drawn by hand, finished on the grid.</h2>
-        </div>
-        <ol class="ib-steps">
-          <li data-i="0"><span class="n">01</span><h3 class="h3">Sketch</h3><p class="small">Pencil first. Find the idea and ignore the details.</p></li>
-          <li data-i="1"><span class="n">02</span><h3 class="h3">Construction</h3><p class="small">Snap to the 24 px grid, the keylines and the 65° guide.</p></li>
-          <li data-i="2"><span class="n">03</span><h3 class="h3">Final</h3><p class="small">One 1.75 px stroke, round ends and one indigo accent.</p></li>
-        </ol>
-      </div>
-      <div class="board" id="board" aria-label="The trade-in icon, from sketch to final">
-        <svg class="lyr grid24" viewBox="0 0 24 24" aria-hidden="true" id="b-grid"></svg>
-        <svg class="lyr keys" viewBox="0 0 24 24" aria-hidden="true" id="b-keys"><circle cx="12" cy="12" r="10"/><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="7.33" y1="22" x2="16.67" y2="2"/></svg>
-        <svg class="lyr sketch" viewBox="0 0 24 24" aria-hidden="true" id="b-sketch"></svg>
-        <div class="lyr final" id="b-final" style="position:absolute;inset:8%">{{icon:trade}}</div>
-      </div>
-    </div></div>
-  </div>
-  <div class="wrap pad" style="padding-top:0">
-    <p class="lede">Twelve icons cover the moments of a renewal journey. Each one is built on a 24 px grid with a 20 px live area, one stroke, one corner radius and one accent.</p>
-    <ul class="iconset" aria-label="Icon set">{{icongrid}}</ul>
-    <div class="ispecs">
-      <div class="card isizes" aria-label="Icon sizes">
-        <div><span style="width:16px;display:block">{{icon:trade}}</span><span class="cap">16</span></div>
-        <div><span style="width:24px;display:block">{{icon:trade}}</span><span class="cap">24</span></div>
-        <div><span style="width:32px;display:block">{{icon:trade}}</span><span class="cap">32</span></div>
-        <div><span style="width:48px;display:block">{{icon:trade}}</span><span class="cap">48</span></div>
-        <p class="small" style="flex-basis:100%">Draw at 24, use at 16, 24, 32 or 48. The stroke scales with the icon.</p>
-      </div>
-      <div class="ion-indigo" aria-label="Icons on Deep Indigo">{{icon:value}}{{icon:check}}{{icon:wipe}}{{icon:pay}}{{icon:store}}{{icon:secure}}<p class="small" style="color:rgba(255,255,255,.85);flex-basis:100%">On Indigo the line turns white and the accent turns Ice.</p></div>
+    <h2 class="h2 ab" data-fx="head" data-t="6.9,8.3" style="top:26px">One system, any card.</h2>
+    <h2 class="h2 ab" data-fx="head" data-t="8.3,9.9" style="top:26px">And what breaks it.</h2>
+    <div class="cgrid">
+      <div class="kc hz" data-t="7.0,8.25" data-e="pop" data-x="flip" style="--gm:1/1/2/3;--ga:1/1/3/2"><img src="{{img:C2}}" alt="A man reads on a tablet in a café"><div class="sk"><i style="width:30%"></i><i style="width:80%;height:22px"></i><i style="width:60%"></i></div><div class="real"><p class="t-l">Vertical · photo</p><p class="t-h">The new one is already in your hands.</p><p class="t-b">Image on top, text below, 24 px padding.</p></div><span class="tag">pad 24</span></div>
+      <div class="kc" data-t="7.15,8.25" data-e="pop" data-x="flip" style="--xd:60ms;--gm:2/1/3/2;--ga:1/2/2/3"><div class="sk"><i style="width:30%"></i><i style="width:90%;height:22px"></i><i style="width:70%"></i></div><div class="real"><p class="t-l">Horizontal</p><p class="t-h">Value, pay, renew.</p><p class="t-b">Label 11 · Title 28/30 · Body 14/22</p></div><span class="tag">gap 10</span></div>
+      <div class="kc cen" data-t="7.3,8.25" data-e="pop" data-x="flip" style="--xd:120ms;--gm:2/2/3/3;--ga:1/3/2/4"><div class="sk"><i style="width:40%;margin:auto"></i><i style="width:70%;height:22px;margin:auto"></i></div><div class="real"><p class="t-l">Centred</p><p class="t-h">Worth more.</p><p class="t-b">Two lines at most.</p></div></div>
+      <div class="kc grp" data-t="7.45,8.25" data-e="pop" data-x="flip" style="--xd:180ms;--gm:3/1/4/3;--ga:2/2/3/4"><div class="sk"><i style="width:30%"></i><i style="width:90%"></i><i style="width:90%"></i><i style="width:90%"></i></div><div class="real"><p class="t-l">Group</p><div class="row">{{icon:check}}Device check<span class="mono" style="margin-left:auto">A</span></div><div class="row">{{icon:wipe}}Data wipe<span class="mono" style="margin-left:auto">Done</span></div><div class="row">{{icon:pay}}Payment<span class="mono" style="margin-left:auto">₺14.250</span></div></div><span class="tag">row 44</span></div>
+      <div class="kc hz dont" data-t="8.3,9.9" data-e="flip" data-x="shrink" style="--xd:220ms;--gm:1/1/2/3;--ga:1/1/3/2"><img src="{{img:C2}}" alt="" style="filter:saturate(1.6) contrast(1.3)"><div class="real"><p class="t-h" style="text-align:center;font-weight:300">The new one is already in your hands and it is worth more than ever.</p><p class="why">Centred long text · light weight</p></div></div>
+      <div class="kc dont" data-t="8.4,9.9" data-e="flip" data-x="shrink" style="--xd:40ms;--gm:2/1/3/2;--ga:1/2/2/3"><div class="real"><p class="t-l" style="font-size:16px">HORIZONTAL</p><p class="t-h" style="font-size:22px;font-weight:700">Value,</p><p class="t-h" style="font-size:30px;font-weight:300">pay, renew.</p><p class="why">Four sizes, mixed weights</p></div></div>
+      <div class="kc cen dont" data-t="8.5,9.9" data-e="flip" data-x="shrink" style="--xd:330ms;background:var(--ice);--gm:2/2/3/3;--ga:1/3/2/4"><div class="real"><p class="t-h" style="color:var(--white)">Worth more.</p><p class="why">White on Ice · 1.48</p></div></div>
+      <div class="kc grp dont" data-t="8.6,9.9" data-e="flip" data-x="shrink" style="--xd:120ms;--gm:3/1/4/3;--ga:2/2/3/4"><div class="real"><div class="row" style="padding:2px 0">{{icon:check}}<b style="font-weight:700">DEVICE CHECK</b></div><div class="row" style="padding:2px 0;font-size:11px">{{icon:wipe}}data wipe</div><p class="why">Cramped rows · no value column · caps for no reason</p></div></div>
     </div>
   </div>
 </section>
 
-<!-- 09 · Illustration -->
-<section class="sec lt" id="illustration" data-tone="white" data-group="system">
-  <div class="wrap pad">
-    <div class="head">
-      <p class="eyebrow">09 · Illustration</p>
-      <h2 class="h2">Icons grow into illustrations.</h2>
-      <p class="lede">Spot illustrations use the icon line at four times the size, on flat planes cut at 65°. Together they tell the renewal in three scenes.</p>
+<section class="scn lt" id="s-gallery" data-len="7.6" data-bg="#FFFFFF" data-slow="0.6,7.2,0.14,0.36,0.5" data-name="Photography" data-num="07">
+  <div class="frame">
+    <div class="lcol">
+      <p class="eyebrow" data-fx="label" data-t="0.1,7.4">07 · Photography</p>
+      <h2 class="h1" data-fx="head" data-t="0.15,7.4">Real people in soft, white light.</h2>
+      <p class="lede" data-fx="body" data-t="0.5,7.4" data-tm="0.5,3.0">The moment a device makes life easier. A diverse cast, gallery-simple places and daylight, always with a premium device in use.</p>
+      <ul class="prl">
+        <li data-t="1.2,7.4" data-e="right" data-x="left"><b>Cast</b><span>Women and men, 25 to 65, many backgrounds.</span></li>
+        <li data-t="1.9,7.4" data-e="right" data-x="left" style="--xd:40ms"><b>Light</b><span>Soft daylight. High-key, shadows at 65°.</span></li>
+        <li data-t="2.6,7.4" data-e="right" data-x="left" style="--xd:80ms"><b>Place</b><span>White rooms, pale stone, light oak.</span></li>
+        <li data-t="3.3,7.4" data-e="right" data-x="left" style="--xd:120ms"><b>Device</b><span>Silver, in use, no third-party logos.</span></li>
+      </ul>
     </div>
-    <div class="g3">
-      <article class="card ill"><div class="art">{{illus:old}}</div><div class="ill-body"><span class="num">01</span><h3 class="h3">Bring the old</h3><p class="small">The customer brings the device they already have.</p></div></article>
-      <article class="card ill"><div class="art">{{illus:value}}</div><div class="ill-body"><span class="num">02</span><h3 class="h3">See the value</h3><p class="small">Its value appears as one clear number, in seconds.</p></div></article>
-      <article class="card ill"><div class="art">{{illus:next}}</div><div class="ill-body"><span class="num">03</span><h3 class="h3">Take the new</h3><p class="small">They leave with the new device. The old one is already counted toward it.</p></div></article>
-    </div>
-    <ul class="rule-list" style="margin-top:clamp(32px,4vw,56px)">
-      <li><span>Line</span><span>Graphite, round ends, the icon stroke scaled up. 3 px at this size.</span></li>
-      <li><span>Planes</span><span>Deep Indigo and Ice Blue, cut at 65°. Never more than two planes per scene.</span></li>
-      <li><span>Restraint</span><span>No gradients, no shadows and no faces. Photography shows people; illustration shows the steps.</span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- 10 · Card patterns -->
-<section class="sec lt" id="cards" data-tone="white" data-group="system">
-  <div class="wrap pad" style="padding-bottom:0">
-    <div class="head" style="margin-bottom:0">
-      <p class="eyebrow">10 · Card patterns</p>
-      <h2 class="h2">Six cards build every surface.</h2>
-      <p class="lede">Website tiles, app banners, sales slides and posts all come from the same six cards. Each one grows from the same skeleton.</p>
-    </div>
-  </div>
-  <div class="car" data-car style="padding-bottom:var(--sec-y)">
-    <div class="wrap car-bar"><p class="cap">Swipe or use the arrows</p><div class="car-ctl"><span class="cap" data-count>1 / 6</span><button class="cbtn" data-prev type="button" aria-label="Previous card"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M11 3 5 9l6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button><button class="cbtn" data-next type="button" aria-label="Next card"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="m7 3 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></div></div>
-    <div class="car-track" id="cards-track" style="--cw:min(78vw,380px)" tabindex="0" aria-label="Card patterns">
-      <figure class="car-fig"><div class="kc kc-photo"><img src="{{img:C2}}" alt="A man reads on a tablet in a bright café" loading="lazy"><div class="skel" aria-hidden="true"><i class="sk-s"></i><div><i class="sk-h"></i><i class="sk-h2"></i></div></div><div class="real"><p class="k-l">Everyday</p><div><p class="k-h">The new one is already in your hands.</p></div></div></div><figcaption><b>Photo card</b><span>One image, one corner cut at 65°, a headline in white.</span></figcaption></figure>
-      <figure class="car-fig"><div class="kc kc-block"><div class="skel" aria-hidden="true"><i class="sk-s"></i><div><i class="sk-h"></i><i class="sk-h2"></i></div></div><div class="real"><p class="k-l" style="color:var(--ice)">Trade-in</p><div><p class="k-h">Your old phone has a new value.</p></div></div></div><figcaption><b>Colour block</b><span>Indigo ground, white headline. For the one message that matters most.</span></figcaption></figure>
-      <figure class="car-fig"><div class="kc kc-pattern"><div class="skel" aria-hidden="true"><i class="sk-s"></i><div><i class="sk-h"></i><i class="sk-h2"></i></div></div><div class="real"><p class="k-l" style="color:var(--indigo)">How it works</p><div><p class="k-h">Value, pay, renew.</p></div></div></div><figcaption><b>Pattern card</b><span>Ice with 65° lines. For explanations and steps.</span></figcaption></figure>
-      <figure class="car-fig"><div class="kc kc-stat"><div class="skel" aria-hidden="true"><i class="sk-s"></i><div><i class="sk-h"></i><i class="sk-h2"></i></div></div><div class="real"><p class="k-l" style="color:var(--indigo)">Renewal</p><div><p class="big">3</p><p class="k-s" style="margin-top:14px">steps from the old device to the new one.</p></div></div></div><figcaption><b>Number card</b><span>One number, set large in Indigo, with one line of context.</span></figcaption></figure>
-      <figure class="car-fig"><div class="kc kc-ill"><div class="skel" aria-hidden="true"><i class="sk-s"></i><div><i class="sk-h"></i><i class="sk-h2"></i></div></div><div class="real"><p class="k-l" style="color:var(--indigo)">Step 02</p><div>{{illus:value}}<p class="k-s" style="margin-top:8px">See the value</p></div></div></div><figcaption><b>Illustration card</b><span>A spot illustration with a short caption. For product flows.</span></figcaption></figure>
-      <figure class="car-fig"><div class="kc kc-voice"><div class="skel" aria-hidden="true"><i class="sk-s"></i><div><i class="sk-h"></i><i class="sk-h2"></i></div></div><div class="real"><p class="k-l" style="color:var(--ice)">Our voice</p><div><p class="k-h">“We show the value first. Everything else gets easy.”</p></div></div></div><figcaption><b>Voice card</b><span>One sentence on Night Indigo. For quotes and principles.</span></figcaption></figure>
+    <div class="strip" id="strip">
+      <figure class="gi"><img src="{{img:A4}}" alt="A grandfather laughs as his granddaughter shows him his new phone"><figcaption>Generations</figcaption></figure>
+      <figure class="gi"><img src="{{img:F1}}" alt="A woman looks out of a car window, phone in hand" style="object-position:30% 50%"><figcaption>On the move</figcaption></figure>
+      <figure class="gi"><img src="{{img:B4}}" alt="A woman in a white shirt holds a laptop"><figcaption>Portrait</figcaption></figure>
+      <figure class="gi"><img src="{{img:F2}}" alt="A man at a café table with a tablet and a glass of tea"><figcaption>A slow morning</figcaption></figure>
+      <figure class="gi"><img src="{{img:A3}}" alt="Hands hold a new phone above white stone"><figcaption>Close-up</figcaption></figure>
+      <figure class="gi"><img src="{{img:B3}}" alt="A laptop, a mug and a notebook on a light oak desk"><figcaption>Detail</figcaption></figure>
+      <figure class="gi"><img src="{{img:C2}}" alt="A man uses a tablet at a café counter"><figcaption>Everyday use</figcaption></figure>
+      <figure class="gi"><img src="{{img:B1}}" alt="A team around a white table" style="object-position:40% 50%"><figcaption>Office</figcaption></figure>
+      <figure class="gi"><img src="{{img:A5}}" alt="An older phone and a new one side by side"><figcaption>Old and new</figcaption></figure>
+      <div class="handles" id="handles"><i style="left:-6px;top:-6px"></i><i style="right:-6px;top:-6px"></i><i style="left:-6px;bottom:-6px"></i><i style="right:-6px;bottom:-6px"></i></div>
+      <svg class="cursor" id="cursor" viewBox="0 0 26 26" aria-hidden="true"><path d="M4 2l17 10-7.5 1.6L10 21z" fill="#0F1115" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
     </div>
   </div>
 </section>
 
-<!-- 11 · Photography -->
-<section class="sec lt" id="photo" data-tone="white" data-group="system">
-  <div class="wrap pad" style="padding-bottom:0">
-    <div class="head">
-      <p class="eyebrow">11 · Photography</p>
-      <h2 class="h2">Real people in soft, white light.</h2>
-      <p class="lede">Our photography shows the moment a device makes life easier. A diverse cast, gallery-simple places and daylight, always with a premium device in use.</p>
+<section class="scn lt" id="s-ptype" data-len="5.6" data-bg="#F5F7FA" data-name="Photo and type" data-num="08">
+  <div class="frame">
+    <p class="eyebrow ab" data-fx="label" data-t="0.1,5.4" style="top:0">08 · Photo and type</p>
+    <div class="prule-txt">
+      <h2 class="h2" data-fx="head" data-t="0.15,5.4">Type always sits bottom left.</h2>
+      <p class="body" data-fx="body" data-t="0.5,2.95">Margins are 6% of the short side. Headline and body keep their pairing at every size.</p>
+      <p class="body" data-fx="body" data-t="3.0,4.0">On bright, plain images the type turns Graphite.</p>
+      <p class="body" data-fx="body" data-t="4.0,5.4">On busy images the text gets a Night Indigo block. One 65° line, always.</p>
     </div>
-    <div class="g4 prules">
-      <div class="card"><img src="{{img:B4}}" alt="A woman in a white shirt leans on a white wall holding a laptop" loading="lazy"><h3 class="h3">Cast</h3><p class="small">Women and men aged 25 to 65, from many backgrounds. Natural expressions, real skin.</p></div>
-      <div class="card"><img src="{{img:A3}}" alt="Two hands hold a new phone above white stone" loading="lazy"><h3 class="h3">Light</h3><p class="small">Soft daylight through large windows. High-key, never washed out, shadows at 65°.</p></div>
-      <div class="card"><img src="{{img:B3}}" alt="A laptop, a mug and a notebook on a light oak desk" loading="lazy"><h3 class="h3">Place</h3><p class="small">Gallery-white rooms, pale stone and light oak, with plenty of empty wall.</p></div>
-      <div class="card"><img src="{{img:C4}}" alt="A laptop, a tablet and a phone on pale stone" loading="lazy"><h3 class="h3">Device</h3><p class="small">Premium silver devices in use. Screens show soft light only, never third-party logos.</p></div>
-    </div>
-    <div class="shots">
-      <h3 class="h3" style="margin-bottom:8px">Four shot types</h3>
-      <p class="small" style="margin-bottom:18px">Every image set mixes all four, so a feed or a page never repeats itself.</p>
-      <div class="g4">
-        <figure class="shot"><img src="{{img:A3}}" alt="Close-up of hands holding a phone" loading="lazy"><figcaption><b>Close-up</b><span class="cap">Hands, devices, details</span></figcaption></figure>
-        <figure class="shot"><img src="{{img:E1}}" alt="" loading="lazy"><p class="ontext">Your device, worth more.</p><figcaption><b>Plain text</b><span class="cap">Light, wall, one sentence</span></figcaption></figure>
-        <figure class="shot"><img src="{{img:C4}}" alt="Devices arranged on stone" loading="lazy"><figcaption><b>Product</b><span class="cap">Devices on their own</span></figcaption></figure>
-        <figure class="shot"><img src="{{img:B2}}" alt="A woman presents a rising chart to her team" loading="lazy"><figcaption><b>Graphic</b><span class="cap">An idea shown as a chart or shape</span></figcaption></figure>
-      </div>
-    </div>
-  </div>
-  <div class="car" data-car>
-    <div class="wrap car-bar"><h3 class="h3">Lifestyle</h3><div class="car-ctl"><span class="cap" data-count>1 / 8</span><button class="cbtn" data-prev type="button" aria-label="Previous photo"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M11 3 5 9l6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button><button class="cbtn" data-next type="button" aria-label="Next photo"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="m7 3 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></div></div>
-    <div class="car-track" style="--cw:min(82vw,460px)" tabindex="0" aria-label="Lifestyle photography">
-      <figure class="car-fig"><img src="{{img:A4}}" alt="A grandfather laughs as his granddaughter shows him his new phone" loading="lazy"><figcaption><b>Generations</b><span>Technology passed on, with patience.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:F1}}" alt="A woman looks out of a car window, phone in hand" style="--ar:4/5;object-position:30% 50%" loading="lazy"><figcaption><b>On the move</b><span>The device belongs to the day, not the desk.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:F2}}" alt="A man at a café table with a tablet and a glass of tea" loading="lazy"><figcaption><b>A slow morning</b><span>Calm, local and unhurried.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:B4}}" alt="A woman in a white shirt holds a laptop" loading="lazy"><figcaption><b>Portrait</b><span>Direct, warm and confident.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:C2}}" alt="A man uses a tablet at a café counter" loading="lazy"><figcaption><b>Everyday use</b><span>A device in a real moment.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:B1}}" alt="A team around a white table" style="object-position:40% 50%" loading="lazy"><figcaption><b>Office</b><span>Gallery-simple rooms, real work.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:A5}}" alt="An older phone and a new one side by side" loading="lazy"><figcaption><b>Old and new</b><span>The story in one still life.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:B3}}" alt="A tidy desk with a laptop and a mug" loading="lazy"><figcaption><b>Detail</b><span>Quiet objects, light oak, soft shadow.</span></figcaption></figure>
-    </div>
-  </div>
-  <div class="wrap pad" style="padding-top:0">
-    <div class="g2 doavoid">
-      <div class="card da"><h3 class="h3">Do</h3><ul><li>Soft daylight, white walls and pale stone</li><li>Genuine moments of relief and joy</li><li>A premium device in every frame</li><li>Small accents of Indigo or Ice in clothing and objects</li></ul></div>
-      <div class="card da no"><h3 class="h3">Avoid</h3><ul><li>Dark, moody grading or neon light</li><li>Posed stock smiles and thumbs-up gestures</li><li>Readable screens, third-party logos or brand names</li><li>Cluttered rooms and busy backgrounds</li></ul></div>
+    <div class="ratio"><p class="h3 acc" data-fx="label" data-t="0.8,1.5">4:5 · Feed</p><p class="h3 acc" data-fx="label" data-t="1.5,2.2">1:1 · Grid</p><p class="h3 acc" data-fx="label" data-t="2.2,2.95">16:9 · Web</p><p class="h3 acc" data-fx="label" data-t="2.95,5.4">9:16 · Reels</p></div>
+    <div class="pcard" id="pcard" data-t="0.3,5.4" data-e="zoom" data-x="shrink">
+      <img id="pc-a" src="{{img:A3}}" alt="Hands hold a new phone"><img id="pc-b" src="{{img:E1}}" alt="" style="opacity:0"><img id="pc-c" src="{{img:D7}}" alt="" style="opacity:0">
+      <div class="veil"></div><div class="blk"></div>
+      <div class="txt"><p class="ph">New in your hands today.</p><p class="pb">Your old phone already paid for part of it.</p></div>
+      <span class="l65"></span><span class="pm">{{mark:white}}</span>
     </div>
   </div>
 </section>
 
-<!-- 12 · Tone of voice -->
-<section class="sec lt" id="voice" data-tone="smoke" data-group="system">
-  <div class="wrap pad">
-    <div class="head">
-      <p class="eyebrow">12 · Tone of voice</p>
-      <h2 class="h2">Say what it changes.</h2>
-      <p class="lede">Fintegre sounds like a calm expert at the counter. Clear first, warm always and never louder than the moment.</p>
+<section class="scn lt" id="s-icons" data-len="6.6" data-bg="#FFFFFF" data-name="Icons" data-num="09">
+  <div class="frame">
+    <div class="lcol">
+      <p class="eyebrow" data-fx="label" data-t="0.1,6.4">09 · Icons</p>
+      <h2 class="h1" data-fx="head" data-t="0.15,3.0">Drawn by hand, finished on the grid.</h2>
+      <h2 class="h1" data-fx="head" data-t="3.0,4.6">Colour and angle come from the mark.</h2>
+      <h2 class="h1" data-fx="head" data-t="4.6,6.4">Words beside, mark on top.</h2>
+      <ol class="isteps" id="isteps" data-t="0.4,3.0" data-tm="9,9" data-e="right" data-x="left"><li><span class="n">01</span><span class="h3">Sketch</span></li><li><span class="n">02</span><span class="h3">Construction</span></li><li><span class="n">03</span><span class="h3">Final · 1.75 px stroke</span></li></ol>
+      <p class="lede" data-fx="body" data-t="3.2,4.6" data-tm="9,9">The accent is always Deep Indigo. Diagonals reuse the 65° slant of the mark.</p>
     </div>
-    <div class="g4 princ">
-      <div class="card"><span class="num">01</span><h3 class="h3">Clear first</h3><p class="small">Lead with the outcome. One idea per sentence.</p></div>
-      <div class="card"><span class="num">02</span><h3 class="h3">Show the number</h3><p class="small">Values, times and steps say more than adjectives.</p></div>
-      <div class="card"><span class="num">03</span><h3 class="h3">Warm, never cute</h3><p class="small">Friendly and respectful. No jokes about money.</p></div>
-      <div class="card"><span class="num">04</span><h3 class="h3">Short and active</h3><p class="small">Verbs up front. Cut every word that does no work.</p></div>
+    <div class="board" id="board" data-t="0.3,4.6" data-e="zoom" data-x="shrink" aria-label="The trade-in icon, from sketch to final">
+      <svg class="grid24" viewBox="0 0 24 24" id="b-grid" aria-hidden="true"></svg>
+      <svg class="keys" viewBox="0 0 24 24" id="b-keys" aria-hidden="true"><circle cx="12" cy="12" r="10"/><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="7.33" y1="22" x2="16.67" y2="2"/></svg>
+      <svg class="sketch" viewBox="0 0 24 24" id="b-sketch" aria-hidden="true"></svg>
+      <div class="fin" id="b-final">{{icon:trade}}</div>
+      <div class="fin" id="b-up" style="opacity:0">{{icon:upgrade}}</div>
+      <div class="ghost" id="b-ghost">{{mark:indigo}}</div>
+      <span class="g65" id="b-g65"></span>
     </div>
-    <div class="saydont">
-      <div class="sd"><p><span class="cap">We say</span>“Your iPad's trade-in value is ready.”</p><p class="no"><span class="cap">We don't say</span><span class="strike">“Exciting news! Unlock amazing value today!”</span></p></div>
-      <div class="sd"><p><span class="cap">We say</span>“Trade-in programs that raise device value and lift conversion.”</p><p class="no"><span class="cap">We don't say</span><span class="strike">“Revolutionary AI-powered synergy for recommerce.”</span></p></div>
-      <div class="sd"><p><span class="cap">We say</span>“Bring your old phone. See its value in a minute.”</p><p class="no"><span class="cap">We don't say</span><span class="strike">“Fintegre is delighted to announce a disruptive solution.”</span></p></div>
+    <div class="swatch" data-t="3.3,4.6" data-e="pop" data-x="shrink"><i></i><div class="stack" style="gap:2px"><b class="mono">#3047EC</b><span class="cap">Accent</span></div></div>
+    <div class="irows">
+      <div class="irow" data-t="4.7,5.6" data-e="right" data-x="left">{{icon:trade}}Trade-in<span class="mono" style="margin-left:auto;color:var(--ink3)">24 · 12 · 16</span></div>
+      <div class="irow" data-t="4.8,5.6" data-e="right" data-x="left" style="--d:50ms;--xd:40ms">{{icon:value}}Valuation</div>
+      <div class="irow" data-t="4.9,5.6" data-e="right" data-x="left" style="--d:100ms;--xd:80ms">{{icon:secure}}Secure</div>
+      <p class="cap" data-fx="label" data-t="5.0,5.6" style="margin-top:8px">Icon 24 · gap 12 · label 16 Medium</p>
     </div>
-    <div class="channels">
-      <h3 class="h3" style="margin-bottom:18px">Real sentences, in Turkish and English</h3>
-      <div class="g4">
-        <div class="card chn">{{icon:store}}<p class="cap">In store</p><p class="tr" lang="tr">Eski telefonunu getir, değerini bir dakikada gör.</p><p class="en">Bring your old phone. See its value in a minute.</p></div>
-        <div class="card chn">{{icon:check}}<p class="cap">App notification</p><p class="tr" lang="tr">iPad'inin takas değeri hazır. Yenisinde kullan.</p><p class="en">Your iPad's trade-in value is ready. Use it on your new one.</p></div>
-        <div class="card chn">{{icon:partner}}<p class="cap">LinkedIn</p><p class="tr" lang="tr">Cihaz değerini artıran, satışı büyüten takas programları.</p><p class="en">Trade-in programs that raise device value and lift conversion.</p></div>
-        <div class="card chn">{{icon:upgrade}}<p class="cap">Billboard</p><p class="tr" lang="tr">Her cihaz, daha değerli.</p><p class="en">Make every device worth more.</p></div>
-      </div>
+    <figure class="onimg" data-t="5.6,6.4" data-e="flip" data-x="shrink"><img src="{{img:F2}}" alt="A man at a café table with a tablet"><span class="cs"></span><span class="pm">{{mark:white}}</span></figure>
+    <p class="body icap" data-fx="body" data-t="5.7,6.4">The mark sits bottom left at 8% of the width, with half its height of clear space.</p>
+  </div>
+</section>
+
+<section class="scn lt" id="s-illus" data-len="4.4" data-bg="#FFFFFF" data-name="Illustration" data-num="10">
+  <div class="frame">
+    <div class="lcol" style="width:min(44%,600px)">
+      <p class="eyebrow" data-fx="label" data-t="0.1,4.2" data-tm="0.1,1.2">10 · Illustration</p>
+      <h2 class="h1" data-fx="head" data-t="0.15,4.2" data-tm="0.15,1.2">Illustration explains a step. Photography carries the feeling.</h2>
+      <p class="lede" data-fx="body" data-t="0.5,4.2" data-tm="9,9">Use it for steps, empty states and errors: about one screen in five. The icon line, scaled up, on flat planes cut at 65°.</p>
+      <div class="ratio5" data-t="0.8,4.2" data-tm="9,9" data-e="pop" data-x="left" aria-label="One screen in five"><i></i><i class="on"></i><i></i><i></i><i></i></div>
     </div>
-    <div class="g2 words">
-      <div class="card"><p class="cap">Words we use</p><ul class="chips"><li class="chip">value</li><li class="chip">renew</li><li class="chip">ready</li><li class="chip">clear</li><li class="chip">together</li><li class="chip">in seconds</li></ul></div>
-      <div class="card"><p class="cap">Words we avoid</p><ul class="chips"><li class="chip"><span class="strike">revolutionary</span></li><li class="chip"><span class="strike">synergy</span></li><li class="chip"><span class="strike">disrupt</span></li><li class="chip"><span class="strike">cheap</span></li><li class="chip"><span class="strike">hack</span></li></ul></div>
+    <div class="phone" data-t="0.3,4.2" data-tm="1.2,4.2" data-e="tilt" data-x="shrink">
+      <div class="scr"><div class="reel" id="reel">
+        <div class="sc"><img src="{{img:A3}}" alt=""><div class="tx"><b>Trade in your phone.</b><span>Bring it to any partner store.</span><span class="btn">Start</span></div></div>
+        <div class="sc il"><div class="art">{{illus:value}}</div><div class="tx"><b>See the value.</b><span>Three checks, one clear number.</span><span class="btn">Continue</span></div></div>
+        <div class="sc"><img src="{{img:A1}}" alt="" style="object-position:70% 50%"><div class="tx"><b>It's yours.</b><span>The old one paid in.</span><span class="btn">Done</span></div></div>
+      </div></div>
+      <span class="flag" id="flag" style="opacity:0">Illustration</span>
     </div>
   </div>
 </section>
 
-<!-- 13 · Instagram -->
-<section class="sec lt" id="instagram" data-tone="white" data-group="use">
-  <div class="wrap pad" style="padding-bottom:0">
-    <div class="ig-wrap">
-      <div>
-        <div class="head" style="margin-bottom:28px">
-          <p class="eyebrow">13 · Instagram</p>
-          <h2 class="h2">A feed that draws the slant.</h2>
-          <p class="lede">Every post follows five rules. Together they turn the profile grid into one calm picture, with the colour posts falling along a diagonal.</p>
-        </div>
-        <ul class="ig-rules">
-          <li><b>Logo</b><span>The mark only, bottom left, at 8% of the post width. White on photos and Indigo, Indigo on Ice.</span></li>
-          <li><b>Angle</b><span>One 65° element per post: a line, a block edge or a crop.</span></li>
-          <li><b>Colour</b><span>Photo posts stay light. Colour posts are Indigo or Ice, full bleed.</span></li>
-          <li><b>Type</b><span>White Geologica on photos over a soft Night Indigo veil. Eight words at most.</span></li>
-          <li><b>Rhythm</b><span>Two photos, then one colour post. On the grid the colour posts form a diagonal.</span></li>
-        </ul>
-      </div>
-      <div class="profile" id="profile">
-        <div class="p-head"><span class="p-av">{{mark:white}}</span><div><b>fintegre</b><span class="small">Make every device worth more.</span></div></div>
-        <div class="p-grid" id="p-grid" aria-label="Profile grid preview"><svg class="p-diag" viewBox="0 0 30 50" preserveAspectRatio="none" aria-hidden="true"><line x1="28" y1="2" x2="2" y2="48"/></svg></div>
-        <button class="nbtn diag-btn" id="diag-btn" type="button" aria-pressed="false" style="background:rgba(15,17,21,.06);color:var(--graphite)">Show the diagonal</button>
-      </div>
+<section class="scn lt" id="s-social" data-len="7.0" data-bg="#FFFFFF" data-name="Social" data-num="11">
+  <div class="frame">
+    <div class="soc-txt">
+      <p class="eyebrow" data-fx="label" data-t="0.1,6.8">11 · Social</p>
+      <h2 class="h2" data-fx="head" data-t="0.15,2.1">One system, every format.</h2>
+      <h2 class="h2" data-fx="head" data-t="2.1,4.9">The post becomes a Reel.</h2>
+      <h2 class="h2" data-fx="head" data-t="4.9,6.8">The grid draws the slant.</h2>
+      <p class="body" data-fx="body" data-t="2.5,4.9" data-tm="9,9">Type stays out of the top 14% and the bottom 20%. The mark sits bottom left, the line at 65°.</p>
+      <p class="body" data-fx="body" data-t="5.1,6.8" data-tm="9,9">Two photos, then one colour post. Seen together, the colour posts fall on a diagonal.</p>
     </div>
-  </div>
-  <div class="car" data-car>
-    <div class="wrap car-bar"><h3 class="h3">Posts</h3><div class="car-ctl"><span class="cap" data-count>1 / 9</span><button class="cbtn" data-prev type="button" aria-label="Previous post"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M11 3 5 9l6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button><button class="cbtn" data-next type="button" aria-label="Next post"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="m7 3 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></div></div>
-    <div class="car-track" id="posts" style="--cw:min(76vw,400px)" tabindex="0" aria-label="Instagram posts">
-      <div class="post"><img src="{{img:A1}}" alt="A woman unboxes a new phone" style="object-position:70% 50%"><span class="scrim"></span><p class="pt">The happy moment, made easy.</p><span class="pm">{{mark:white}}</span></div>
-      <div class="post"><img src="{{img:A3}}" alt="Hands hold a new phone"><span class="scrim"></span><p class="pt">New in your hands today.</p><span class="pm">{{mark:white}}</span></div>
-      <div class="post block"><p class="pk" style="color:var(--ice)">Trade-in</p><p class="pt">Your old phone has a new value.</p><span class="pm">{{mark:white}}</span></div>
-      <div class="post"><img src="{{img:F2}}" alt="A man at a café with a tablet"><span class="scrim"></span><p class="pt">Slow mornings, faster upgrades.</p><span class="pm">{{mark:white}}</span></div>
-      <div class="post ice"><p class="pk" style="color:var(--indigo)">How it works</p><p class="pt" style="color:var(--graphite)">Value. Pay. Renew.</p><span class="pm">{{mark:indigo}}</span></div>
-      <div class="post"><img src="{{img:D7}}" alt="A Fintegre billboard in a city square" style="object-position:40% 50%"><span class="scrim"></span><p class="pt">Seen in the city.</p><span class="pm">{{mark:white}}</span></div>
-      <div class="post split"><img src="{{img:C4}}" alt="Devices on stone"><p class="pt top" style="right:45cqw">Every device counts.</p><span class="pm">{{mark:white}}</span></div>
-      <div class="post"><img src="{{img:B4}}" alt="A portrait of a smiling woman"><span class="scrim"></span><p class="pt">Built by people who care.</p><span class="pm">{{mark:white}}</span></div>
-      <div class="post"><img src="{{img:F1}}" alt="A woman in a car with her phone" style="object-position:35% 50%"><span class="scrim"></span><p class="pt">Worth more, wherever you go.</p><span class="pm">{{mark:white}}</span></div>
+    <div class="posts" id="posts">
+      <div class="post" id="sp1" data-t="0.5,2.05" data-e="pop" data-x="shrink"><img src="{{img:A1}}" alt="" style="object-position:70% 50%"><span class="scrim"></span><p class="pt">The happy moment, made easy.</p><span class="pm">{{mark:white}}</span></div>
+      <div class="post" id="reelpost" data-t="0.6,4.95" data-e="pop" data-x="shrink"><div class="frames"><img class="on" src="{{img:A3}}" alt=""><img src="{{img:A2}}" alt="" style="object-position:55% 45%"><img src="{{img:A1}}" alt="" style="object-position:70% 50%"><img src="{{img:F1}}" alt="" style="object-position:32% 50%"></div><span class="scrim"></span>
+        <div class="bars3" id="rbars"><i><b></b></i><i><b></b></i><i><b></b></i></div>
+        <p class="pt" id="rk0">New in your hands today.</p><p class="ktx" id="rk1" style="opacity:0">Bring it.</p><p class="ktx" id="rk2" style="opacity:0">See its value.</p><p class="ktx" id="rk3" style="opacity:0">Take the new.</p>
+        <span class="pm">{{mark:white}}</span><div class="safe" id="rsafe"><i class="t"><b style="top:30%">SAFE · 14%</b></i><i class="b"><b style="bottom:30%">SAFE · 20%</b></i></div></div>
+      <div class="post ice" id="sp3" data-t="0.7,2.05" data-e="pop" data-x="shrink"><p class="pk" style="color:var(--indigo)">How it works</p><p class="pt" style="color:var(--graphite)">Value. Pay. Renew.</p><span class="pm">{{mark:indigo}}</span></div>
     </div>
-  </div>
-  <div style="height:var(--sec-y)"></div>
-</section>
-
-<!-- 14 · Merchandise -->
-<section class="sec lt" id="merch" data-tone="white" data-group="use">
-  <div class="wrap" style="padding-bottom:0">
-    <div class="head" style="margin-bottom:0">
-      <p class="eyebrow">14 · Merchandise</p>
-      <h2 class="h2">The mark, worn and used.</h2>
-      <p class="lede">Merchandise is shot like fashion, not like a catalogue. Premium materials, real people and a device always close at hand.</p>
-    </div>
-  </div>
-  <div class="car" data-car>
-    <div class="wrap car-bar"><p class="cap">Eight pieces</p><div class="car-ctl"><span class="cap" data-count>1 / 8</span><button class="cbtn" data-prev type="button" aria-label="Previous piece"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M11 3 5 9l6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button><button class="cbtn" data-next type="button" aria-label="Next piece"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="m7 3 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></div></div>
-    <div class="car-track" style="--cw:min(80vw,440px)" tabindex="0" aria-label="Merchandise">
-      <figure class="car-fig"><img src="{{img:D7}}" alt="A large Indigo billboard with the Fintegre lockup and slogan above a busy square" style="--ar:4/5;object-position:45% 50%" loading="lazy"><figcaption><b>Billboard</b><span>White lockup and slogan on Deep Indigo. The headline is the only other element.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:D1}}" alt="A man in an Indigo cap with the white mark holds a phone" loading="lazy"><figcaption><b>Cap</b><span>White mark, embroidered on Indigo. Centred above the brim.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:D2}}" alt="A woman in a white t-shirt with a small Fintegre lockup on the chest" loading="lazy"><figcaption><b>T-shirt</b><span>Small Graphite lockup on the left chest. White cotton only.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:D3}}" alt="A woman holds a white mug with the gradient mark beside her laptop" loading="lazy"><figcaption><b>Mug</b><span>The gradient mark on white ceramic, facing the person across the table.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:D4}}" alt="A man wears an Indigo lanyard with repeated white lockups and a badge" loading="lazy"><figcaption><b>Lanyard</b><span>White lockup repeated on Indigo. The badge carries the mark only.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:D5}}" alt="A light grey notebook with a Graphite mark next to a phone and a pen" loading="lazy"><figcaption><b>Notebook</b><span>Debossed Graphite mark, centred on a light grey cover.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:D6}}" alt="Fintegre stickers on a silver laptop lid" loading="lazy"><figcaption><b>Stickers</b><span>Gradient, Ice and Indigo marks. Die-cut along the blocks.</span></figcaption></figure>
-      <figure class="car-fig"><img src="{{img:D8}}" alt="A woman walks with a natural canvas tote printed with a large Graphite mark" loading="lazy"><figcaption><b>Tote</b><span>A large Graphite mark on natural canvas. The only piece where the mark goes big.</span></figcaption></figure>
-    </div>
-  </div>
-  <div class="wrap pad" style="padding-top:0">
-    <div class="g3 mrules">
-      <div class="card"><h3 class="h3">Shot like fashion</h3><p class="small">People wear and use the piece in daylight. No flat mockups, no floating products.</p></div>
-      <div class="card"><h3 class="h3">A device nearby</h3><p class="small">A phone, tablet or laptop sits in frame. It reminds us what the brand is about.</p></div>
-      <div class="card"><h3 class="h3">Premium materials</h3><p class="small">Heavy cotton, ceramic, canvas and embroidery. Never glossy plastic giveaways.</p></div>
+    <div class="pgrid" id="pgrid" data-t="5.0,6.8" data-e="open" data-x="shrink" aria-label="Profile grid">
+      <div class="post"><img src="{{img:A1}}" alt="" style="object-position:70% 50%"><span class="scrim"></span><span class="pm">{{mark:white}}</span></div>
+      <div class="post"><img src="{{img:A3}}" alt=""><span class="scrim"></span><span class="pm">{{mark:white}}</span></div>
+      <div class="post"><p class="pt">A new value.</p><span class="pm">{{mark:white}}</span></div>
+      <div class="post"><img src="{{img:F2}}" alt=""><span class="scrim"></span><span class="pm">{{mark:white}}</span></div>
+      <div class="post ice"><p class="pt" style="color:var(--graphite)">Value. Pay. Renew.</p><span class="pm">{{mark:indigo}}</span></div>
+      <div class="post"><img src="{{img:D7}}" alt="" style="object-position:40% 50%"><span class="scrim"></span><span class="pm">{{mark:white}}</span></div>
+      <div class="post"><p class="pt">Every device counts.</p><span class="pm">{{mark:white}}</span></div>
+      <div class="post"><img src="{{img:B4}}" alt=""><span class="scrim"></span><span class="pm">{{mark:white}}</span></div>
+      <div class="post"><img src="{{img:F1}}" alt="" style="object-position:35% 50%"><span class="scrim"></span><span class="pm">{{mark:white}}</span></div>
+      <svg class="diag" viewBox="0 0 30 50" preserveAspectRatio="none" aria-hidden="true"><line id="gdiag" x1="28" y1="2" x2="2" y2="48" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>
     </div>
   </div>
 </section>
 
-<!-- 15 · Devices -->
-<section class="sec lt" id="devices" data-tone="white" data-group="use">
-  <div class="wrap pad" style="padding-top:0">
-    <div class="head">
-      <p class="eyebrow">15 · Devices</p>
-      <h2 class="h2">On the screens people already love.</h2>
-      <p class="lede">Fintegre lives where iPhone, iPad and Mac live. Our imagery shows devices in everyday use. Official Apple product photography is supplied by Fintegre.</p>
+<section class="scn lt" id="s-strip" data-len="3.6" data-bg="#FFFFFF" data-slow="0.4,3.4,0.16,0.4,0.5" data-name="In use" data-num="12">
+  <div class="frame">
+    <p class="eyebrow ab" data-fx="label" data-t="0.05,3.4" style="top:0">12 · In use</p>
+    <h2 class="h2 ab" data-fx="head" data-t="0.1,3.4" style="top:26px">The mark, worn and used.</h2>
+    <div class="fstrip" id="fstrip">
+      <figure class="fi"><img src="{{img:D1}}" alt="A man in an Indigo cap with the white mark holds a phone"><figcaption><b>Cap</b>White mark, embroidered on Indigo</figcaption></figure>
+      <figure class="fi"><img src="{{img:D2}}" alt="A woman in a white t-shirt with a small Fintegre lockup"><figcaption><b>T-shirt</b>Small Graphite lockup, left chest</figcaption></figure>
+      <figure class="fi"><img src="{{img:D4}}" alt="A man wears an Indigo lanyard with white lockups"><figcaption><b>Lanyard</b>White lockup repeated on Indigo</figcaption></figure>
+      <figure class="fi"><img src="{{img:D8}}" alt="A woman with a canvas tote printed with a large mark"><figcaption><b>Tote</b>One large Graphite mark</figcaption></figure>
+      <figure class="fi"><img src="{{img:D3}}" alt="A woman holds a white mug with the gradient mark"><figcaption><b>Mug</b>Gradient mark on white ceramic</figcaption></figure>
     </div>
-    <div class="devs">
-      <figure class="tall"><img src="{{img:C4}}" alt="A laptop, a tablet and a phone laid out on pale stone" style="aspect-ratio:auto;min-height:100%" loading="lazy"><figcaption>Phone · tablet · laptop</figcaption></figure>
-      <figure><img src="{{img:C2}}" alt="A man reads on a tablet at a café counter" style="aspect-ratio:16/11" loading="lazy"><figcaption>Tablet in use</figcaption></figure>
-      <figure><img src="{{img:A2}}" alt="A specialist hands over a new phone in a store" style="aspect-ratio:16/11;object-position:50% 45%" loading="lazy"><figcaption>The handover</figcaption></figure>
-    </div>
-    <div class="g3 slots">
-      <div class="oslot"><b>iPhone</b><span class="cap">Official product image · supplied by Fintegre</span></div>
-      <div class="oslot"><b>iPad</b><span class="cap">Official product image · supplied by Fintegre</span></div>
-      <div class="oslot"><b>Mac</b><span class="cap">Official product image · supplied by Fintegre</span></div>
-    </div>
-    <ul class="rule-list" style="margin-top:clamp(32px,4vw,56px)">
-      <li><span>Screens</span><span>Show soft light or a Fintegre screen. Never another company's interface.</span></li>
-      <li><span>Our imagery</span><span>Silver aluminium devices with no visible logos. They stay recognisable through form and finish.</span></li>
-      <li><span>Official imagery</span><span>Apple product photos come from the partner kit, used as supplied, with names written exactly.</span></li>
-    </ul>
   </div>
 </section>
 
-<!-- Closing -->
-<section class="sec closing dk" id="closing" data-tone="white" data-navbg="night" aria-label="Closing">
-  <img src="{{img:F1}}" alt="A woman in the back of a car looks out at the city, phone in hand" loading="lazy">
-  <div class="wrap">
-    <p class="eyebrow">Fintegre Brand Book · v2 · October 2026</p>
-    <h2 class="h-display">Make every device <span>worth more.</span></h2>
-    <div class="end-btns"><a class="ebtn pri" href="#cover">Back to the start</a><button class="ebtn" type="button" id="idx-open2">Open the index</button></div>
-    <p class="foot">Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Lifestyle and merchandise images were generated for this brand book and can be replaced with commissioned photography.</p>
+<section class="scn dk" id="s-board" data-len="3.8" data-bg="#E8F1FF" data-slow="0.2,3.3,0.18,0.42,0.5" data-name="Billboard" data-num="12">
+  <div class="bb-wrap" id="bbw" data-t="0.1,3.4" data-e="zoom" data-x="shrink">
+    <div class="bb-img" id="bbimg"><img src="{{img:D7}}" alt="A large Indigo billboard with the Fintegre lockup and slogan above a city square"></div>
+    <div class="silh" id="silh1"><svg viewBox="0 0 120 400" aria-hidden="true"><g fill="#141826"><ellipse cx="62" cy="40" rx="20" ry="24"/><path d="M36 74q26-12 52 0l10 120-12 4 2 196H74l-12-170-12 170H36l4-196-12-4z"/><path d="M88 96l20 70-8 4-18-60z"/></g></svg></div>
+    <div class="silh" id="silh2"><svg viewBox="0 0 140 400" aria-hidden="true"><g fill="#10131c"><ellipse cx="70" cy="42" rx="21" ry="25"/><path d="M40 78q30-14 60 0l14 150-16 2-6 168H80l-10-150-10 150H48l-6-168-16-2z"/><rect x="96" y="150" width="26" height="40" rx="4"/></g></svg></div>
+    <div class="silh" id="silh3"><svg viewBox="0 0 120 400" aria-hidden="true"><g fill="#181c2a"><ellipse cx="58" cy="38" rx="19" ry="23"/><path d="M34 70q24-10 48 0l8 110-10 6 0 208H68l-8-180-8 180H40l0-208-10-6z"/><path d="M30 92l-14 58 7 4 14-50z"/></g></svg></div>
   </div>
+  <div class="bb-cap" data-t="0.6,3.3" data-e="pop" data-x="left"><p class="cap" style="color:rgba(255,255,255,.8)">Billboard</p><p class="h3" data-fx="head" data-t="0.7,3.3">White lockup and slogan on Deep Indigo. Nothing else.</p></div>
+</section>
+
+<section class="scn lt" id="s-objects" data-len="8.0" data-bg="#EEF3FA" data-name="Brand objects" data-num="12">
+  <div class="frame">
+    <p class="eyebrow ab" data-fx="label" data-t="0.1,7.8" style="top:0">12 · Brand objects</p>
+    <div class="ocap">
+      <div class="obj"><p class="h3" data-fx="head" data-t="0.3,1.9">Notebook</p><p class="body" data-fx="body" data-t="0.5,1.9">Debossed Graphite mark on light grey linen, an Indigo band.</p></div>
+      <div class="obj"><p class="h3" data-fx="head" data-t="2.0,4.3">Laptop</p><p class="body" data-fx="body" data-t="2.2,4.3">Three stickers on the lid. Inside, the signature gradient as wallpaper.</p></div>
+      <div class="obj"><p class="h3" data-fx="head" data-t="4.4,5.8">Mug</p><p class="body" data-fx="body" data-t="4.6,5.8">The gradient mark on white ceramic, facing the person across the table.</p></div>
+      <div class="obj"><p class="h3" data-fx="head" data-t="5.9,7.8">Phones</p><p class="body" data-fx="body" data-t="6.1,7.8">The white mark on the back, the valuation on the screen.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="scn lt" id="s-end" data-len="2.4" data-bg="#FFFFFF" data-name="Closing">
+  <div class="end"><div class="end-in">
+    <div class="end-mark" data-t="0.3,9" data-e="pop" data-x="shrink">{{mark:gradient}}</div>
+    <h2 class="display" data-fx="head" data-t="0.4,9">Make every device <em>worth more.</em></h2>
+    <p class="cap" data-fx="label" data-t="0.7,9">Fintegre Brand Book · v2 · October 2026</p>
+    <div class="ebtns" data-t="0.9,9" data-e="pop" data-x="shrink"><button class="eb pri" type="button" id="restart">Back to the start</button><button class="eb" type="button" id="idx-open2">Open the index</button></div>
+    <p class="foot" data-fx="body" data-t="1.1,9">Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Images were generated for this brand book and can be replaced with commissioned photography.</p>
+  </div></div>
 </section>
 
 </main>

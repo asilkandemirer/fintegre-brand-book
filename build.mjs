@@ -115,6 +115,7 @@ html = html
   .replace(/\{\{mark:(\w+)\}\}/g, (_, v) => mark(v))
   .replace(/\{\{lockup:(\w+)\}\}/g, (_, v) =>
     v === 'dark' ? lockup('gradient', C.graphite) : v === 'white' ? lockup(C.smoke, C.smoke) : lockup(C.graphite, C.graphite))
+  .replace(/\{\{wordmark:(\w+)\}\}/g, (_, v) => `<svg class="wordmark" viewBox="${wbb[0] - 1} ${wbb[1] - 1} ${wbb[2] - wbb[0] + 2} ${wbb[3] - wbb[1] + 2}" role="img" aria-label="Fintegre"><path fill="${C[v] || v}" fill-rule="evenodd" d="${wmD}"/></svg>`)
   .replace(/\{\{icon:(\w+)\}\}/g, (_, id) => iconSVG(id))
   .replace('{{icongrid}}', icongrid)
   .replace(/\{\{illus:(\w+)\}\}/g, (_, id) => ILLUS[id].svg)
