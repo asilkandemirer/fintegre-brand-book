@@ -84,6 +84,7 @@ ul, ol { padding: 0; list-style: none; }
 
 /* timed elements: pre → on → post */
 .st-pre[data-e="pop"] { transform: scale(.3); opacity: 0; }
+.st-pre[data-e="rise"] { transform: translateY(18px); opacity: 0; }
 .st-pre[data-e="open"] { clip-path: inset(50% 50% 50% 50% round var(--r, 20px)); }
 .st-pre[data-e="flip"] { transform: perspective(1400px) rotateY(-84deg) scale(.92); opacity: 0; }
 .st-pre[data-e="zoom"] { transform: scale(1.4); opacity: 0; }
@@ -519,6 +520,16 @@ html.boot * { transition: none !important; }
 .ocap .obj { position: absolute; left: 0; bottom: 0; width: 100%; display: grid; gap: 6px; }
 @media (max-width: 760px) { .fstrip { top: 20%; } .ocap { width: 100%; height: 22%; } }
 
+/* ---------- brand film: scroll scrubs the footage, frosted captions sit on top ---------- */
+.film { position: absolute; inset: 0; opacity: 0; overflow: hidden; }
+.film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.ocap.glass .obj { box-sizing: border-box; padding: 18px 20px 20px; border-radius: 20px; background: rgba(255, 255, 255, .6); -webkit-backdrop-filter: blur(18px) saturate(1.3); backdrop-filter: blur(18px) saturate(1.3); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), 0 18px 40px -24px rgba(48, 71, 236, .35); }
+@media (max-width: 760px) {
+  /* a band that shows half the footage's width; main.js pans it to follow the subject */
+  .film { top: 11%; bottom: auto; height: min(112.5vw, 56svh); -webkit-mask-image: linear-gradient(transparent, #000 12%, #000 80%, transparent); mask-image: linear-gradient(transparent, #000 12%, #000 80%, transparent); }
+  .ocap.glass .obj { padding: 0; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+}
+
 /* ---------- closing ---------- */
 .end { position: absolute; inset: var(--top) var(--gr) var(--bot) var(--gl); display: grid; place-items: center; text-align: center; }
 .end-in { display: grid; gap: clamp(14px, 2.6svh, 22px); justify-items: center; }
@@ -924,14 +935,25 @@ html.boot * { transition: none !important; }
   <div class="bb-cap" data-t="0.6,3.3" data-e="pop" data-x="left"><p class="cap" style="color:rgba(255,255,255,.8)">Billboard</p><p class="h3" data-fx="head" data-t="0.7,3.3">White lockup and slogan on Deep Indigo. Nothing else.</p></div>
 </section>
 
-<section class="scn lt" id="s-objects" data-len="8.0" data-bg="#EEF3FA" data-name="Brand objects" data-num="12">
+<section class="scn lt" id="s-film" data-len="7.2" data-bg="#E1EAFA" data-slow="0.05,7.15,0.25,0.8,0.6" data-name="Brand objects" data-num="12">
+  <div class="film" id="film"><video id="film-v" muted playsinline preload="auto" disablepictureinpicture disableremoteplayback poster="{{film:poster}}" aria-label="Brand objects film: a notebook, a pen, a mug and six stickers carrying the mark."></video></div>
   <div class="frame">
-    <p class="eyebrow ab" data-fx="label" data-t="0.1,7.8" style="top:0">12 · Brand objects</p>
+    <p class="eyebrow ab" data-fx="label" data-t="0.1,7.0" style="top:0">12 · Brand objects</p>
+    <div class="ocap glass">
+      <div class="obj" data-t="0.15,1.5" data-e="rise" data-x="fade"><p class="h3" data-fx="head" data-t="0.25,1.45">Notebook</p><p class="body" data-fx="body" data-t="0.4,1.45">White linen cover, a debossed mark, an Indigo ribbon.</p></div>
+      <div class="obj" data-t="1.55,3.3" data-e="rise" data-x="fade"><p class="h3" data-fx="head" data-t="1.65,3.25">Pen</p><p class="body" data-fx="body" data-t="1.8,3.25">Brushed steel, left plain. Not every object needs the mark.</p></div>
+      <div class="obj" data-t="3.35,5.05" data-e="rise" data-x="fade"><p class="h3" data-fx="head" data-t="3.45,5.0">Mug</p><p class="body" data-fx="body" data-t="3.6,5.0">The gradient mark on white ceramic, facing the person across the table.</p></div>
+      <div class="obj" data-t="5.15,7.1" data-e="rise" data-x="fade"><p class="h3" data-fx="head" data-t="5.25,7.05">Stickers</p><p class="body" data-fx="body" data-t="5.4,7.05">Six die-cut stickers: the mark alone or on a tile, in Indigo, Ice and Graphite.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="scn lt" id="s-objects" data-len="5.0" data-bg="#EEF3FA" data-name="Devices" data-num="12">
+  <div class="frame">
+    <p class="eyebrow ab" data-fx="label" data-t="0.1,4.8" style="top:0">12 · Devices</p>
     <div class="ocap">
-      <div class="obj"><p class="h3" data-fx="head" data-t="0.3,1.9">Notebook</p><p class="body" data-fx="body" data-t="0.5,1.9">Debossed Graphite mark on light grey linen, an Indigo band.</p></div>
-      <div class="obj"><p class="h3" data-fx="head" data-t="2.0,4.3">Laptop</p><p class="body" data-fx="body" data-t="2.2,4.3">Three stickers on the lid. Inside, the signature gradient as wallpaper.</p></div>
-      <div class="obj"><p class="h3" data-fx="head" data-t="4.4,5.8">Mug</p><p class="body" data-fx="body" data-t="4.6,5.8">The gradient mark on white ceramic, facing the person across the table.</p></div>
-      <div class="obj"><p class="h3" data-fx="head" data-t="5.9,7.8">Phones</p><p class="body" data-fx="body" data-t="6.1,7.8">The white mark on the back, the valuation on the screen.</p></div>
+      <div class="obj"><p class="h3" data-fx="head" data-t="0.3,2.55">Laptop</p><p class="body" data-fx="body" data-t="0.5,2.55">Three stickers on the lid. Inside, the signature gradient as wallpaper.</p></div>
+      <div class="obj"><p class="h3" data-fx="head" data-t="2.75,4.9">Phones</p><p class="body" data-fx="body" data-t="2.95,4.9">The white mark on the back, the valuation on the screen.</p></div>
     </div>
   </div>
 </section>
@@ -942,9 +964,11 @@ html.boot * { transition: none !important; }
     <h2 class="display" data-fx="head" data-t="0.4,9">Make every device <em>worth more.</em></h2>
     <p class="cap" data-fx="label" data-t="0.7,9">Fintegre Brand Book · v2 · October 2026</p>
     <div class="ebtns" data-t="0.9,9" data-e="pop" data-x="shrink"><button class="eb pri" type="button" id="restart">Back to the start</button><button class="eb" type="button" id="idx-open2">Open the index</button></div>
-    <p class="foot" data-fx="body" data-t="1.1,9">Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Images were generated for this brand book and can be replaced with commissioned photography.</p>
+    <p class="foot" data-fx="body" data-t="1.1,9">Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Images and the objects film were generated for this brand book and can be replaced with commissioned work.</p>
   </div></div>
 </section>
 
 </main>
+<script type="application/octet-stream" id="film-mp4">{{film:mp4}}</script>
+<script type="application/octet-stream" id="film-webm">{{film:webm}}</script>
 <script>/*BUNDLE*/</script>

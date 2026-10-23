@@ -409,7 +409,7 @@ motions.social = (t) => {
   $('#gdiag').style.strokeDashoffset = (1 - smooth(seg(t, 5.45, 6.0))).toFixed(3);
 };
 
-// 12 · fashion strip, billboard pan with passers-by, then the objects in 3D
+// 12 · fashion strip, billboard pan with passers-by, the brand film, then the devices in 3D
 motions.strip = (t) => {
   const fs = $('#fstrip');
   const H = fs.clientHeight, W = fs.clientWidth, w = H * 0.8, gap = Math.max(16, W * 0.02);
@@ -431,6 +431,50 @@ motions.board = (t) => {
     el.style.visibility = q > 0 && q < 1 ? 'visible' : 'hidden';
   });
 };
+// the film is embedded as base64 (two codecs); the first one this browser plays becomes a Blob
+// URL, which seeks reliably. Scroll scrubs it: one seek at a time, always to the newest time.
+const film = { v: $('#film-v'), box: $('#film'), ready: false, want: 0, dur: 9 };
+function loadFilm() {
+  for (const [id, type] of [['film-mp4', 'video/mp4; codecs="avc1.640028"'], ['film-webm', 'video/webm; codecs="vp9"']]) {
+    const el = document.getElementById(id);
+    if (!el || !film.v.canPlayType(type)) continue;
+    const bin = atob(el.textContent.trim());
+    const u8 = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+    film.v.src = URL.createObjectURL(new Blob([u8], { type: type.split(';')[0] }));
+    break;
+  }
+  $$('script[type="application/octet-stream"]').forEach((el) => el.remove());
+  film.v.addEventListener('loadeddata', () => { film.ready = true; film.dur = film.v.duration || 9; filmSeek(); }, { once: true });
+  // iOS Safari decodes nothing until a video has played once; a muted inline video may, so prime it
+  film.v.play()?.then(() => film.v.pause(), () => {});
+  film.v.addEventListener('seeked', filmSeek);
+}
+function filmSeek() {
+  if (!film.ready || film.v.seeking) return;
+  if (Math.abs(film.v.currentTime - film.want) > 0.01) film.v.currentTime = film.want;
+}
+// where the subject sits across the footage (fraction of the width, by film seconds), so a
+// narrow screen can follow it instead of cropping the centre
+const FILM_X = [[0, 0.7], [0.6, 0.55], [1.2, 0.5], [1.9, 0.47], [3.9, 0.46], [4.3, 0.62], [4.7, 0.5], [6.2, 0.52], [6.6, 0.32], [8.9, 0.66]];
+const filmX = (s) => {
+  let i = 0;
+  while (i + 2 < FILM_X.length && FILM_X[i + 1][0] <= s) i++;
+  const [a, x0] = FILM_X[i], [b, x1] = FILM_X[i + 1];
+  return lerp(x0, x1, smooth(seg(s, a, b)));
+};
+motions.film = (t) => {
+  const len = S.film.len;
+  film.box.style.opacity = (smooth(seg(t, -0.1, 0.35)) * (1 - smooth(seg(t, len - 0.4, len)))).toFixed(3);
+  const s = clamp(t / len) * (film.dur - 0.05);
+  film.want = s;
+  filmSeek();
+  // visible share of the 16:9 width; object-position p puts the subject centre c in view
+  const f = (film.box.clientWidth / Math.max(1, film.box.clientHeight)) / (16 / 9);
+  const p = f >= 1 ? 0.5 : clamp((filmX(s) - f / 2) / (1 - f));
+  film.v.style.objectPosition = `${(p * 100).toFixed(2)}% 50%`;
+};
+
 motions.objects = (t) => {
   if (!stage) return;
   const win = (a, b) => {
@@ -440,11 +484,9 @@ motions.objects = (t) => {
   };
   const orbit = Math.sin(t * 0.9) * (mobile ? 0.35 : 1.1);
   stage.setObjects({
-    on: t > 0 && t < 8.0, cx: orbit, cy: 1.3, cz: mobile ? 9.5 : 7.4, ly: 0.05,
-    note: { s: win(0.1, 1.95), ry: lerp(-0.8, 0.6, seg(t, 0.1, 1.95)), x: mobile ? 0 : 0.6 },
-    lap: { s: win(1.95, 4.35), ry: lerp(-0.6, 0.35, seg(t, 1.95, 4.35)), y: -0.55, x: mobile ? 0 : 0.5, lid: smooth(seg(t, 2.95, 3.65)), stick: seg(t, 2.2, 2.95) },
-    mug: { s: win(4.4, 5.85), ry: lerp(-1.3, 0.4, seg(t, 4.4, 5.85)), x: mobile ? 0 : 0.6 },
-    phones: { s: win(5.9, 7.95), ry: (t - 5.9) * 1.9, x: mobile ? 0 : 0.6, spread: smooth(seg(t, 6.3, 6.9)) },
+    on: t > 0 && t < 5.0, cx: orbit, cy: 1.3, cz: mobile ? 9.5 : 7.4, ly: 0.05,
+    lap: { s: win(0.1, 2.6), ry: lerp(-0.6, 0.35, seg(t, 0.1, 2.6)), y: -0.55, x: mobile ? 0 : 0.5, lid: smooth(seg(t, 1.0, 1.7)), stick: seg(t, 0.25, 1.0) },
+    phones: { s: win(2.65, 4.95), ry: (t - 2.65) * 1.9, x: mobile ? 0 : 0.6, spread: smooth(seg(t, 3.05, 3.65)) },
   });
 };
 
@@ -576,6 +618,7 @@ async function boot() {
   ctr.show(performance.now(), true);
   frame(performance.now());
   requestAnimationFrame(() => root.classList.remove('boot'));
+  setTimeout(loadFilm, 300); // after the first paint: decoding the film takes a few tens of ms
   let rt = 0;
   window.addEventListener('resize', () => {
     clearTimeout(rt);

@@ -6,24 +6,26 @@ It plays like a film on a fixed stage. Scrolling never moves the page; it moves 
 
 ## Story
 
-Intro (the mark assembles, the photo opens through it) · 01 What is Fintegre · 02 Values · 03 Apple ecosystem · 04 Logo (3D mark that turns into digits, then a valuation screen) and logo system · 05 Colour · 06 Typography (weights, italic, card system, what breaks it) · 07 Photography (paced gallery) · 08 Photo and type · 09 Icons (sketch to final, colour and angle from the mark) · 10 Illustration · 11 Social (post to Reel to profile grid) · 12 In use (fashion strip, billboard, brand objects in 3D) · Closing
+Intro (the mark assembles, the photo opens through it) · 01 What is Fintegre · 02 Values · 03 Apple ecosystem · 04 Logo (3D mark that turns into digits, then a valuation screen) and logo system · 05 Colour · 06 Typography (weights, italic, card system, what breaks it) · 07 Photography (paced gallery) · 08 Photo and type · 09 Icons (sketch to final, colour and angle from the mark) · 10 Illustration · 11 Social (post to Reel to profile grid) · 12 In use (fashion strip, billboard, brand objects film, devices in 3D) · Closing
 
 ## Structure
 
 - `src/template.html`: every scene's copy, markup and CSS. Timed elements carry `data-t="in,out"` in scene beats (and `data-tm` for phones), an entry (`data-e`: pop, open, flip, zoom, right, wipe, draw, tilt) and an exit (`data-x`: left, shrink, cut, flip, zoom, fade). Text with `data-fx` is typed in and blown out to the left.
-- `src/main.js`: the timeline, element states, background colour, nav, index and every continuous motion (intro mask zoom, galleries, ratio morph, icon build, reel, billboard, objects)
+- `src/main.js`: the timeline, element states, background colour, nav, index and every continuous motion (intro mask zoom, galleries, ratio morph, icon build, reel, billboard, brand film, devices). The brand film is scrubbed, not played: scroll sets its time, one seek at a time, and on narrow screens the crop pans to follow the subject
 - `src/engine.js`: the clock: input to beats, speed limits, paced regions (`data-slow` on a scene)
-- `src/stage3d.js`: Three.js for the mark (assembly, sweep line, digit cloud) and the brand objects (notebook, laptop, mug, phones)
+- `src/stage3d.js`: Three.js for the mark (assembly, sweep line, digit cloud) and the devices (laptop, phones)
 - `src/ascii.js`: digits under the pointer and short number streams (desktop only), and the drawing of the digit mark
 - `src/i18n.js`: the Turkish layer. English in the template is the master copy; each Turkish string is keyed by its exact English text, so meaning is always checked against English. The page opens in Turkish; the TR / EN button (or the L key) switches language and remembers the choice. Names, colour and font names, sizes and codes stay in English on purpose. Run `__fb.missing()` in the console to list English text that has no Turkish entry.
 - `src/textfx.js`: the typing and wind effects; `src/icons.js`: icons and illustrations; `src/logo.js`: the mark geometry; `src/audio.js`: the one chime
 - `assets/images/` source images, `assets/web/` their WebP versions embedded by the build; `pack/` logo files and the image prompt pack
+- `assets/film/objects-film.mp4`: the brand objects film (notebook, pen, mug, stickers; generated with Higgsfield). `scripts/web-film.sh` encodes it to `assets/web/film.mp4` (H.264) and `film.webm` (VP9) with a keyframe every 4 frames so scrubbing stays smooth; the build embeds both and the page uses the first one the browser can play
 
 ## Build
 
 ```sh
 npm install
 npm run images   # only after changing assets/images (needs Python with Pillow)
+sh scripts/web-film.sh   # only after changing assets/film (needs ffmpeg with libx264 and libvpx)
 npm run build    # writes dist/fintegre-brand-book.html and dist/test.html (local preview)
 ```
 

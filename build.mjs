@@ -120,7 +120,10 @@ html = html
   .replace('{{icongrid}}', icongrid)
   .replace(/\{\{illus:(\w+)\}\}/g, (_, id) => ILLUS[id].svg)
   .replace('{{construction}}', construction())
-  .replace('{{clearspace}}', clearspace());
+  .replace('{{clearspace}}', clearspace())
+  // the brand film (scripts/web-film.sh): raw base64 in inert script tags, main.js turns one into a Blob
+  .replace(/\{\{film:(mp4|webm)\}\}/g, (_, k) => b64(`assets/web/film.${k}`))
+  .replace('{{film:poster}}', `data:image/webp;base64,${b64('assets/web/film-poster.webp')}`);
 
 const left = html.match(/\{\{[^}]+\}\}/g);
 if (left) throw new Error('Unresolved tokens: ' + left.join(', '));

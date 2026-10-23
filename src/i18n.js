@@ -287,17 +287,24 @@ export const TR = {
   'White lockup and slogan on Deep Indigo. Nothing else.': 'Deep Indigo üzerinde beyaz logo ve slogan. Başka hiçbir şey.',
   '12 · Brand objects': '12 · Marka objeleri',
   'Notebook': 'Defter',
-  'Debossed Graphite mark on light grey linen, an Indigo band.': 'Açık gri keten üzerinde deboss Graphite amblem ve Indigo bir lastik.',
   'Three stickers on the lid. Inside, the signature gradient as wallpaper.': 'Kapakta üç sticker. İçeride duvar kâğıdı olarak imza gradyanı.',
   'The gradient mark on white ceramic, facing the person across the table.': 'Beyaz seramikte gradyan amblem; masanın karşısındaki kişiye bakar.',
   'Phones': 'Telefonlar',
+  'Brand objects film: a notebook, a pen, a mug and six stickers carrying the mark.': 'Marka objeleri filmi: amblemi taşıyan bir defter, bir kalem, bir kupa ve altı sticker.',
+  'White linen cover, a debossed mark, an Indigo ribbon.': 'Beyaz keten kapak, deboss amblem, Indigo bir ayraç şeridi.',
+  'Pen': 'Kalem',
+  'Brushed steel, left plain. Not every object needs the mark.': 'Fırçalanmış çelik, yalın bırakıldı. Her objenin amblem taşıması gerekmez.',
+  'Stickers': 'Sticker\'lar',
+  'Six die-cut stickers: the mark alone or on a tile, in Indigo, Ice and Graphite.': 'Altı kesim sticker: amblem tek başına ya da kare zemin üzerinde; Indigo, Ice ve Graphite.',
+  'Devices': 'Cihazlar',
+  '12 · Devices': '12 · Cihazlar',
   'The white mark on the back, the valuation on the screen.': 'Arkada beyaz amblem, ekranda değerleme.',
 
   // closing
   'Fintegre Brand Book · v2 · October 2026': 'Fintegre Marka Kılavuzu · v2 · Ekim 2026',
   'Back to the start': 'Başa dön',
   'Open the index': 'İçindekileri aç',
-  'Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Images were generated for this brand book and can be replaced with commissioned photography.': 'Apple, iPhone, iPad, Mac ve Apple Watch, Apple Inc.\'in ticari markalarıdır. Görseller bu kılavuz için üretilmiştir; ısmarlanacak çekimlerle değiştirilebilir.',
+  'Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Images and the objects film were generated for this brand book and can be replaced with commissioned work.': 'Apple, iPhone, iPad, Mac ve Apple Watch, Apple Inc.\'in ticari markalarıdır. Görseller ve objeler filmi bu kılavuz için üretilmiştir; ısmarlanacak çekimlerle değiştirilebilir.',
 
   // the phone screen in 3D
   'VALUATION READY': 'DEĞERLEME HAZIR',

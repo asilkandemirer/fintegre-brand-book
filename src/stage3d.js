@@ -1,12 +1,13 @@
 // One Three.js stage for the two 3D moments:
 //  · the mark: four blocks lock together along 65°, then a sweeping line turns its surface
 //    into digits that keep turning in 3D and finally scatter;
-//  · the objects: notebook, laptop, mug and phones carrying the brand, in real materials.
+//  · the devices: laptop and phones carrying the brand, in real materials (the notebook,
+//    pen, mug and stickers live in the brand film, see main.js).
 // Scenes only set parameters; this module eases, renders and reports the digit cloud.
 import {
   WebGLRenderer, Scene, PerspectiveCamera, Group, Mesh, MeshPhysicalMaterial, MeshBasicMaterial,
   PMREMGenerator, DirectionalLight, NeutralToneMapping, SRGBColorSpace, Plane, Vector3,
-  PlaneGeometry, CylinderGeometry, TorusGeometry, CircleGeometry, CanvasTexture, DoubleSide, BackSide,
+  PlaneGeometry, CylinderGeometry, CanvasTexture, DoubleSide,
 } from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
@@ -154,16 +155,6 @@ export class Stage3D {
       drawLogo(x, w / 2, h / 2, mh, fill === 'grad' ? grad(x, w / 2 - (mh * LOGO_W) / 2, w / 2 + (mh * LOGO_W) / 2) : fill);
     });
 
-    // notebook: light grey linen cover, debossed graphite mark, indigo band
-    const note = new Group();
-    const cover = new Mesh(new RoundedBoxGeometry(1.5, 2.0, 0.14, 4, 0.04), new MeshPhysicalMaterial({ color: 0xd6dae0, roughness: 0.86, metalness: 0 }));
-    const nlogo = new Mesh(new PlaneGeometry(0.62, 0.46), basic(markTex('rgba(15,17,21,.78)'), true));
-    nlogo.position.set(0, 0.22, 0.072);
-    const band = new Mesh(new RoundedBoxGeometry(0.06, 2.02, 0.16, 2, 0.02), new MeshPhysicalMaterial({ color: 0x3047ec, roughness: 0.4 }));
-    band.position.set(0.58, 0, 0);
-    note.add(cover, nlogo, band, shadow(2.4, 1.2, -1.02));
-    O.add(note);
-
     // laptop: aluminium base, lid on a hinge, stickers outside, wallpaper inside
     const lap = new Group();
     const alu = metal(0xc9ced6);
@@ -200,24 +191,6 @@ export class Stage3D {
     lap.userData = { hinge, stickers };
     O.add(lap);
 
-    // mug: white ceramic, gradient mark facing out
-    const mug = new Group();
-    const cer = new MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.22, clearcoat: 0.6, metalness: 0 });
-    const body = new Mesh(new CylinderGeometry(0.56, 0.52, 1.24, 56, 1, true), cer);
-    const inner = new Mesh(new CylinderGeometry(0.53, 0.49, 1.2, 56, 1, true), new MeshPhysicalMaterial({ color: 0xf1f3f6, roughness: 0.3, side: BackSide }));
-    const bottom = new Mesh(new CircleGeometry(0.52, 48), cer);
-    bottom.rotation.x = -Math.PI / 2; bottom.position.y = -0.62;
-    const rim = new Mesh(new TorusGeometry(0.545, 0.018, 10, 72), cer);
-    rim.rotation.x = Math.PI / 2; rim.position.y = 0.62;
-    const handle = new Mesh(new TorusGeometry(0.3, 0.07, 16, 40, Math.PI * 1.15), cer);
-    handle.position.set(0.6, 0.02, 0); handle.rotation.z = -Math.PI * 0.575;
-    const dtex = markTex('grad', null, 512, 384, 0.66);
-    const decal = new Mesh(new CylinderGeometry(0.565, 0.53, 0.62, 40, 1, true, -0.62, 1.24),
-      new MeshBasicMaterial({ map: dtex, transparent: true, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -2 }));
-    decal.position.y = 0.04;
-    mug.add(body, inner, bottom, rim, handle, decal, shadow(1.9, 1.9, -0.63));
-    O.add(mug);
-
     // phones: mark on the back, a valuation screen on the front
     const ui = (this.uiTex = tex(512, 1060, () => {}));
     this.drawUI();
@@ -245,7 +218,7 @@ export class Stage3D {
     phones.userData = { p1, p2 };
     O.add(phones);
 
-    this.items = { note, lap, mug, phones };
+    this.items = { lap, phones };
     for (const k in this.items) this.items[k].scale.setScalar(0.0001);
     this.scene.add(O);
   }
