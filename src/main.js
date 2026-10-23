@@ -10,6 +10,7 @@ import { sound } from './audio.js';
 import { icon } from './icons.js';
 import { logoSVG } from './logo.js';
 import { clamp, seg, smooth, ease, lerp } from './util.js';
+import { TR } from './i18n.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -25,6 +26,47 @@ for (const el of $$('img[data-ref]')) {
   const src = $(`img[data-id="${el.dataset.ref}"]`);
   if (src) el.src = src.src;
 }
+
+// ------------------------------------------------------------------ language
+// The page is written in English, the master copy. Turkish is a layer on top: every string is
+// looked up by its exact English text, so switching back always returns the original.
+const norm = (v) => v.replace(/\s+/g, ' ').trim();
+let lang = 'tr';
+try { const v = localStorage.getItem('fb-lang'); if (v === 'tr' || v === 'en') lang = v; } catch (e) { /* private mode */ }
+const missing = new Set();
+const tr = (en) => {
+  if (lang === 'en') return en;
+  const v = TR[norm(en)];
+  if (v == null && /[A-Za-z]{2}/.test(en)) missing.add(norm(en));
+  return v ?? en;
+};
+const L10N = { fx: [], text: [], attr: [] };
+for (const el of $$('[data-fx], #ctr')) L10N.fx.push({ el, en: norm(el.innerHTML) });
+{
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  let n;
+  while ((n = w.nextNode())) {
+    const p = n.parentElement;
+    if (!p || !/[A-Za-z]{2}/.test(n.nodeValue) || p.closest('script, style, svg, [data-fx], #ctr, #snd-t, #idx-list')) continue;
+    const [, a, , b] = n.nodeValue.match(/^(\s*)([\s\S]*?)(\s*)$/);
+    L10N.text.push({ n, a, b, en: n.nodeValue.trim() });
+  }
+}
+for (const el of $$('[alt], [aria-label], [title]')) {
+  for (const k of ['alt', 'aria-label', 'title']) {
+    const v = el.getAttribute(k);
+    if (v && /[A-Za-z]{2}/.test(v) && el.id !== 'lang') L10N.attr.push({ el, k, en: v });
+  }
+}
+function applyText() {
+  root.lang = lang;
+  document.title = tr('Fintegre Brand Book');
+  for (const t of L10N.text) t.n.nodeValue = t.a + tr(t.en) + t.b;
+  for (const t of L10N.attr) t.el.setAttribute(t.k, tr(t.en));
+  root.style.setProperty('--avoid', JSON.stringify(tr('Avoid')));
+}
+applyText();
+for (const f of L10N.fx) if (lang !== 'en') f.el.innerHTML = tr(f.en);
 
 // ------------------------------------------------------------------ timeline
 const scenes = $$('.scn').map((el) => ({
@@ -61,7 +103,7 @@ const fxs = [];
 for (const s of scenes) {
   for (const el of $$('[data-t]', s.el)) {
     const it = { el, t: parseT(el.dataset.t), tm: parseT(el.dataset.tm), wait: +(el.dataset.wait || 0), st: '' };
-    if (el.dataset.fx) { it.fx = new TextFX(el); fxs.push(it.fx); }
+    if (el.dataset.fx) { it.fx = el.__fx = new TextFX(el); fxs.push(it.fx); }
     if (el.classList.contains('count')) it.count = { to: +el.dataset.to, pre: el.dataset.pre || '', t0: 0, on: false };
     s.items.push(it);
   }
@@ -412,7 +454,8 @@ const list = $('#idx-list');
 const chapters = scenes.filter((s, i) => s.num && scenes.findIndex((o) => o.num === s.num) === i);
 [...chapters, S.end].forEach((s) => {
   const li = document.createElement('li');
-  li.innerHTML = `<button type="button"><span class="n">${s.num || '··'}</span><span class="t">${s.name}</span></button>`;
+  li.innerHTML = `<button type="button"><span class="n">${s.num || '··'}</span><span class="t"></span></button>`;
+  li.querySelector('.t').dataset.en = s.name;
   li.querySelector('button').addEventListener('click', () => { closeIndex(); clock.seek(s.start + 0.04); });
   list.appendChild(li);
 });
@@ -423,11 +466,36 @@ openers.forEach((b) => b.addEventListener('click', openIndex));
 $('#idx-close').addEventListener('click', closeIndex);
 $('#restart').addEventListener('click', () => clock.seek(0));
 const snd = $('#snd');
+let soundOn = false;
+const sndLabel = () => ($('#snd-t').textContent = tr(soundOn ? 'Sound on' : 'Sound off'));
 snd.addEventListener('click', () => {
-  const on = sound.toggle();
-  snd.setAttribute('aria-pressed', String(on));
-  $('#snd-t').textContent = on ? 'Sound on' : 'Sound off';
-  if (on) sound.chime();
+  soundOn = sound.toggle();
+  snd.setAttribute('aria-pressed', String(soundOn));
+  sndLabel();
+  if (soundOn) sound.chime();
+});
+const sceneLabel = (s) => (s.num ? `${s.num} · ${tr(s.name)}` : tr('Fintegre Brand Book'));
+function chromeText() {
+  for (const t of $$('#idx-list .t')) t.textContent = tr(t.dataset.en);
+  sndLabel();
+  $('#lang').setAttribute('aria-label', lang === 'tr' ? 'Dil: Türkçe. İngilizceye geç' : 'Language: English. Switch to Turkish');
+  stage?.setLang(tr);
+}
+chromeText();
+function setLang(next) {
+  if (next === lang) return;
+  lang = next;
+  try { localStorage.setItem('fb-lang', lang); } catch (e) { /* private mode */ }
+  applyText();
+  chromeText();
+  root.classList.add('measuring');
+  for (const f of L10N.fx) f.el.__fx?.replace(tr(f.en));
+  ctr.replace(curScene ? sceneLabel(curScene) : tr('Fintegre Brand Book'));
+  root.classList.remove('measuring');
+}
+$('#lang').addEventListener('click', () => setLang(lang === 'tr' ? 'en' : 'tr'));
+window.addEventListener('keydown', (e) => {
+  if ((e.key === 'l' || e.key === 'L') && !e.metaKey && !e.ctrlKey && !e.altKey && idx.hidden) setLang(lang === 'tr' ? 'en' : 'tr');
 });
 bindInput(clock, window, { onKey: (e) => { if (!idx.hidden) { if (e.key === 'Escape') closeIndex(); return true; } return false; } });
 idx.addEventListener('wheel', (e) => e.stopPropagation(), { passive: true });
@@ -473,7 +541,7 @@ function frame(now) {
 
   if (active && active !== curScene) {
     curScene = active;
-    ctr.replace(active.num ? `${active.num} · ${active.name}` : 'Fintegre Brand Book');
+    ctr.replace(sceneLabel(active));
     if (ctr.state === 'hidden') ctr.show(now, true);
   }
   for (const f of [ctr]) f.update(now);
@@ -520,5 +588,5 @@ async function boot() {
     }, 150);
   });
 }
-window.__fb = { seek: (t) => clock.seek(t), scenes: scenes.map((s) => ({ id: s.id, start: s.start, len: s.len })), total: TOTAL, get T() { return clock.T; } };
+window.__fb = { setLang, get lang() { return lang; }, missing: () => [...missing], seek: (t) => clock.seek(t), scenes: scenes.map((s) => ({ id: s.id, start: s.start, len: s.len })), total: TOTAL, get T() { return clock.T; } };
 boot();

@@ -125,9 +125,21 @@ html[data-nav="dark"] .tb { background: rgba(245, 247, 250, .14); }
 html[data-nav="dark"] .tb.pri { background: var(--ice); color: var(--graphite); }
 .dot { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid currentColor; }
 .tb[aria-pressed="true"] .dot { background: currentColor; }
+.lang { gap: 7px; padding: 0 11px; }
+.lang i { width: 1px; height: 12px; background: currentColor; opacity: .3; }
+.lang span { opacity: .42; transition: opacity .25s; }
+html[lang="tr"] .lang [data-l="tr"], html[lang="en"] .lang [data-l="en"] { opacity: 1; font-weight: 700; }
 .bar { position: fixed; z-index: 20; left: var(--gl); right: var(--gr); bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); height: 2px; background: rgba(127, 140, 170, .22); border-radius: 2px; overflow: hidden; pointer-events: none; }
 .bar i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--indigo), var(--ice)); transform-origin: left; transform: scaleX(var(--p, 0)); }
 @media (max-width: 760px) { .ctr { display: none; } .tools { margin-left: auto; } }
+.tb { white-space: nowrap; }
+#snd { position: relative; }
+@media (max-width: 760px) {
+  .top { gap: 10px; } .tools { gap: 6px; } .tb { padding: 0 10px; letter-spacing: .1em; } .lang { padding: 0 9px; }
+  #snd { width: 34px; padding: 0; justify-content: center; }
+  #snd-t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+}
+@media (max-width: 400px) { .brand { height: 20px; } .tb { font-size: 10px; letter-spacing: .06em; } }
 .index { position: fixed; inset: 0; z-index: 70; background: var(--night); color: var(--smoke); overflow-y: auto; padding: calc(env(safe-area-inset-top, 0px) + 20px) var(--gr) calc(env(safe-area-inset-bottom, 0px) + 32px) var(--gl); touch-action: pan-y; }
 .index-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5vh; }
 .index-top svg { height: 24px; width: auto; }
@@ -348,7 +360,7 @@ html.boot * { transition: none !important; }
 .kc.cen .real { justify-items: center; }
 .kc.grp .row { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 14px; }
 .kc.grp .row .ico { width: 22px; height: 22px; color: var(--graphite); flex: none; }
-.kc.dont::after { content: "Avoid"; position: absolute; right: 12px; bottom: 12px; font-family: var(--f-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--white); background: var(--graphite); padding: 3px 8px; border-radius: 6px; }
+.kc.dont::after { content: var(--avoid, "Avoid"); position: absolute; right: 12px; bottom: 12px; font-family: var(--f-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--white); background: var(--graphite); padding: 3px 8px; border-radius: 6px; }
 .kc.dont .real { opacity: 1; }
 .kc .why { font-family: var(--f-mono); font-size: 11px; color: var(--ink2); padding-top: 10px; padding-right: 56px; border-top: 1px dashed var(--rule); }
 .cgrid .kc { grid-area: var(--ga); }
@@ -534,6 +546,7 @@ html.boot * { transition: none !important; }
   <span class="brand" aria-label="Fintegre"><span class="on-light">{{lockup:dark}}</span><span class="on-dark">{{lockup:white}}</span></span>
   <p class="ctr" id="ctr" data-fx="label">Fintegre Brand Book</p>
   <div class="tools">
+    <button class="tb lang" id="lang" type="button" title="Türkçe / English · L"><span data-l="tr">TR</span><i></i><span data-l="en">EN</span></button>
     <button class="tb" id="snd" type="button" aria-pressed="false" title="One short chime when the mark assembles"><span class="dot"></span><span id="snd-t">Sound off</span></button>
     <button class="tb pri" id="idx-open" type="button" aria-expanded="false" aria-controls="index">Index</button>
   </div>
@@ -644,7 +657,7 @@ html.boot * { transition: none !important; }
       <ul class="con-checks">
         <li data-t="4.4,6.4" data-e="pop" data-x="fade">Screen <span>A</span></li>
         <li data-t="4.5,6.4" data-e="pop" data-x="fade">Battery <span>91%</span></li>
-        <li data-t="4.6,6.4" data-e="pop" data-x="fade">Body <span>A−</span></li>
+        <li data-t="4.6,6.4" data-e="pop" data-x="fade">Casing <span>A−</span></li>
         <li data-t="4.7,6.4" data-e="pop" data-x="fade">Market <span>+3.2%</span></li>
       </ul>
       <div class="con-val"><div class="stack" style="gap:6px"><span class="mono" style="color:rgba(245,247,250,.6)">TRADE-IN VALUE</span><b class="count" data-t="4.8,6.4" data-to="14250" data-pre="₺">₺0</b></div>
@@ -764,7 +777,7 @@ html.boot * { transition: none !important; }
       <p class="lede" data-fx="body" data-t="0.5,7.4" data-tm="0.5,3.0">The moment a device makes life easier. A diverse cast, gallery-simple places and daylight, always with a premium device in use.</p>
       <ul class="prl">
         <li data-t="1.2,7.4" data-e="right" data-x="left"><b>Cast</b><span>Women and men, 25 to 65, many backgrounds.</span></li>
-        <li data-t="1.9,7.4" data-e="right" data-x="left" style="--xd:40ms"><b>Light</b><span>Soft daylight. High-key, shadows at 65°.</span></li>
+        <li data-t="1.9,7.4" data-e="right" data-x="left" style="--xd:40ms"><b>Lighting</b><span>Soft daylight. High-key, shadows at 65°.</span></li>
         <li data-t="2.6,7.4" data-e="right" data-x="left" style="--xd:80ms"><b>Place</b><span>White rooms, pale stone, light oak.</span></li>
         <li data-t="3.3,7.4" data-e="right" data-x="left" style="--xd:120ms"><b>Device</b><span>Silver, in use, no third-party logos.</span></li>
       </ul>
