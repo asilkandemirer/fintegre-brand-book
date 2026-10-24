@@ -19,8 +19,8 @@ export const SHOTS = [
   [14.6, 16.4, '09 · Watch (kadran)'],
   [16.4, 18, '10 · Kulaklık: kampanya filminin ilk karesi'],
 ];
-// each device holds still for a beat, then morphs into the next in 0.8 s
-const HOLD = [[0, 1.2], [2.0, 3.0], [3.8, 4.8], [5.6, 6.6], [7.4, 8.4], [9.2, 10.2], [11.0, 12.0], [12.8, 13.8], [14.6, 15.6], [16.4, 18.0]];
+// each device holds still, facing the camera, then spins a full turn in 1 s while it morphs into the next
+const HOLD = [[0, 1.0], [2.0, 2.8], [3.8, 4.6], [5.6, 6.4], [7.4, 8.2], [9.2, 10.0], [11.0, 11.8], [12.8, 13.6], [14.6, 15.4], [16.4, 18.0]];
 
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (t, a, b) => clamp((t - a) / (b - a));
@@ -77,10 +77,13 @@ scene.add(floor);
 const INDIGO = '#3047EC', ICE = '#B7D7FF';
 const mat = (c, o = {}) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.45, metalness: 0.15, transparent: true, ...o });
 const unitBox = new THREE.BoxGeometry(1, 1, 1);
+// everything that belongs to the device turns together about the vertical axis through the mark
+const rig = new THREE.Group();
+scene.add(rig);
 function part(c, o) {
   const m = new THREE.Mesh(unitBox, mat(c, o));
   m.castShadow = m.receiveShadow = true;
-  scene.add(m);
+  rig.add(m);
   return m;
 }
 
@@ -99,7 +102,7 @@ const markShape = LOGO.map((b) => {
 const mark = new THREE.Mesh(new THREE.ExtrudeGeometry(markShape, { depth: 0.05, bevelEnabled: false }), mat(INDIGO, { emissive: INDIGO, emissiveIntensity: 0.35, roughness: 0.3 }));
 mark.position.copy(ANCHOR);
 mark.scale.setScalar(1.05);
-scene.add(mark);
+rig.add(mark);
 
 // ------------------------------------------------------------------ devices
 // body w × h × d (the face toward camera carries the logo), oy = body centre relative to the
@@ -124,7 +127,7 @@ const extras = DEVICES.map((s) => {
   if (s.buds) {
     e.buds = [-1, 1].map(() => {
       const m = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.6, 6, 16), mat('#F7F8FB'));
-      m.castShadow = true; scene.add(m); return m;
+      m.castShadow = true; rig.add(m); return m;
     });
     e.lid = part(s.c);
   }
@@ -133,7 +136,7 @@ const extras = DEVICES.map((s) => {
 });
 // screen and laptop base are shared, so when both devices have one it stays and only reshapes
 const screen = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat(ICE, { emissive: ICE, emissiveIntensity: 0.3 }));
-scene.add(screen);
+rig.add(screen);
 const base = part('#C7CDD6'), keys = part('#3A3F48');
 
 const sparks = (() => {
@@ -141,7 +144,7 @@ const sparks = (() => {
   g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(900 * 3), 3));
   const p = new THREE.Points(g, new THREE.PointsMaterial({ color: INDIGO, size: 4, sizeAttenuation: false, transparent: true, depthWrite: false }));
   p.frustumCulled = false;
-  scene.add(p);
+  rig.add(p);
   return p;
 })();
 const sparkSeed = Array.from({ length: 900 }, () => [R(), R(), R(), R()]);
@@ -162,6 +165,7 @@ export function renderAt(f) {
   const A = DEVICES[i], B = DEVICES[Math.min(i + 1, DEVICES.length - 1)];
   const w = lerp(A.w, B.w, k), h = lerp(A.h, B.h, k), d = lerp(A.d, B.d, k), oy = lerp(A.oy, B.oy, k);
   const s = 1;
+  rig.rotation.y = Math.PI * 2 * k; // a full turn per change, easing in and out with the morph
   const front = ANCHOR.z - 0.03; // the logo face of the body, just behind the mark
   body.visible = s > 0.04;
   body.scale.set(w * s, h * s, d * s);
