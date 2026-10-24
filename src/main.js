@@ -409,7 +409,7 @@ motions.social = (t) => {
   $('#gdiag').style.strokeDashoffset = (1 - smooth(seg(t, 5.45, 6.0))).toFixed(3);
 };
 
-// 12 · fashion strip, billboard pan with passers-by, the brand film, then the devices in 3D
+// 12 · fashion strip, billboard pan with passers-by, the campaign film, the objects film, then the devices in 3D
 motions.strip = (t) => {
   const fs = $('#fstrip');
   const H = fs.clientHeight, W = fs.clientWidth, w = H * 0.8, gap = Math.max(16, W * 0.02);
@@ -431,49 +431,61 @@ motions.board = (t) => {
     el.style.visibility = q > 0 && q < 1 ? 'visible' : 'hidden';
   });
 };
-// the film is embedded as base64 (two codecs); the first one this browser plays becomes a Blob
-// URL, which seeks reliably. Scroll scrubs it: one seek at a time, always to the newest time.
-const film = { v: $('#film-v'), box: $('#film'), ready: false, want: 0, dur: 9 };
-function loadFilm() {
-  for (const [id, type] of [['film-mp4', 'video/mp4; codecs="avc1.640028"'], ['film-webm', 'video/webm; codecs="vp9"']]) {
-    const el = document.getElementById(id);
-    if (!el || !film.v.canPlayType(type)) continue;
-    const bin = atob(el.textContent.trim());
-    const u8 = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
-    film.v.src = URL.createObjectURL(new Blob([u8], { type: type.split(';')[0] }));
-    break;
-  }
-  $$('script[type="application/octet-stream"]').forEach((el) => el.remove());
-  film.v.addEventListener('loadeddata', () => { film.ready = true; film.dur = film.v.duration || 9; filmSeek(); }, { once: true });
-  // iOS Safari decodes nothing until a video has played once; a muted inline video may, so prime it
-  film.v.play()?.then(() => film.v.pause(), () => {});
-  film.v.addEventListener('seeked', filmSeek);
-}
-function filmSeek() {
-  if (!film.ready || film.v.seeking) return;
-  if (Math.abs(film.v.currentTime - film.want) > 0.01) film.v.currentTime = film.want;
+// films come embedded as base64 or as a file published next to the page, in two codecs; the
+// first one this browser plays becomes a Blob URL, which seeks reliably. Scroll scrubs it: one
+// seek at a time, always to the newest time.
+const CODECS = [['mp4', 'video/mp4; codecs="avc1.640028"'], ['webm', 'video/webm; codecs="vp9"']];
+function makeFilm(key, xs, dur) {
+  const f = { v: $(`#${key}-v`), box: $(`#${key}`), ready: false, want: 0, dur, xs };
+  f.seek = () => {
+    if (!f.ready || f.v.seeking) return;
+    if (Math.abs(f.v.currentTime - f.want) > 0.01) f.v.currentTime = f.want;
+  };
+  f.load = async () => {
+    for (const [ext, type] of CODECS) {
+      const el = document.getElementById(`${key}-${ext}`);
+      if (!el || !f.v.canPlayType(type)) continue;
+      const mime = type.split(';')[0], text = el.textContent.trim();
+      if (text) {
+        const bin = atob(text);
+        const u8 = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+        f.v.src = URL.createObjectURL(new Blob([u8], { type: mime }));
+      } else if (el.dataset.src) {
+        try { f.v.src = URL.createObjectURL(new Blob([await (await fetch(el.dataset.src)).blob()], { type: mime })); } catch (e) { f.v.src = el.dataset.src; }
+      }
+      break;
+    }
+    $$(`script[id^="${key}-"]`).forEach((el) => el.remove());
+    f.v.addEventListener('loadeddata', () => { f.ready = true; f.dur = f.v.duration || dur; f.seek(); }, { once: true });
+    f.v.addEventListener('seeked', f.seek);
+    // iOS Safari decodes nothing until a video has played once; a muted inline video may, so prime it
+    f.v.play()?.then(() => f.v.pause(), () => {});
+  };
+  return f;
 }
 // where the subject sits across the footage (fraction of the width, by film seconds), so a
 // narrow screen can follow it instead of cropping the centre
-const FILM_X = [[0, 0.7], [0.6, 0.55], [1.2, 0.5], [1.9, 0.47], [3.9, 0.46], [4.3, 0.62], [4.7, 0.5], [6.2, 0.52], [6.6, 0.32], [8.9, 0.66]];
-const filmX = (s) => {
-  let i = 0;
-  while (i + 2 < FILM_X.length && FILM_X[i + 1][0] <= s) i++;
-  const [a, x0] = FILM_X[i], [b, x1] = FILM_X[i + 1];
-  return lerp(x0, x1, smooth(seg(s, a, b)));
+const films = {
+  film: makeFilm('film', [[0, 0.7], [0.6, 0.55], [1.2, 0.5], [1.9, 0.47], [3.9, 0.46], [4.3, 0.62], [4.7, 0.5], [6.2, 0.52], [6.6, 0.32], [8.9, 0.66]], 9),
+  campaign: makeFilm('campaign', [[0, 0.5], [2.4, 0.5], [3.0, 0.62], [6.0, 0.6], [7.0, 0.5], [13.5, 0.55], [14.0, 0.5], [18.3, 0.5], [18.6, 0.45], [20.3, 0.45]], 20.3),
 };
-motions.film = (t) => {
-  const len = S.film.len;
-  film.box.style.opacity = (smooth(seg(t, -0.1, 0.35)) * (1 - smooth(seg(t, len - 0.4, len)))).toFixed(3);
-  const s = clamp(t / len) * (film.dur - 0.05);
-  film.want = s;
-  filmSeek();
+function scrub(f, t, len) {
+  f.box.style.opacity = (smooth(seg(t, -0.1, 0.35)) * (1 - smooth(seg(t, len - 0.4, len)))).toFixed(3);
+  const s = clamp(t / len) * (f.dur - 0.05);
+  f.want = s;
+  f.seek();
   // visible share of the 16:9 width; object-position p puts the subject centre c in view
-  const f = (film.box.clientWidth / Math.max(1, film.box.clientHeight)) / (16 / 9);
-  const p = f >= 1 ? 0.5 : clamp((filmX(s) - f / 2) / (1 - f));
-  film.v.style.objectPosition = `${(p * 100).toFixed(2)}% 50%`;
-};
+  let i = 0;
+  while (i + 2 < f.xs.length && f.xs[i + 1][0] <= s) i++;
+  const [a, x0] = f.xs[i], [b, x1] = f.xs[i + 1];
+  const c = lerp(x0, x1, smooth(seg(s, a, b)));
+  const w = (f.box.clientWidth / Math.max(1, f.box.clientHeight)) / (16 / 9);
+  const p = w >= 1 ? 0.5 : clamp((c - w / 2) / (1 - w));
+  f.v.style.objectPosition = `${(p * 100).toFixed(2)}% 50%`;
+}
+motions.campaign = (t) => scrub(films.campaign, t, S.campaign.len);
+motions.film = (t) => scrub(films.film, t, S.film.len);
 
 motions.objects = (t) => {
   if (!stage) return;
@@ -618,7 +630,8 @@ async function boot() {
   ctr.show(performance.now(), true);
   frame(performance.now());
   requestAnimationFrame(() => root.classList.remove('boot'));
-  setTimeout(loadFilm, 300); // after the first paint: decoding the film takes a few tens of ms
+  setTimeout(films.film.load, 300); // after the first paint: decoding a film takes a few tens of ms
+  setTimeout(films.campaign.load, 900);
   let rt = 0;
   window.addEventListener('resize', () => {
     clearTimeout(rt);

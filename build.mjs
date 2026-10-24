@@ -123,16 +123,24 @@ html = html
   .replace('{{clearspace}}', clearspace())
   // the brand film (scripts/web-film.sh): raw base64 in inert script tags, main.js turns one into a Blob
   .replace(/\{\{film:(mp4|webm)\}\}/g, (_, k) => b64(`assets/web/film.${k}`))
-  .replace('{{film:poster}}', `data:image/webp;base64,${b64('assets/web/film-poster.webp')}`);
+  .replace('{{film:poster}}', `data:image/webp;base64,${b64('assets/web/film-poster.webp')}`)
+  .replace(/\{\{poster:(\w+)\}\}/g, (_, k) => `data:image/webp;base64,${b64(`assets/web/${k}-poster.webp`)}`);
 
-const left = html.match(/\{\{[^}]+\}\}/g);
+// larger films: the artifact publishes them next to the page (media/…, see the README), and the
+// single-file copy embeds them so it plays anywhere, offline included
+const MEDIA = /\{\{media:(\w+):(mp4|webm)\}\}/g;
+
+const left = html.replace(MEDIA, '').match(/\{\{[^}]+\}\}/g);
 if (left) throw new Error('Unresolved tokens: ' + left.join(', '));
 const parts = html.split('/*BUNDLE*/');
 html = parts[0] + js + parts[1];
 
 fs.mkdirSync('dist', { recursive: true });
-fs.writeFileSync('dist/fintegre-brand-book.html', html);
-// local preview with a document shell (the artifact host adds its own)
-const shell = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>${html}</body></html>`;
+const page = html.replace(MEDIA, '');
+fs.writeFileSync('dist/fintegre-brand-book.html', page);
+// single file with a document shell (the artifact host adds its own): local preview and hand-off
+const single = html.replace(MEDIA, (_, k, e) => b64(`assets/web/${k}.${e}`));
+const shell = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>${single}</body></html>`;
 fs.writeFileSync('dist/test.html', shell);
-console.log('bytes', html.length, 'js', js.length);
+fs.writeFileSync('dist/fintegre-brand-book-tek-dosya.html', shell);
+console.log('page bytes', page.length, 'single file bytes', shell.length, 'js', js.length);

@@ -297,6 +297,18 @@ export const TR = {
   'Stickers': 'Sticker\'lar',
   'Six die-cut stickers: the mark alone or on a tile, in Indigo, Ice and Graphite.': 'Altı kesim sticker: amblem tek başına ya da kare zemin üzerinde; Indigo, Ice ve Graphite.',
   'Devices': 'Cihazlar',
+  'Campaign film': 'Kampanya filmi',
+  '12 · Campaign film': '12 · Kampanya filmi',
+  'Campaign film: earbuds, a billboard, a bus, an ad column, a building facade and a closing billboard carrying the Fintegre campaign.': 'Kampanya filmi: Fintegre kampanyasını taşıyan kulaklık, billboard, otobüs, reklam silindiri, bina cephesi ve kapanış billboard\'u.',
+  'One line on every surface: Make every device worth more.': 'Her yüzeyde tek cümle: Make every device worth more.',
+  'The lockup and the slogan on Deep Indigo, one person with a phone.': 'Deep Indigo üzerinde logo ve slogan, telefonuyla tek bir kişi.',
+  'Bus': 'Otobüs',
+  'The devices fill the side; the line stays short.': 'Cihazlar yan yüzü doldurur; cümle kısa kalır.',
+  'Ad column': 'Reklam silindiri',
+  'Headline and photograph wrap all the way around.': 'Başlık ve fotoğraf silindirin etrafını tamamen sarar.',
+  'Facade': 'Cephe',
+  'One person, one phone, one line, readable from across the street.': 'Tek kişi, tek telefon, tek cümle; karşı kaldırımdan okunur.',
+  'The slogan and a phone in hand. Nothing else.': 'Slogan ve elde bir telefon. Başka hiçbir şey.',
   '12 · Devices': '12 · Cihazlar',
   'The white mark on the back, the valuation on the screen.': 'Arkada beyaz amblem, ekranda değerleme.',
 
@@ -304,7 +316,7 @@ export const TR = {
   'Fintegre Brand Book · v2 · October 2026': 'Fintegre Marka Kılavuzu · v2 · Ekim 2026',
   'Back to the start': 'Başa dön',
   'Open the index': 'İçindekileri aç',
-  'Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Images and the objects film were generated for this brand book and can be replaced with commissioned work.': 'Apple, iPhone, iPad, Mac ve Apple Watch, Apple Inc.\'in ticari markalarıdır. Görseller ve objeler filmi bu kılavuz için üretilmiştir; ısmarlanacak çekimlerle değiştirilebilir.',
+  'Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Images and films were generated for this brand book and can be replaced with commissioned work.': 'Apple, iPhone, iPad, Mac ve Apple Watch, Apple Inc.\'in ticari markalarıdır. Görseller ve filmler bu kılavuz için üretilmiştir; ısmarlanacak çekimlerle değiştirilebilir.',
 
   // the phone screen in 3D
   'VALUATION READY': 'DEĞERLEME HAZIR',

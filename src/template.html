@@ -935,6 +935,21 @@ html.boot * { transition: none !important; }
   <div class="bb-cap" data-t="0.6,3.3" data-e="pop" data-x="left"><p class="cap" style="color:rgba(255,255,255,.8)">Billboard</p><p class="h3" data-fx="head" data-t="0.7,3.3">White lockup and slogan on Deep Indigo. Nothing else.</p></div>
 </section>
 
+<section class="scn lt" id="s-campaign" data-len="16.2" data-bg="#DCE8F8" data-slow="0.05,16.15,0.25,0.8,0.6" data-name="Campaign film" data-num="12">
+  <div class="film" id="campaign"><video id="campaign-v" muted playsinline preload="auto" disablepictureinpicture disableremoteplayback poster="{{poster:kampanya}}" aria-label="Campaign film: earbuds, a billboard, a bus, an ad column, a building facade and a closing billboard carrying the Fintegre campaign."></video></div>
+  <div class="frame">
+    <p class="eyebrow ab" data-fx="label" data-t="0.1,16.0" style="top:0">12 · Campaign film</p>
+    <div class="ocap glass">
+      <div class="obj" data-t="0.15,2.0" data-e="rise" data-x="fade"><p class="h3" data-fx="head" data-t="0.25,1.95">Campaign film</p><p class="body" data-fx="body" data-t="0.4,1.95">One line on every surface: Make every device worth more.</p></div>
+      <div class="obj" data-t="2.1,4.8" data-e="rise" data-x="fade"><p class="h3" data-fx="head" data-t="2.2,4.75">Billboard</p><p class="body" data-fx="body" data-t="2.35,4.75">The lockup and the slogan on Deep Indigo, one person with a phone.</p></div>
+      <div class="obj" data-t="4.9,9.3" data-e="rise" data-x="fade"><p class="h3" data-fx="head" data-t="5.0,9.25">Bus</p><p class="body" data-fx="body" data-t="5.15,9.25">The devices fill the side; the line stays short.</p></div>
+      <div class="obj" data-t="9.45,10.9" data-e="rise" data-x="fade"><p class="h3" data-fx="head" data-t="9.55,10.85">Ad column</p><p class="body" data-fx="body" data-t="9.7,10.85">Headline and photograph wrap all the way around.</p></div>
+      <div class="obj" data-t="11.05,14.6" data-e="rise" data-x="fade"><p class="h3" data-fx="head" data-t="11.15,14.55">Facade</p><p class="body" data-fx="body" data-t="11.3,14.55">One person, one phone, one line, readable from across the street.</p></div>
+      <div class="obj" data-t="14.7,16.1" data-e="rise" data-x="fade"><p class="h3" data-fx="head" data-t="14.8,16.05">Billboard</p><p class="body" data-fx="body" data-t="14.95,16.05">The slogan and a phone in hand. Nothing else.</p></div>
+    </div>
+  </div>
+</section>
+
 <section class="scn lt" id="s-film" data-len="7.2" data-bg="#E1EAFA" data-slow="0.05,7.15,0.25,0.8,0.6" data-name="Brand objects" data-num="12">
   <div class="film" id="film"><video id="film-v" muted playsinline preload="auto" disablepictureinpicture disableremoteplayback poster="{{film:poster}}" aria-label="Brand objects film: a notebook, a pen, a mug and six stickers carrying the mark."></video></div>
   <div class="frame">
@@ -964,11 +979,13 @@ html.boot * { transition: none !important; }
     <h2 class="display" data-fx="head" data-t="0.4,9">Make every device <em>worth more.</em></h2>
     <p class="cap" data-fx="label" data-t="0.7,9">Fintegre Brand Book · v2 · October 2026</p>
     <div class="ebtns" data-t="0.9,9" data-e="pop" data-x="shrink"><button class="eb pri" type="button" id="restart">Back to the start</button><button class="eb" type="button" id="idx-open2">Open the index</button></div>
-    <p class="foot" data-fx="body" data-t="1.1,9">Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Images and the objects film were generated for this brand book and can be replaced with commissioned work.</p>
+    <p class="foot" data-fx="body" data-t="1.1,9">Apple, iPhone, iPad, Mac and Apple Watch are trademarks of Apple Inc. Images and films were generated for this brand book and can be replaced with commissioned work.</p>
   </div></div>
 </section>
 
 </main>
 <script type="application/octet-stream" id="film-mp4">{{film:mp4}}</script>
 <script type="application/octet-stream" id="film-webm">{{film:webm}}</script>
+<script type="application/octet-stream" id="campaign-mp4" data-src="media/kampanya.mp4">{{media:kampanya:mp4}}</script>
+<script type="application/octet-stream" id="campaign-webm" data-src="media/kampanya.webm">{{media:kampanya:webm}}</script>
 <script>/*BUNDLE*/</script>

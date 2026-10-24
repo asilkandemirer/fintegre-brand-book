@@ -6,7 +6,7 @@ It plays like a film on a fixed stage. Scrolling never moves the page; it moves 
 
 ## Story
 
-Intro (the mark assembles, the photo opens through it) · 01 What is Fintegre · 02 Values · 03 Apple ecosystem · 04 Logo (3D mark that turns into digits, then a valuation screen) and logo system · 05 Colour · 06 Typography (weights, italic, card system, what breaks it) · 07 Photography (paced gallery) · 08 Photo and type · 09 Icons (sketch to final, colour and angle from the mark) · 10 Illustration · 11 Social (post to Reel to profile grid) · 12 In use (fashion strip, billboard, brand objects film, devices in 3D) · Closing
+Intro (the mark assembles, the photo opens through it) · 01 What is Fintegre · 02 Values · 03 Apple ecosystem · 04 Logo (3D mark that turns into digits, then a valuation screen) and logo system · 05 Colour · 06 Typography (weights, italic, card system, what breaks it) · 07 Photography (paced gallery) · 08 Photo and type · 09 Icons (sketch to final, colour and angle from the mark) · 10 Illustration · 11 Social (post to Reel to profile grid) · 12 In use (fashion strip, billboard, campaign film, brand objects film, devices in 3D) · Closing
 
 ## Structure
 
@@ -18,7 +18,8 @@ Intro (the mark assembles, the photo opens through it) · 01 What is Fintegre ·
 - `src/i18n.js`: the Turkish layer. English in the template is the master copy; each Turkish string is keyed by its exact English text, so meaning is always checked against English. The page opens in Turkish; the TR / EN button (or the L key) switches language and remembers the choice. Names, colour and font names, sizes and codes stay in English on purpose. Run `__fb.missing()` in the console to list English text that has no Turkish entry.
 - `src/textfx.js`: the typing and wind effects; `src/icons.js`: icons and illustrations; `src/logo.js`: the mark geometry; `src/audio.js`: the one chime
 - `assets/images/` source images, `assets/web/` their WebP versions embedded by the build; `pack/` logo files and the image prompt pack
-- `assets/film/objects-film.mp4`: the brand objects film (notebook, pen, mug, stickers; generated with Higgsfield). `scripts/web-film.sh` encodes it to `assets/web/film.mp4` (H.264) and `film.webm` (VP9) with a keyframe every 4 frames so scrubbing stays smooth; the build embeds both and the page uses the first one the browser can play
+- `assets/film/objects-film.mp4`: the brand objects film (notebook, pen, mug, stickers; generated with Higgsfield). `assets/film/kampanya-filmi.mp4`: the campaign film (earbuds, billboard, bus, ad column, facade, closing billboard), cut from four Kling parts with short dissolves, with sound. `scripts/web-film.sh` encodes both for scrubbing (H.264 and VP9, short keyframe interval, no sound); the page uses the first codec the browser can play
+- The build writes two pages. `dist/fintegre-brand-book.html` is the artifact page: the campaign film is not inside it but published next to it as `media/kampanya.mp4` and `media/kampanya.webm`, which keeps the page under the 16 MB artifact limit. `dist/fintegre-brand-book-tek-dosya.html` (also `dist/test.html`) embeds everything and works anywhere, offline included
 
 ## Build
 
