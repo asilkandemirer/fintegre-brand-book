@@ -15,10 +15,10 @@ os.makedirs(f'{out}/labeled', exist_ok=True)
 frames = sorted(f for f in os.listdir(f'{out}/frames') if f.endswith('.png'))
 for f in frames:
     i = int(f[:4]); t = i / 20
-    name = next((n for a, b, n in shots if a <= t < b), shots[-1][2])
+    shot = next((n for a, b, n in shots if a <= t < b), shots[-1][2])
     im = Image.open(f'{out}/frames/{f}').convert('RGB')
     d = ImageDraw.Draw(im, 'RGBA')
-    label = f'{name}   {t:05.2f} s   kare {i:03d}'
+    label = f'{shot}   {t:05.2f} s   kare {i:03d}'
     w = d.textlength(label, font=font)
     d.rounded_rectangle((24, 1080 - 76, 24 + w + 32, 1080 - 24), 12, fill=(15, 17, 21, 170))
     d.text((40, 1080 - 66), label, font=font, fill=(255, 255, 255))
