@@ -1,12 +1,14 @@
 # Turns rendered frames into two MP4s at 20 fps:
 #   blockout.mp4          clean, the source video for Genjutsu
 #   blockout-etiketli.mp4 the same with shot number, time and frame stamped in a corner, for review
-# usage: python3 video/encode.py <outDir>
+# usage: python3 video/encode.py <outDir> [scene.js] [name]   (defaults: video/blockout.js, blockout)
 import json, os, re, subprocess, sys
 from PIL import Image, ImageDraw, ImageFont
 
 out = sys.argv[1]
-src = open('video/blockout.js', encoding='utf-8').read()
+entry = sys.argv[2] if len(sys.argv) > 2 else 'video/blockout.js'
+name = sys.argv[3] if len(sys.argv) > 3 else 'blockout'
+src = open(entry, encoding='utf-8').read()
 shots = [(float(a), float(b), n) for a, b, n in re.findall(r"\[([\d.]+), ([\d.]+), '([^']+)'\]", src)]
 font = ImageFont.truetype('/usr/share/fonts/truetype/jetbrains-mono/JetBrainsMono-Regular.ttf', 26) if os.path.exists('/usr/share/fonts/truetype/jetbrains-mono/JetBrainsMono-Regular.ttf') else ImageFont.load_default()
 os.makedirs(f'{out}/labeled', exist_ok=True)
@@ -22,6 +24,6 @@ for f in frames:
     d.text((40, 1080 - 66), label, font=font, fill=(255, 255, 255))
     im.save(f'{out}/labeled/{f}')
 enc = ['-framerate', '20', '-c:v', 'libx264', '-preset', 'slow', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', '20', '-movflags', '+faststart']
-subprocess.run(['ffmpeg', '-v', 'error', '-y', '-framerate', '20', '-i', f'{out}/frames/%04d.png', *enc[2:], f'{out}/blockout.mp4'], check=True)
-subprocess.run(['ffmpeg', '-v', 'error', '-y', '-framerate', '20', '-i', f'{out}/labeled/%04d.png', *enc[2:], f'{out}/blockout-etiketli.mp4'], check=True)
-print(len(frames), 'frames →', f'{out}/blockout.mp4', f'{out}/blockout-etiketli.mp4')
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-framerate', '20', '-i', f'{out}/frames/%04d.png', *enc[2:], f'{out}/{name}.mp4'], check=True)
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-framerate', '20', '-i', f'{out}/labeled/%04d.png', *enc[2:], f'{out}/{name}-etiketli.mp4'], check=True)
+print(len(frames), 'frames →', f'{out}/{name}.mp4', f'{out}/{name}-etiketli.mp4')
