@@ -30,3 +30,11 @@ npm run build    # writes dist/fintegre-brand-book.html and dist/test.html (loca
 ```
 
 To swap the hero photo for a video later, replace the `<img>` inside `#heroph` with a muted, looping `<video>`; the intro mask works on either.
+
+## Genjutsu blockout (30 s · 20 fps)
+
+`video/` holds the rough source video for Higgsfield Genjutsu: boxes, lines and dots that fix the camera, timing and staging, so Genjutsu can replace each simple shape with a reference image.
+
+- `video/blockout.js`: the scene. Every frame is a pure function of its time (`renderAt(frame)`), and `SHOTS` lists the 16 shots with their seconds.
+- `video/render.mjs`: renders frames with headless Chromium (`node video/render.mjs <outDir> 0 599`, or a comma list such as `0,150,300` for a quick look).
+- `video/encode.py`: writes `blockout.mp4` (clean, for Genjutsu) and `blockout-etiketli.mp4` (shot, time and frame stamped, for review).
