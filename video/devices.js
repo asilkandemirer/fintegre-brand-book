@@ -1,11 +1,12 @@
-// 20 s device chain for Kling 4.0: one object turns into ten devices in a row while the
+// 18 s device chain for Kling 4.0: one object turns into ten devices in a row while the
 // Fintegre mark stays fixed in the centre of the frame, always on the spot where each
 // device carries its logo (the back of the phones, the screen of iPad, MacBook, iMac and
-// Watch, the top of Mac mini and Studio, the earbuds case). Locked camera, pure function of time.
+// Watch, the top of Mac mini and Studio). It ends on the earbuds exactly as the campaign film
+// opens, and only then does the mark move: it lands on the case lid. Locked camera, pure function of time.
 import * as THREE from 'three';
 import { LOGO } from '../src/logo.js';
 
-export const FPS = 20, DUR = 20, W = 1920, H = 1080;
+export const FPS = 20, DUR = 18, W = 1920, H = 1080;
 export const SHOTS = [
   [0, 2, '01 · Eski telefon (sırt)'],
   [2, 3.8, '02 · Yeni telefon (sırt)'],
@@ -15,9 +16,8 @@ export const SHOTS = [
   [9.2, 11, '06 · iMac (ekran)'],
   [11, 12.8, '07 · Mac mini (üst yüz)'],
   [12.8, 14.6, '08 · Mac Studio (üst yüz)'],
-  [14.6, 16.4, '09 · Kulaklık (kutu)'],
-  [16.4, 18, '10 · Watch (kadran)'],
-  [18, 20, '11 · Cihaz dağılır, amblem kalır'],
+  [14.6, 16.4, '09 · Watch (kadran)'],
+  [16.4, 18, '10 · Kulaklık: kampanya filminin ilk karesi'],
 ];
 // each device holds still for a beat, then morphs into the next in 0.8 s
 const HOLD = [[0, 1.2], [2.0, 3.0], [3.8, 4.8], [5.6, 6.6], [7.4, 8.4], [9.2, 10.2], [11.0, 12.0], [12.8, 13.8], [14.6, 15.6], [16.4, 18.0]];
@@ -86,6 +86,11 @@ function part(c, o) {
 
 // ------------------------------------------------------------------ the fixed mark
 const ANCHOR = new THREE.Vector3(0, 4.5, 0); // the mark never moves; the logo face of every device sits here
+// …until the last device: the open earbuds lid, tilted back, carries it where the campaign film shows it
+const LID = new THREE.Vector3(0.31, 6.35, -1.2), LID_TILT = -0.35;
+const MARK_ON_LID = LID.clone()
+  .add(new THREE.Vector3(0.09, 0.6 * Math.cos(LID_TILT), 0.6 * Math.sin(LID_TILT)))
+  .add(new THREE.Vector3(0, -0.18 * Math.sin(LID_TILT), 0.18 * Math.cos(LID_TILT)));
 const markShape = LOGO.map((b) => {
   const s = new THREE.Shape();
   b.forEach((p, i) => (i ? s.lineTo(p[0], p[1]) : s.moveTo(p[0], p[1])));
@@ -108,8 +113,8 @@ const DEVICES = [
   { w: 6.8, h: 4.9, d: 0.14, oy: -0.5, c: '#A8C4EA', screen: [0.94, 0.76], stand: [2.0, 1.8] }, // iMac, screen above the chin
   { w: 3.8, h: 3.8, d: 1.2, oy: 0, c: '#C9CED6' }, // Mac mini, top face to camera
   { w: 4.4, h: 4.4, d: 2.4, oy: 0, c: '#BFC5CE' }, // Mac Studio, top face to camera
-  { w: 2.5, h: 2.0, d: 1.1, oy: 0, c: '#F4F6FA', buds: true }, // earbuds case, front
   { w: 2.0, h: 2.4, d: 0.5, oy: 0, c: '#2A2E36', band: [1.6, 2.5], screen: [0.86, 0.86] }, // Watch, face
+  { w: 4.1, h: 2.8, d: 2.0, oy: -0.17, c: '#F4F6FA', buds: true }, // earbuds: case, open lid and buds framed as the campaign film's first frame
 ];
 const body = part('#A3ABB8');
 const extras = DEVICES.map((s) => {
@@ -121,6 +126,7 @@ const extras = DEVICES.map((s) => {
       const m = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.6, 6, 16), mat('#F7F8FB'));
       m.castShadow = true; scene.add(m); return m;
     });
+    e.lid = part(s.c);
   }
   if (s.band) { e.top = part(INDIGO); e.bot = part(INDIGO); }
   return e;
@@ -155,15 +161,12 @@ export function renderAt(f) {
   const { i, k } = stateAt(t);
   const A = DEVICES[i], B = DEVICES[Math.min(i + 1, DEVICES.length - 1)];
   const w = lerp(A.w, B.w, k), h = lerp(A.h, B.h, k), d = lerp(A.d, B.d, k), oy = lerp(A.oy, B.oy, k);
-  // final: the watch dissolves, only the mark stays
-  const gone = io(seg(t, 18.0, 18.8));
-  const s = 1 - gone;
+  const s = 1;
   const front = ANCHOR.z - 0.03; // the logo face of the body, just behind the mark
   body.visible = s > 0.04;
   body.scale.set(w * s, h * s, d * s);
   body.position.set(ANCHOR.x, ANCHOR.y + oy * s, front - (d * s) / 2);
   body.material.color.copy(col.set(A.c).lerp(c2.set(B.c), k));
-  body.material.opacity = 1 - gone * 0.6;
 
   // parts: the outgoing device's parts shrink in the first half of a morph, the incoming ones grow in the second
   extras.forEach((e, j) => {
@@ -190,7 +193,12 @@ export function renderAt(f) {
       e.foot.scale.set(sw * p, 0.12, 2.0 * p);
       e.foot.position.set(bx, bottom - sh * p + 0.2, front - d * s - 0.2);
     }
-    if (e.buds) e.buds.forEach((m, n) => { m.scale.setScalar(p); m.position.set(bx + (n ? 1 : -1) * ((w * s) / 2 + 0.7), by + 0.15, front - 0.3); m.rotation.z = n ? -0.5 : 0.5; });
+    if (e.buds) { // where the campaign film's first frame has them: buds either side, the lid open and tilted back
+      e.buds.forEach((m, n) => { m.scale.setScalar(2.2 * p); m.position.set(n ? 3.4 : -3.24, n ? 4.33 : 5.1, -0.5); m.rotation.z = n ? -0.25 : 0.35; });
+      e.lid.scale.set(4.1 * p, 2.3 * p, 0.3);
+      e.lid.position.copy(LID);
+      e.lid.rotation.x = LID_TILT;
+    }
     if (e.top) {
       const [bw, bh] = S.band;
       e.top.scale.set(bw * p, bh * p, 0.2);
@@ -225,10 +233,18 @@ export function renderAt(f) {
     keys.position.set(ANCHOR.x, bottom + 0.01, front + bd * 0.3);
   }
 
-  // a shimmer of digits along the outline while a device changes, and a burst at the end
+  // the mark holds still through every device, then lands on the earbuds case lid
   {
-    const m = Math.sin(Math.PI * k) * (k > 0 ? 1 : 0), fin = Math.sin(Math.PI * seg(t, 17.9, 19.0));
-    const a = Math.max(m, fin);
+    const land = i === DEVICES.length - 1 ? 1 : i === DEVICES.length - 2 ? k : 0;
+    mark.position.lerpVectors(ANCHOR, MARK_ON_LID, land);
+    mark.rotation.x = LID_TILT * land;
+    mark.scale.setScalar(lerp(1.05, 0.72, land));
+  }
+
+  // a shimmer of digits along the outline while a device changes
+  {
+    const m = Math.sin(Math.PI * k) * (k > 0 ? 1 : 0), fin = 0;
+    const a = m;
     sparks.visible = a > 0.01;
     sparks.material.opacity = a * 0.9;
     if (sparks.visible) {
