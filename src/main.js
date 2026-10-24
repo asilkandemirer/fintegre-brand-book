@@ -468,7 +468,7 @@ function makeFilm(key, xs, dur) {
 // narrow screen can follow it instead of cropping the centre
 const films = {
   film: makeFilm('film', [[0, 0.7], [0.6, 0.55], [1.2, 0.5], [1.9, 0.47], [3.9, 0.46], [4.3, 0.62], [4.7, 0.5], [6.2, 0.52], [6.6, 0.32], [8.9, 0.66]], 9),
-  campaign: makeFilm('campaign', [[0, 0.5], [2.4, 0.5], [3.0, 0.62], [6.0, 0.6], [7.0, 0.5], [13.5, 0.55], [14.0, 0.5], [18.3, 0.5], [18.6, 0.45], [20.3, 0.45]], 20.3),
+  campaign: makeFilm('campaign', [[0, 0.5], [17.75, 0.5], [20.15, 0.5], [20.75, 0.62], [23.75, 0.6], [24.75, 0.5], [31.25, 0.55], [31.75, 0.5], [36.05, 0.5], [36.35, 0.45], [38.05, 0.45]], 38),
 };
 function scrub(f, t, len) {
   f.box.style.opacity = (smooth(seg(t, -0.1, 0.35)) * (1 - smooth(seg(t, len - 0.4, len)))).toFixed(3);

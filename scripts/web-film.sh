@@ -14,5 +14,5 @@ enc() { # source, output name, width:height, H.264 crf, VP9 crf, keyframe interv
   ffmpeg -v error -y -ss "$7" -i "$1" -frames:v 1 -vf "scale=1280:720:flags=lanczos" -c:v libwebp -quality 72 "$OUT/$2-poster.webp"
 }
 enc assets/film/objects-film.mp4 film 1600:900 24 34 4 0
-enc assets/film/kampanya-filmi.mp4 kampanya 1280:720 27 38 6 0
+enc assets/film/kampanya-filmi.mp4 kampanya 1280:720 29 40 6 0
 ls -l "$OUT"/film* "$OUT"/kampanya*
