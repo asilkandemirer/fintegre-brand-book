@@ -555,7 +555,8 @@ bindInput(clock, window, { onKey: (e) => { if (!idx.hidden) { if (e.key === 'Esc
 idx.addEventListener('wheel', (e) => e.stopPropagation(), { passive: true });
 
 // ------------------------------------------------------------------ loop
-let last = performance.now(), curScene = null, navDark = null;
+let last = performance.now(), curScene = null, navDark = null, barCompact = null;
+const topBar = $('.top');
 const bar = $('#bar');
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000);
@@ -592,6 +593,8 @@ function frame(now) {
   const photo = T > 1.0 && T < S.hero.start + S.hero.len - 0.3;
   const dark = photo || lum < 0.55;
   if (dark !== navDark) { root.dataset.nav = dark ? 'dark' : 'light'; navDark = dark; }
+  const compact = T > 0.6; // the bar folds to icons on the way down and opens again at the top
+  if (compact !== barCompact) { topBar.classList.toggle('compact', compact); barCompact = compact; }
 
   if (active && active !== curScene) {
     curScene = active;

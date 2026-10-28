@@ -29,6 +29,7 @@ export const TR = {
   'Fintegre Brand Book · v2': 'Fintegre Marka Kılavuzu · v2',
   'Make every device worth more.': 'Her cihaz, daha değerli.',
   'Make every device <em>worth more.</em>': 'Her cihaz, <em>daha değerli.</em>',
+  'Make every device<br><em>worth more.</em>': 'Her cihaz,<br><em>daha değerli.</em>',
   'The happy moment': 'Mutlu an',
   'A new phone, handed over in a bright store. Fintegre is the quiet system that makes that moment easy.': 'Aydınlık bir mağazada uzatılan yeni bir telefon. Fintegre, o anı kolaylaştıran sessiz sistemdir.',
 
