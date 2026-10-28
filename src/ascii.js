@@ -37,7 +37,7 @@ export class Ascii {
     if (cloud && cloud.length) {
       for (const p of cloud) {
         if (p.a <= 0.01) continue;
-        x.font = `500 ${p.s.toFixed(1)}px "JetBrains Mono", monospace`;
+        x.font = `700 ${p.s.toFixed(1)}px "Inter", sans-serif`;
         x.fillStyle = p.c || col(p.a);
         x.globalAlpha = p.c ? p.a : 1;
         x.fillText(p.ch, p.x, p.y);
@@ -50,7 +50,7 @@ export class Ascii {
     const idle = Math.max(0, 1 - (now - this.mt - 600) / 900);
     if (idle > 0 && this.mx > -900) {
       const G = 18, R = 150;
-      x.font = '500 11px "JetBrains Mono", monospace';
+      x.font = '700 11px "Inter", sans-serif';
       const gx0 = Math.floor((this.mx - R) / G), gx1 = Math.ceil((this.mx + R) / G);
       const gy0 = Math.floor((this.my - R) / G), gy1 = Math.ceil((this.my + R) / G);
       const tick = Math.floor(now / 160);
@@ -72,7 +72,7 @@ export class Ascii {
     if (this.streams.length < 2 && Math.random() < 0.006) {
       this.streams.push({ x: 40 + Math.random() * (w - 360), y: 90 + Math.random() * (h - 180), n: 8 + ((Math.random() * 10) | 0), t0: now, seed: Math.random() * 1000 });
     }
-    x.font = '500 10px "JetBrains Mono", monospace';
+    x.font = '700 10px "Inter", sans-serif';
     x.textAlign = 'left';
     this.streams = this.streams.filter((s) => {
       const age = (now - s.t0) / 1000;

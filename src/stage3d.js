@@ -123,12 +123,12 @@ export class Stage3D {
     x.fillStyle = '#F5F7FA'; x.fillRect(0, 0, w, h);
     drawLogo(x, 74, 92, 34, grad(x, 50, 98));
     x.fillStyle = '#0F1115'; x.font = '600 26px Geologica, sans-serif'; x.fillText('Fintegre', 104, 101);
-    x.fillStyle = '#3047EC'; x.font = '500 20px "JetBrains Mono", monospace'; x.fillText(t('VALUATION READY'), 44, 220);
+    x.fillStyle = '#3047EC'; x.font = '700 20px "Inter", sans-serif'; x.fillText(t('VALUATION READY'), 44, 220);
     x.fillStyle = '#0F1115'; x.font = '600 50px Geologica, sans-serif'; x.fillText(t('Your phone is'), 44, 290); x.fillText(t('worth more.'), 44, 350);
     x.fillStyle = '#FFFFFF'; x.beginPath(); x.roundRect(44, 410, w - 88, 300, 28); x.fill();
-    x.fillStyle = '#0F1115'; x.font = '500 22px "JetBrains Mono", monospace'; x.fillText(t('TRADE-IN VALUE'), 76, 470);
+    x.fillStyle = '#0F1115'; x.font = '700 22px "Inter", sans-serif'; x.fillText(t('TRADE-IN VALUE'), 76, 470);
     x.fillStyle = '#3047EC'; x.font = '600 96px Geologica, sans-serif'; x.fillText('₺14.250', 70, 580);
-    x.fillStyle = 'rgba(15,17,21,.55)'; x.font = '400 22px "JetBrains Mono", monospace'; x.fillText(t('Example · 00:58'), 76, 650);
+    x.fillStyle = 'rgba(15,17,21,.55)'; x.font = '700 22px "Inter", sans-serif'; x.fillText(t('Example · 00:58'), 76, 650);
     x.fillStyle = '#3047EC'; x.beginPath(); x.roundRect(44, h - 230, w - 88, 104, 26); x.fill();
     x.fillStyle = '#FFFFFF'; x.font = '600 32px Geologica, sans-serif'; x.fillText(t('Use on a new device'), 92, h - 165);
     this.uiTex.needsUpdate = true;

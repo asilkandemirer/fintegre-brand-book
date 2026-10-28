@@ -19,12 +19,12 @@ const ff = (fam, file, range, wght) =>
 const LAT = 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD';
 const EXT = 'U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF';
 const G = 'node_modules/@fontsource-variable/geologica/files/geologica-';
-const M = 'node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-';
+const M = 'node_modules/@fontsource-variable/inter/files/inter-';
 const fonts = [
   ff('Geologica', G + 'latin-full-normal.woff2', LAT, '100 900'),
   ff('Geologica', G + 'latin-ext-full-normal.woff2', EXT, '100 900'),
-  ff('JetBrains Mono', M + 'latin-wght-normal.woff2', LAT, '100 800'),
-  ff('JetBrains Mono', M + 'latin-ext-wght-normal.woff2', EXT, '100 800'),
+  ff('Inter', M + 'latin-wght-normal.woff2', LAT, '100 900'),
+  ff('Inter', M + 'latin-ext-wght-normal.woff2', EXT, '100 900'),
 ].join('\n');
 
 // ---- logo
@@ -76,7 +76,7 @@ function construction() {
 <g fill="${C.indigo}" opacity=".9">${paths}</g>
 <g class="c-guide" stroke="${C.indigo}" stroke-width="1.2" opacity=".55">${guides}</g>
 <path d="${arc}" fill="none" stroke="${C.graphite}" stroke-width="1.6"/><line x1="${bl[0].toFixed(1)}" y1="${bl[1].toFixed(1)}" x2="${(bl[0] + 70).toFixed(1)}" y2="${bl[1].toFixed(1)}" stroke="${C.graphite}" stroke-width="1.2"/>
-<text x="${(bl[0] + R + 10).toFixed(1)}" y="${(bl[1] - 16).toFixed(1)}" font-family="JetBrains Mono, monospace" font-size="17" fill="${C.graphite}">65°</text></svg>`;
+<text x="${(bl[0] + R + 10).toFixed(1)}" y="${(bl[1] - 16).toFixed(1)}" font-family="Inter, sans-serif" font-weight="700" font-size="17" fill="${C.graphite}">65°</text></svg>`;
 }
 
 // clear space: half the mark height on every side
@@ -88,7 +88,7 @@ function clearspace() {
 <rect x="${-W / 2}" y="${-H / 2}" width="${W}" height="${H}" fill="none" stroke="${C.indigo}" stroke-width="1.2" stroke-dasharray="5 5"/>
 <rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="${C.ice}" opacity=".35"/>
 <g fill="${C.indigo}">${paths}</g>
-<g font-family="JetBrains Mono, monospace" font-size="13" fill="${C.graphite}" text-anchor="middle">
+<g font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="${C.graphite}" text-anchor="middle">
 <text x="0" y="${-h / 2 - x / 2 + 5}">x/2</text><text x="0" y="${h / 2 + x / 2 + 5}">x/2</text>
 <text x="${-w / 2 - x / 2}" y="5">x/2</text><text x="${w / 2 + x / 2}" y="5">x/2</text>
 <text x="${w / 2 + x + 22}" y="5">x</text></g>

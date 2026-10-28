@@ -158,7 +158,7 @@ export const TR = {
   'Bring it to the store. We check it, value it and count it toward your new one in minutes.': 'Mağazaya getir. Dakikalar içinde kontrol eder, değerler ve yenisine sayarız.',
   'Valuation ready · 00:58': 'Değerleme hazır · 00:58',
   'Label': 'Etiket',
-  'Mono 500 · 12/18 · +0.16em · caps': 'Mono 500 · 12/18 · +0.16em · büyük harf',
+  'Inter Bold · 12/18 · +0.16em · caps': 'Inter Bold · 12/18 · +0.16em · büyük harf',
   'Headline': 'Başlık',
   'Body': 'Gövde metni',
   'Data': 'Veri',
